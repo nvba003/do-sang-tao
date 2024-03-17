@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderSapoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,6 @@ Route::group(['middleware' => ['auth:api']], function () {
         // Các logic xử lý cho route bảo vệ ở đây
     });
     // Thêm các routes khác bạn muốn bảo vệ vào đây
+    Route::post('api/submit', [OrderSapoController::class, 'submit']);
 });
 
