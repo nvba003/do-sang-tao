@@ -24,6 +24,6 @@ Route::group(['middleware' => ['auth:api']], function () {
         // Các logic xử lý cho route bảo vệ ở đây
     });
     // Thêm các routes khác bạn muốn bảo vệ vào đây
-    Route::post('api/submit', [OrderSapoController::class, 'submit']);
+    Route::post('submit', [OrderSapoController::class, 'submit']);
 });
 

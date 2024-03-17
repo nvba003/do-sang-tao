@@ -16,10 +16,15 @@ class OrderSapoController extends Controller
         // Lưu dữ liệu vào database
         $data = $request->all(); // Hoặc sử dụng $request->input('key') để lấy dữ liệu cụ thể
         // Thực hiện lưu dữ liệu vào table tương ứng
-        // Ví dụ: $record = YourModel::create($data);
+        $order = OrderSapo::create($data);//lưu dữ liệu Sử Dụng Phương Thức create Trong Model
 
-        // Trả về kết quả
-        return response()->json(['message' => 'Data saved successfully', 'data' => $data]);
+         // Kiểm tra xem dữ liệu đã được lưu thành công không
+        if ($order) {
+            return response()->json(['message' => 'Data saved successfully', 'data' => $data]);
+        } else {
+            return response()->json(['message' => 'Failed to save order'], 500);
+        }
+
     }
     /**
      * Display a listing of the resource.
