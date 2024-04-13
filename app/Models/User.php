@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -22,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
     
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -53,4 +54,9 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    // Mối quan hệ với InventoryTransaction
+    public function inventoryTransaction()
+    {
+        return $this->belongsTo(InventoryTransaction::class, 'user_id');
+    }
 }

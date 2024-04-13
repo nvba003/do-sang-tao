@@ -4,23 +4,30 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTasksTable extends Migration
+class CreateBundleTypesTable extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
+        Schema::create('bundle_types', function (Blueprint $table) {
+            $table->tinyIncrements('id');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->dateTime('due_date')->nullable();
-            $table->string('status')->default('pending'); // ví dụ: pending, completed
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('bundle_types');
     }
 }
-

@@ -25,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('add-container', function ($user) {
+            // Giả sử 'is_admin' là thuộc tính xác định quyền admin
+            return $user->is_admin; 
+        });
     }
 }

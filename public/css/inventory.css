@@ -1,0 +1,97 @@
+.flex {
+    display: flex;
+}
+/* Tăng kích thước chữ */
+.form-control, .btn, label {
+    font-size: 1rem; /* Tăng kích thước chữ */
+}
+
+/* Giảm khoảng cách giữa các form-group */
+.form-group {
+    margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+}
+
+.wide-button {
+    width: 60px; /* Ví dụ: thiết lập width là 100px */
+}
+
+@media (min-width: 768px) { /* Đối với các màn hình có chiều rộng ít nhất 768px */
+    .half-width { /* Thiết kế cho mỗi form-group chiếm một nửa chiều rộng */
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* Cơ bản cho bảng */
+#myTable {
+    width: 100%; /* Đặt chiều rộng bảng */
+    border-collapse: collapse; /* Loại bỏ khoảng cách giữa các đường viền */
+}
+
+#myTable th, #myTable td {
+    border: 1px solid #ddd; /* Thêm đường viền cho th và td */
+    padding: 8px; /* Thêm padding */
+    text-align: left; /* Căn lề trái cho nội dung */
+}
+
+/* Style cho hàng tiêu đề */
+#myTable thead {
+    background-color: #3009bc; /* Màu nền cho tiêu đề */
+    color: white; /* Màu chữ cho tiêu đề */
+}
+
+/* Style cho dấu "+" */
+.expand-button {
+    cursor: pointer; /* Thay đổi con trỏ khi hover */
+    font-weight: bold; /* Đặt chữ đậm */
+}
+
+/* Ẩn hàng chi tiết mặc định */
+.details-row {
+    display: none; /* Ẩn hàng chi tiết */
+}
+
+/* Style cho hàng chi tiết khi được hiển thị */
+.details-row td {
+    background-color: #e9e9e9; /* Màu nền cho hàng chi tiết */
+    font-style: italic; /* Chữ nghiêng cho hàng chi tiết */
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .pagination li {
+    margin: 4px;
+  }
+  
+  .pagination li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+  }
+  
+  .pagination li a:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .pagination .active a {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .pagination .disabled a {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+  }
+  

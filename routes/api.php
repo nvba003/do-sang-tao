@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderSapoController;
+use App\Http\Controllers\Api\MenuOptionController;
+use App\Http\Controllers\Api\InventoryTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +27,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     });
     // Thêm các routes khác bạn muốn bảo vệ vào đây
     Route::post('submit', [OrderSapoController::class, 'submit']);
+
+    
 });
 
+Route::get('/container-menu-options/children/{parentId}', [MenuOptionController::class, 'getChildren']);
+Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);
