@@ -64,4 +64,26 @@ class ProductApiController extends Controller
         );
     }
 
+    public function showWebProducts(Request $request)
+    {
+        $perPage = $request->input('per_page',20); // Số lượng mặc định là 3 nếu không có tham số per_page
+        $query = ProductApi::query()
+            ->with(['containers'])
+            ->when($request->filled('created_at'), function ($q) use ($request) {
+                $q->whereDate('created_at', $request->created_at);
+            })
+            ->orderBy('name', 'desc'); // Sắp xếp theo report_date giảm dần
+
+        $products = $query->paginate($perPage);
+
+        if ($request->ajax()) {
+            $view = view('products.partial_show_web_products', compact('products'))->render();
+            $links = $products->links()->toHtml();
+            return response()->json(['table' => $view, 'links' => $links]);//, 'products' => $products
+        }
+
+        $header = 'Danh sách sản phẩm';
+        return view('products.show_web_products', compact('products', 'header'));
+    }
+
 }

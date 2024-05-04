@@ -1,0 +1,46 @@
+.active-menu {
+    background-color: #4A90E2;
+    color: #FFFFFF;
+}
+
+.submenu-item {
+    display: block;
+    padding: 4px 16px;
+    text-decoration: none; /* Loại bỏ gạch chân */
+}
+
+.submenu-item:hover {
+    background-color: #4a5568;
+    color: #FFFFFF;
+}
+
+.active-submenu {
+    color: #4A90E2;
+    background-color: #4a5568;
+}
+
+.active-submenu-item {
+    color: #FFFFFF;
+    background-color: #4a5568;
+    padding: 4px 16px;
+}
+
+.right-sidebar-expanded {
+    right: calc(100% - 320px); /* Phù hợp với chiều rộng mở rộng của sidebar */
+}
+
+.right-sidebar-collapsed {
+    right: calc(100% - 40px); /* Phù hợp với chiều rộng thu gọn của sidebar */
+}
+
+.toggle-sidebar {
+    width: 20px; /* Chiều rộng mới cho nút, có thể điều chỉnh tùy thích */
+    height: 30px;
+    padding: 4px; /* Giảm padding để làm cho nút nhỏ gọn hơn */
+    border-radius: 0 20% 20% 0; /* Bo tròn tất cả các góc */
+    display: flex;
+    align-items: center; /* Căn giữa nội dung trong nút */
+    justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+}
+
+

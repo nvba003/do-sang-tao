@@ -4,47 +4,46 @@ use Carbon\Carbon;
 @endphp
 
 @section('content')
-<div id="formContainer" class="container mt-3">
-    <!--<h4 class="mb-4">Nhập/Xuất Thùng Hàng</h4>-->
-    <form action="{{ route('transactions.store') }}" method="POST" id="transactionForm">
+<div id="formContainer" class="container mx-auto mt-3">
+    <form action="{{ route('transactions.store') }}" method="POST" id="transactionForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         @csrf
 
-        <div class="row">
+        <div class="flex flex-wrap -mx-3 mb-2">
             <!-- Gộp Chọn Chi Nhánh và Loại Giao Dịch -->
-            <div class="form-group col-md-6 mb-1">
-                <label for="branch_id">Chọn Chi Nhánh</label>
-                <select class="form-control form-control-sm" id="branch_id" name="branch_id" required>
+            <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                <label for="branch_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Chọn Chi Nhánh</label>
+                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="branch_id" name="branch_id" required>
                     <option value="">Chọn chi nhánh</option>
                     @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-md-6 mb-1">
-                <label>Lựa chọn</label>
-                <div class="btn-group btn-group-toggle d-flex" data-toggle="buttons">
-                    <label class="btn btn-primary btn-sm flex-fill">
+            <div class="w-full md:w-1/2 px-3">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Lựa chọn</label>
+                <div class="flex">
+                    <label class="btn flex-1 text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-l">
                         <input type="radio" name="type" id="type_in" value="Nhap" autocomplete="off" checked> Nhập
                     </label>
-                    <label class="btn btn-danger btn-sm flex-fill">
+                    <label class="btn flex-1 text-sm bg-red-500 hover:bg-red-700 text-white py-2 px-4">
                         <input type="radio" name="type" id="type_out" value="Xuat" autocomplete="off"> Xuất
                     </label>
-                    <label class="btn btn-success btn-sm flex-fill">
+                    <label class="btn flex-1 text-sm bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-r">
                         <input type="radio" name="type" id="type_check" value="Kiem" autocomplete="off"> Kiểm
                     </label>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="flex flex-wrap -mx-3 mb-2">
             <!-- Gộp Mã Thùng và TransactionTypes -->
-            <div class="form-group col-md-6 mb-1">
-                <label for="container_id">Mã Thùng</label>
-                <input type="text" class="form-control form-control-sm" id="container_id" name="container_id" placeholder="Nhập mã thùng" required>
+            <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                <label for="container_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Mã Thùng</label>
+                <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="container_id" name="container_id" placeholder="Nhập mã thùng" required>
             </div>
-            <div class="form-group col-md-6 mb-1">
-                <label for="transaction_type_id">Loại Giao Dịch</label>
-                <select class="form-control form-control-sm" id="transaction_type_id" name="transaction_type_id" required>
+            <div class="w-full md:w-1/2 px-3">
+                <label for="transaction_type_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Loại Giao Dịch</label>
+                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="transaction_type_id" name="transaction_type_id" required>
                     <option value="">Chọn loại</option>
                     @foreach($transactionTypes as $type)
                         <option value="{{ $type->id }}">{{ $type->type_name }}</option>
@@ -53,113 +52,66 @@ use Carbon\Carbon;
             </div>
         </div>
 
-        <!-- Trường ẩn để lưu thông tin sản phẩm -->
-        <input type="hidden" id="product_id" name="product_info" value="">
-        <!-- Khu vực hiển thị thông tin sản phẩm -->
-        <div id="product_info" class="mt-0 mb-0 text-success">
-            <!-- Thông tin sản phẩm sẽ được hiển thị ở đây thông qua JavaScript -->
-        </div>
-        <!-- Khu vực hiển thị thông báo lỗi -->
-        <div id="error_message" class="mt-0 text-danger mb-0">
-            <!-- Thông báo lỗi sẽ được hiển thị ở đây thông qua JavaScript -->
-        </div>
-
-        <div class="row">
+        <div class="flex flex-wrap -mx-3 mb-2">
             <!-- Gộp Số Lượng và Ghi Chú -->
-            <div class="form-group col-md-6 mb-2">
-                <label for="quantity">Số Lượng</label>
-                <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                        <button type="button" class="btn btn-dark wide-button" onclick="decreaseQuantity()">-</button>
-                    </div>
-                    <input type="number" class="form-control text-center" id="quantity" name="quantity" value="1" min="1" required>
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-dark wide-button" onclick="increaseQuantity()">+</button>
-                    </div>
+            <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                <label for="quantity" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Số Lượng</label>
+                <div class="flex">
+                    <button type="button" class="text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-l" onclick="decreaseQuantity()">-</button>
+                    <input type="number" class="w-full text-center border-t border-b border-gray-300 py-2" id="quantity" name="quantity" value="1" min="1" required>
+                    <button type="button" class="text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-r" onclick="increaseQuantity()">+</button>
                 </div>
             </div>
-            <div class="form-group col-md-6 mb-2">
-                <label for="notes">Ghi Chú</label>
-                <textarea class="form-control form-control-sm" id="notes" name="notes" rows="1"></textarea>
+            <div class="w-full md:w-1/2 px-3">
+                <label for="notes" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Ghi Chú</label>
+                <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="notes" name="notes" rows="1"></textarea>
             </div>
         </div>
 
-        <!-- Làm nhỏ nút Thực Hiện -->
-        <button type="submit" class="btn btn-warning btn-sm mb-2 mt-2">Lưu giao dịch</button>
-        
+        <!-- Nút Thực Hiện -->
+        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Lưu giao dịch</button>
     </form>
 </div>
 
-<!-- tìm kiếm giao dịch thùng hàng-->    
-<div id="searchForm" class="container mt-3">
-    <form id="searchContainer" action="" method="POST" class="mb-3">
+<div id="searchForm" class="container mx-auto mt-3">
+    <form id="searchContainer" action="" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         @csrf
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Tìm Kiếm</button>
-                <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Xóa Tìm Kiếm</button>
-            </div>
+        <div class="flex">
+            <input type="text" class="flex-grow appearance-none border rounded-l py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
+            <button class="btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-r" type="submit">Tìm Kiếm</button>
+            <button class="btn ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded" type="button" onclick="clearSearch()">Xóa Tìm Kiếm</button>
         </div>
     </form>
 </div>
 
-<!-- Hiển thị dữ liệu trong table -->    
-<div class="container mt-4">
-    <!-- Phần chứa phân trang -->
-    <nav aria-label="Page navigation example" id="paginationContainer">
-        <ul class="pagination" id="pagination">
-            <!-- Các liên kết phân trang sẽ được thêm vào đây -->
-        </ul>
-    </nav>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="myTable" class="table">
-                <thead>
+<div class="container mx-auto mt-4">
+    <div class="flex flex-col">
+        <nav aria-label="Page navigation example">
+            <ul class="flex list-reset pl-0 rounded my-2">
+                <!-- Pagination here -->
+            </ul>
+        </nav>
+        <div class="shadow overflow-hidden rounded border-b border-gray-200">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
                     <tr>
-                      <th></th> <!-- Cột cho dấu "+" -->  
-                      <th scope="col">Ngày</th>
-                      <th scope="col">ID thùng</th>
-                      <th scope="col">Số Lượng</th>
-                      <th scope="col">Loại</th>
-                      <th scope="col">Tồn</th>
-                      <th scope="col">Tên Sản Phẩm</th>
+                      <th class="th-common">+</th>
+                      <th class="th-common">Ngày</th>
+                      <th class="th-common">ID thùng</th>
+                      <th class="th-common">Số Lượng</th>
+                      <th class="th-common">Loại</th>
+                      <th class="th-common">Tồn</th>
+                      <th class="th-common">Tên Sản Phẩm</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!--@forelse ($transactions as $transaction)
-                    <tr>
-                      <td class="expand-button" data-target="#details{{ $transaction->id }}">></td>
-                      <td>{{ Carbon::parse($transaction->updated_at)->format('Y-m-d') }}</td>
-                      <td>{{ $transaction->container_id}}</td>
-                      <td>{{ $transaction->quantity }}</td>
-                      <td>{{ $transaction->type }}</td>
-                      <td>{{ $transaction->inventoryHistory->quantity_after }}</td>
-                      <td>{{ $transaction->productapi->name }}</td>
-                      
-                    </tr>
-
-                    <tr id="details{{ $transaction->id }}" class="details-row">
-                        <td></td>
-                        <td colspan="6">
-                            <div><strong>Cập nhật:</strong> {{ $transaction->updated_at }}</div>
-                            <div><strong>SKU:</strong> {{ $transaction->productapi->sku }}</div>
-                            <div><strong>Loại:</strong> {{ $transaction->transactionType->type_name }}</div>
-                            <div><strong>User:</strong> {{ $transaction->user->name }}</div>
-                            <div><strong>Ghi chú:</strong> {{ $transaction->inventoryHistory->notes }}</div>
-                        </td>
-                    </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3">Không tìm thấy thùng hàng nào.</td>
-                        </tr>
-                    @endforelse
-                    -->
+                    <!-- Data rows here -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 
 
 @endsection

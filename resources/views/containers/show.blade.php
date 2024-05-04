@@ -23,12 +23,37 @@
             @endforelse
         </p>
     @endif
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Click me!
+            </button>
 @if(auth()->user() && auth()->user()->can('edit posts'))
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addContainerModal">
     Thêm Thùng
     </button>
 @endif
+
+<!-- Button trigger modal -->
+<button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onclick="toggleModal(true)">Open Modal</button>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden justify-center items-center">
+    <div class="bg-white rounded shadow-lg w-1/3">
+        <div class="border-b px-4 py-2 flex justify-between items-center">
+            <h3 class="font-semibold text-lg">Modal Title</h3>
+            <button class="text-black" onclick="toggleModal(false)">
+                <span class="text-xl">&times;</span>
+            </button>
+        </div>
+        <div class="p-4">
+            <p>This is some modal content. It can be anything you like.</p>
+        </div>
+        <div class="flex justify-end items-center p-4 border-t">
+            <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2" onclick="toggleModal(false)">Close</button>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="addContainerModal" tabindex="-1" aria-labelledby="addContainerModalLabel" aria-hidden="true">
@@ -107,7 +132,8 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="submit" class="btn btn-primary">Lưu</button> 
+
           </div>
         </form>
       </div>
@@ -300,6 +326,17 @@
 
 @push('scripts')
 <script>
+    function toggleModal(show) {
+            const modal = document.getElementById('modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+
+
     var containers = @json($containers);
     var currentData = containers; // Biến toàn cục giữ dữ liệu hiện tại
     var currentType = 'container';

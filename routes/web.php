@@ -33,6 +33,7 @@ require __DIR__.'/auth.php';
 Route::post('/login-endpoint', [AuthController::class, 'login']);
 
 Route::get('/fetch-products', [ProductApiController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
+Route::get('/show-web-products', [ProductApiController::class, 'showWebProducts'])->name('web.products');
 
 Route::get('/containers', [ContainerController::class, 'show'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers/data', [ContainerController::class, 'getContainers'])->name('containers.data');//lấy danh sách json containers
