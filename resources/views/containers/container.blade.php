@@ -65,21 +65,25 @@
             </div>
         </form>
 
-        <form id="searchContainer" action="" method="POST" class="flex items-center bg-white p-2 sm:p-4 rounded-lg shadow space-x-4">
-            <div class="flex items-center space-x-2">
-                <input type="text" class="px-4 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
-                <button type="button" class="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearch()">Xóa</button>
+        <form id="searchContainer" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
+            <div class="flex flex-wrap -mx-3">
+                <div class="w-full sm:w-3/6 px-3 mb-2 md:mb-4 md:w-6/12 lg:w-4/12">
+                    <input type="text" class="px-2 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
+                    <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
+                    <button type="button" class="bg-gray-200 text-black px-2 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearch()">Xóa</button>
+                </div>
+                <div class="w-full sm:w-3/6 px-1 mt-2 mb-2 ml-2 md:mb-4 md:w-6/12 lg:w-6/12">
+                    <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1">
+                    <label class="text-gray-700" for="display">Trưng Bày</label>
+                <!-- </div>
+                <div class="w-full sm:w-1/6 px-1 mt-2 mb-2 ml-2 md:mb-4 md:w-3/12 lg:w-2/12"> -->
+                    <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1">
+                    <label class="text-gray-700" for="stock">Thùng Kho</label>
+                <!-- </div>
+                <div class="w-full sm:w-1/6 px-1 mt-1 mb-2 md:mb-4 md:w-2/12 lg:w-2/12"> -->
+                    <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa lọc</button>
+                </div>
             </div>
-            <div class="flex items-center space-x-2 ml-2">
-                <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1">
-                <label class="text-gray-700" for="display">Thùng Trưng Bày</label>
-            </div>
-            <div class="flex items-center space-x-2 ml-2">
-                <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1">
-                <label class="text-gray-700" for="stock">Thùng Kho</label>
-            </div>
-            <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa bộ lọc</button>
         </form>
     </div>
 
@@ -113,20 +117,23 @@
             </tbody>
         </table>
     </div>
-    <div class="grid grid-cols-10 gap-4 m-2">
-        <div class="col-span-8" id="pagination-links">
-            <!-- Pagination links here -->
-        </div>
-        <div class="col-span-2">
-            <div class="flex items-center space-x-2 w-full">
-                <label for="perPage" class="text-sm flex-1 text-right pr-2">Số hàng:</label>
-                <select id="perPage" class="form-control form-control-sm text-sm flex-1">
-                    <option value="20">20</option>
-                    <option value="100">100</option>
-                </select>
+    <div class="mx-auto mt-2">
+        <div class="grid grid-cols-10 gap-4 m-2">
+            <div class="col-span-8" id="pagination-links">
+                <!-- Pagination links here -->
+            </div>
+            <div class="col-span-2">
+                <div class="flex items-center space-x-2 w-full">
+                    <label for="perPage" class="text-sm flex-1 text-right pr-2">Số hàng:</label>
+                    <select id="perPage" class="form-control form-control-sm text-sm flex-1">
+                        <option value="20">20</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
+    
 </div>
 
 <!-- Modal thông báo -->
