@@ -20,12 +20,11 @@
 }
 
 .active-submenu-item {
-    color: #FFFFFF;
-    background-color: #4a5568;
+    color: #4A90E2;
     padding: 4px 16px;
 }
 
-.right-sidebar-expanded {
+.right-sidebar-expanded { /* button mở rộng và thu nhỏ sidebar */
     right: calc(100% - 320px); /* Phù hợp với chiều rộng mở rộng của sidebar */
 }
 
@@ -42,5 +41,4 @@
     align-items: center; /* Căn giữa nội dung trong nút */
     justify-content: center; /* Căn giữa nội dung theo chiều ngang */
 }
-
 

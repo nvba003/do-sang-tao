@@ -35,7 +35,7 @@ Route::post('/login-endpoint', [AuthController::class, 'login']);
 Route::get('/fetch-products', [ProductApiController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
 Route::get('/show-web-products', [ProductApiController::class, 'showWebProducts'])->name('web.products');
 
-Route::get('/containers', [ContainerController::class, 'show'])->name('containers.show');//hiển thị trang danh sách thùng hàng
+Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers/data', [ContainerController::class, 'getContainers'])->name('containers.data');//lấy danh sách json containers
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới
 Route::post('/container/search/product', [ContainerController::class, 'searchProduct'])->name('containers.searchProduct');//lấy dữ liệu sản phẩm bằng ajax để hiển thị thùng hàng

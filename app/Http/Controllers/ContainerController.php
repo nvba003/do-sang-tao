@@ -16,8 +16,9 @@ use App\Models\Location;
 
 class ContainerController extends Controller
 {
-    public function show()
+    public function showContainers(Request $request)
     {
+        $perPage = $request->input('per_page',20);
         // Kiểm tra quyền
         //if (!Gate::allows('add-container')) {
             //abort(403);
@@ -26,16 +27,28 @@ class ContainerController extends Controller
         //     abort(403);
         // }
 
-        $products = ProductApi::all(); // Giả sử bạn có Model tương ứng
+        $products = ProductApi::all();
         $branches = Branch::all();
         $containerMenuOptions = ContainerMenuOption::all();
-        $containers = Container::paginate(4); // Dữ liệu containers đầu tiên sau tải trang
         $existingCodes = Container::pluck('id')->toArray();
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
+        $query = Container::query()
+            ->with(['transaction', 'inventoryTransaction', 'productapi'])
+            ->when($request->filled('container_id'), function ($q) use ($request) {
+                $q->where('container_id', $request->input('container_id'));
+            })
+            ->orderBy('id', 'desc');
+
+        $containers = $query->paginate($perPage);
+        if ($request->ajax()) {
+            $view = view('containers.partial_container_table', compact('containers'))->render();
+            $links = $containers->links()->toHtml();
+            return response()->json(['table' => $view, 'links' => $links]);
+        }
         
         $header = 'Quản lý thùng hàng';
-        return view('containers.show', compact('products', 'branches', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
+        return view('containers.container', compact('products', 'branches', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
         //return view('containers.show', compact('products', 'branches', 'containerMenuOptions', 'existingCodes'), ['header' => 'Quản lý thùng hàng']);
     }
 

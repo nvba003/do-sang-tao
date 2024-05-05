@@ -9,9 +9,10 @@
 </div>
 
 <!-- <aside id="sidebar" :class="{ 'w-80': !collapsed, 'w-10': collapsed, 'hidden': hideSidebar }" class="bg-gray-800 text-white min-h-screen transition-width duration-300 ease-in-out relative"> -->
-<aside id="sidebar" :class="{ 'w-80': !collapsed, 'w-10': collapsed, 'hidden': hideSidebar }" class="min-h-screen bg-gray-800 text-white fixed md:relative z-30 md:z-auto transform transition-width">
-<!-- x-data="sidebarComponent({{ json_encode($menus) }})"> -->
-    
+<aside id="sidebar" 
+       :class="{ 'w-80': !collapsed && !hideSidebar, 'w-10': collapsed && !hideSidebar, 'hidden': hideSidebar, 
+        'md:relative': !collapsed || hideSidebar, 'relative': collapsed || hideSidebar }" 
+       class="fixed inset-y-0 min-h-screen bg-gray-800 text-white fixed z-40 transform transition-width">
     <div :class="{'right-sidebar-expanded': !collapsed, 'right-sidebar-collapsed': collapsed}" class="sidebar-toggle-container fixed top-10 z-50">
         <button @click="toggleSidebar" class="toggle-sidebar absolute flex items-center justify-between px-2 py-2 bg-gray-700 opacity-100 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="bi bi-list w-4 h-6">
@@ -20,13 +21,7 @@
         </button>
     </div>
 
-    <nav class="flex flex-col">
-        <!-- <button @click="toggleSidebar" class="toggle-sidebar flex items-center justify-between px-2 py-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300 ease-in-out">
-            <span x-show="!collapsed">Đồ Sáng Tạo App</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="bi bi-list w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8M4 18h16" />
-            </svg>
-        </button> -->
+    <nav>
         <div class="bg-blue-500 h-[40px]">
             <div class="flex justify-center">
                 <span x-show="!collapsed" x-transition:enter="transition-opacity ease-linear duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -45,9 +40,9 @@
                                 <span x-show="!collapsed && (activeMenu === '{{ $menu->id }}' || sidebarExpanded)" class="ml-2 menu-name">{{ $menu->name }}</span>
                             </span>
                         </button>
-                        <div x-show="activeMenu === '{{ $menu->id }}' && !collapsed && sidebarExpanded" class="menu-links flex flex-col pl-4 bg-gray-800 w-full">
+                        <div x-show="activeMenu === '{{ $menu->id }}' && !collapsed && sidebarExpanded" class="flex flex-col pl-4 bg-gray-800 w-full">
                             @foreach ($menu->children as $child)
-                                <a @click="handleSubmenuClick('{{ $child->id }}', '{{ $menu->id }}', '{{ $child->url }}', $event)" 
+                                <a href="{{ $child->url }}" @click="handleSubmenuClick('{{ $child->id }}', '{{ $menu->id }}', '{{ $child->url }}', $event)" 
                                    :class="{ 'active-submenu': isActiveSubmenu('{{ $child->id }}') }"
                                    class="block px-4 py-2 hover:bg-gray-600 text-white cursor-pointer no-underline">{{ $child->name }}</a>
                             @endforeach
@@ -65,7 +60,7 @@
         <ul>
             <li class="text-white bg-gray-600 font-bold p-2 mb-2 shadow w-[200px]" x-text="submenuTitle"></li>
             <template x-for="item in submenuItems" :key="item.id">
-                <a :class="item.class" @click="handleSubmenuClick(item.id, item.menuId, item.url, $event)" x-text="item.name" class="cursor-pointer"></a>
+                <a :href="item.url" :class="item.class" @click="handleSubmenuClick(item.id, item.menuId, item.url, $event)" x-text="item.name" class="cursor-pointer submenu-item"></a>
             </template>
         </ul>
     </div>
@@ -87,15 +82,27 @@ function sidebarComponent(menusData) {
         modalLeft: '0px',
         hoveringMenuItem: false,
         hideSidebar: false,
+        content: document.getElementById('content'),
+
+        updateContentWidth() {
+            const content = document.getElementById('content');
+            if (this.collapsed && !this.hideSidebar) {
+                content.style.width = 'calc(100% - 40px)';  // Thu nhỏ sidebar
+            } else {
+                content.style.width = '100%';  // Mở rộng sidebar hoặc sidebar bị ẩn
+            }
+        },
 
         showHideSidebar() {
             this.hideSidebar = !this.hideSidebar;
+            this.updateContentWidth();
         },
 
         toggleSidebar() {
             this.collapsed = !this.collapsed;
             sessionStorage.setItem('sidebarCollapsed', this.collapsed);
             this.sidebarExpanded = !this.collapsed;
+            this.updateContentWidth();
         },
         setActiveMenu(menuId) {
             this.activeMenu = this.activeMenu === menuId ? null : menuId;
