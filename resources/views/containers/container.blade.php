@@ -3,193 +3,87 @@
 
 @section('content')
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
-    <!-- Modal thêm thùng hàng -->
-    <div class="fixed bg-gray-600 bg-opacity-0 z-50 overflow-y-auto h-full w-full hidden" id="addContainerModal">
-        <div class="relative top-10 mx-auto p-5 border w-1/2 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="addContainerModalLabel">Thêm Thùng Hàng Mới</h3>
-                    <button type="button" class="bg-transparent hover:bg-gray-200 text-gray-500 font-semibold py-2 px-2 rounded inline-flex items-center" onclick="closeModal()">
-                    <!-- <svg class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg> -->
-                    </button>
-                </div>
-                <!-- Form -->
-                <form action="{{ route('containers.store') }}" method="POST" id="addContainerForm" class="mt-2">
-                    @csrf
-                    <div class="px-4 py-5 bg-white sm:p-6">
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                            <label for="containerId" class="block text-sm font-medium text-gray-700">Mã thùng:</label>
-                            <input type="text" name="id" id="containerId" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Nhập mã thùng">
-                            <div id="containerCodeError" class="text-xs text-red-500 mt-1 hidden">Mã thùng đã tồn tại.</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="productId" class="block text-sm font-medium text-gray-700">Sản Phẩm:</label>
-                            <select id="productId" name="productId" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="">Chọn Sản Phẩm</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                            </select>
-                        </div>
+    @include('containers.add_container_modal')
 
-                        <div class="mb-4">
-                            <label for="unit" class="block text-sm font-medium text-gray-700">Đơn Vị:</label>
-                            <input type="text" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="unit" name="unit" placeholder="Nhập đơn vị">
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-3">
-                            <label for="branchId" class="block text-sm font-medium text-gray-700">Chi Nhánh:</label>
-                            <select id="branchId" name="branch_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="">Chọn chi nhánh</option>
-                                @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option> 
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="parent_menu" class="block text-sm font-medium text-gray-700">Menu Cha:</label>
-                            <select name="parent_id" id="parent_menu" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                <option value="">Chọn Menu Cha (Nếu có)</option>
-                                @foreach($containerMenuOptions as $menuOption)
-                                    @if($menuOption->isParent())
-                                        <option value="{{ $menuOption->id }}" data-parent-menu="{{ $menuOption->definition_id }}">{{ $menuOption->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="child_menu" class="block text-sm font-medium text-gray-700">Menu Con:</label>
-                            <select name="child_id" id="child_menu" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                <option value="">Chọn Menu Con (Dựa trên Menu Cha)</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center mb-4">
-                            <input type="checkbox" name="display_box" id="display_box" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label for="display_box" class="ml-2 block text-sm text-gray-900">
-                                Tạo Trưng Bày
-                            </label>
-                        </div>
-
-                        <div class="flex items-center mb-4">
-                            <input type="checkbox" name="branch_box" id="branch_box" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label for="branch_box" class="ml-2 block text-sm text-gray-900">
-                                Tạo 2 chi nhánh
-                            </label>
-                        </div>
-
-                    <!-- Actions -->
-                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
-                        <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onclick="closeModal()">
-                        Đóng
-                        </button>
-                        <button type="submit" class="ml-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Lưu
-                        </button>
-                    </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="mx-auto mt-3">
+    <div class="mx-auto mt-2">
         @if(auth()->user() && auth()->user()->can('edit posts'))
-            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openModal()">
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 mb-2 rounded" onclick="openModal()">
                 Thêm Thùng
             </button>
         @endif
-        <form id="searchProduct" action="" method="POST" class="mb-3">
-            <div class="flex flex-wrap">
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <form id="searchProduct" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
+            <div class="flex flex-wrap -mx-3">
+                <div class="w-full sm:w-4/12 px-3 mb-2 md:mb-4">
                     <label for="search_product_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Nhập sản phẩm:</label>
                     <div class="relative">
-                        <select name="search_product_id" id="search_product_id" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" data-live-search="true">
-                            <option value="">Chọn Sản Phẩm</option>
-                            @foreach($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <button class="bg-gray-200 text-black p-2 rounded-r-md hover:bg-gray-300" type="button" onclick="clearSelection()">Xóa</button>
+                        <input type="text" id="searchProductID" class="shadow appearance-none border rounded mt-1 block w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
+                        <input type="hidden" id="searchProductIDValue" name="searchProductID">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2">
+                            <button class="bg-yellow-600 text-gray-50 p-2 rounded-r-md hover:bg-yellow-800 z-40" type="button" onclick="clearSelection()">Xóa</button>
                         </div>
                     </div>
                 </div>
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <label for="location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Lọc vị trí:</label>
-                    <select name="location_id" id="location_id" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" data-live-search="true">
-                        <option value="">Chọn vị trí</option>
+                <div class="w-full sm:w-1/12 px-3 mb-2 md:mb-4">
+                    <label for="location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Vị trí:</label>
+                    <select name="location_id" id="location_id" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="">Chọn</option>
                         @foreach($locations as $location)
                             @if($location->isParent())
-                                <option value="{{ $location->id }}">{{ $location->location_name }}</option>
+                            <option value="{{ $location->id }}">{{ $location->location_name }}</option>
                             @endif
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <label for="child_location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Lọc thùng số:</label>
-                    <select name="child_location_id" id="child_location_id" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" data-live-search="true">
-                        <option value="">Chọn thùng số</option>
-                        <!-- Dynamic options will be here -->
+                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                    <label for="branch_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Chi nhánh:</label>
+                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="branch_id">
+                        <option value="">Chọn chi nhánh</option>
+                        @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                        @endforeach
                     </select>
                 </div>
-                <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 w-full rounded hover:bg-blue-600 mt-6">Tìm sản phẩm</button>
+                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                    <label for="container_status_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Trạng thái:</label>
+                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
+                        <option value="">Chọn trạng thái container</option>
+                        @foreach($containerStatuses as $status)
+                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                        <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="branch_id">
-                            <option value="">Chọn chi nhánh</option>
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                        <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="container_status_id">
-                            <option value="">Chọn trạng thái container</option>
-                            @foreach($containerStatuses as $status)
-                                <option value="{{ $status->id }}">{{ $status->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                        <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="bundle_type">
-                            <option value="">Chọn loại bundle</option>
-                            <!-- Additional options for bundle type here -->
-                        </select>
-                    </div>
+                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                    <label for="bundle_type" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Loại SP:</label>
+                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="bundle_type">
+                        <option value="">Chọn loại bundle</option>
+                        <!-- Additional options for bundle type here -->
+                    </select>
                 </div>
-
+                <div class="w-full sm:w-1/12 px-3 mt-1 md:mb-0">
+                    <button type="submit" class="bg-blue-500 text-white py-1 px-4 w-full rounded hover:bg-blue-600 mt-2 sm:mt-6">Tìm</button>
+                </div>
             </div>
         </form>
 
-        <form id="searchContainer" action="" method="POST" class="flex items-center">
-            <div class="flex items-center mr-2">
-                <input type="text" class="form-control px-4 py-2 border rounded" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-                <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tìm thùng</button>
-                <button type="button" class="ml-2 bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300" onclick="clearSearch()">Xóa</button>
+        <form id="searchContainer" action="" method="POST" class="flex items-center bg-white p-2 sm:p-4 rounded-lg shadow space-x-4">
+            <div class="flex items-center space-x-2">
+                <input type="text" class="px-4 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
+                <button type="button" class="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearch()">Xóa</button>
             </div>
-            <div class="flex items-center mx-2">
-                <input class="form-checkbox h-5 w-5" type="checkbox" id="display" name="display" value="1">
-                <label class="ml-2 text-gray-700" for="display">Thùng Trưng Bày</label>
+            <div class="flex items-center space-x-2 ml-2">
+                <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1">
+                <label class="text-gray-700" for="display">Thùng Trưng Bày</label>
             </div>
-            <div class="flex items-center mx-2">
-                <input class="form-checkbox h-5 w-5" type="checkbox" id="stock" name="stock" value="1">
-                <label class="ml-2 text-gray-700" for="stock">Thùng Kho</label>
+            <div class="flex items-center space-x-2 ml-2">
+                <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1">
+                <label class="text-gray-700" for="stock">Thùng Kho</label>
             </div>
-            <button id="refesh_data" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">Xóa bộ lọc</button>
+            <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa bộ lọc</button>
         </form>
     </div>
 
-    <div class="bg-white shadow-md rounded my-1 overflow-x-auto">
+    <div class="bg-white shadow-md rounded my-1 overflow-x-auto p-2 sm:p-4">
         <table class="min-w-full leading-normal" id="containerTable">
             <thead class="text-white bg-gray-500">
                 <tr>
@@ -235,21 +129,24 @@
     </div>
 </div>
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
+<!-- Modal thông báo -->
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" id="successModal" style="display: none;">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center pb-3">
+      <p class="text-2xl font-bold">Thành công!</p>
+      <div class="modal-close cursor-pointer z-50" onclick="toggleModal(false)">
+        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"/>
+        </svg>
+      </div>
     </div>
-@endif
-
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    <!-- Modal Body -->
+    <div class="text-sm">
+      Thao tác thành công!
     </div>
-@endif
+  </div>
+</div>
 
 @endsection
 
@@ -265,14 +162,24 @@
         const modal = document.getElementById('addContainerModal');
         modal.classList.add('hidden');
     }
+    window.onload = function() {
+        @if(session('success'))
+            toggleModal(true); // Hiển thị modal khi có thông báo thành công
+            setTimeout(function() {
+                toggleModal(false); // Ẩn modal sau 500ms
+            }, 500);
+        @endif
+    };
+
     function toggleModal(show) {
-            const modal = document.getElementById('modal');
-            if (show) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
-        }
+        const modal = document.getElementById('successModal');
+        modal.style.display = show ? 'block' : 'none';
+    }
+
+    function clearSelection() {
+        document.getElementById('searchProductID').value = "";
+        // document.getElementById('searchProductIDvalue').value = "";
+    }
 
     var containers = @json($containers);
     var currentData = containers; // Biến toàn cục giữ dữ liệu hiện tại
@@ -306,31 +213,31 @@
             });
         }
 
-    // ---Kiểm tra điều kiện trước khi thêm thùng------
-    var addContainerForm = document.getElementById('addContainerForm');
-    if (addContainerForm) {
-      addContainerForm.addEventListener('submit', function(event) {
-          event.preventDefault(); // Ngăn form được gửi đi mặc định
+        // ---Kiểm tra điều kiện trước khi thêm thùng------
+        var addContainerForm = document.getElementById('addContainerForm');
+        if (addContainerForm) {
+            addContainerForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Ngăn form được gửi đi mặc định
 
-          var containerId = document.getElementById('containerId').value;
-          var containerCodeError = document.getElementById('containerCodeError');
+                var containerId = document.getElementById('containerId').value;
+                var containerCodeError = document.getElementById('containerCodeError');
 
-          // Kiểm tra định dạng mã thùng
-          var isValidCode = /^[0-9][A-Za-z][0-9]{4}$/.test(containerId);
+                // Kiểm tra định dạng mã thùng
+                var isValidCode = /^[0-9][A-Za-z][0-9]{4}$/.test(containerId);
 
-          if (!isValidCode || containerId.length !== 6) {
-              // Nếu mã thùng không đúng, hiển thị thông báo lỗi và ngăn không cho form submit
-              containerCodeError.style.display = 'block';
-              containerCodeError.textContent = 'Mã thùng chưa đúng định dạng. Mã thùng phải có 6 ký tự, ký tự thứ 2 là chữ cái, các ký tự còn lại là số.';
-          } else {
-              // Nếu mã thùng đúng, ẩn thông báo lỗi (nếu có) và cho phép form submit
-              containerCodeError.style.display = 'none';
-              // Tiến hành gửi form nếu cần
-              addContainerForm.submit(); // Mở dòng này nếu bạn muốn gửi form sau khi tất cả các kiểm tra đã hoàn tất
-          }
-      });
-    }
-  //-------------Gợi ý mã thùng từ các lựa chọn----------------------------
+                if (!isValidCode || containerId.length !== 6) {
+                    // Nếu mã thùng không đúng, hiển thị thông báo lỗi và ngăn không cho form submit
+                    containerCodeError.style.display = 'block';
+                    containerCodeError.textContent = 'Mã thùng chưa đúng định dạng. Mã thùng phải có 6 ký tự, ký tự thứ 2 là chữ cái, còn lại là số.';
+                } else {
+                    // Nếu mã thùng đúng, ẩn thông báo lỗi (nếu có) và cho phép form submit
+                    containerCodeError.style.display = 'none';
+                    // Tiến hành gửi form nếu cần
+                    addContainerForm.submit(); // Mở dòng này nếu bạn muốn gửi form sau khi tất cả các kiểm tra đã hoàn tất
+                }
+            });
+        }
+        //-------------Gợi ý mã thùng từ các lựa chọn----------------------------
         // Lắng nghe sự kiện change trên các dropdown
         document.getElementById('branchId').addEventListener('change', function() { generateContainerCode(this); });
         document.getElementById('parent_menu').addEventListener('change', function() { generateContainerCode(this); });
@@ -392,14 +299,14 @@
             
         }
     });
-  //-------------kiểm tra thùng tồn tại chưa mỗi khi thay đổi---------------------
+    //-------------kiểm tra thùng tồn tại chưa mỗi khi thay đổi---------------------
     document.getElementById('containerId').addEventListener('input', function() {
       checkexist();
     });
 
     function checkexist() {// Kiểm tra xem mã thùng đã tồn tại chưa
         var existingCodes = @json($existingCodes);
-        //console.log(existingCodes);
+        // console.log(existingCodes);
         // Lấy phần mã từ ký tự thứ 2 đến 5
         containerCode =  document.getElementById('containerId').value;
         var codeToCheck = containerCode.substring(1, 5);
@@ -428,8 +335,43 @@
     let perPage = $('#perPage').val();
     var containers = @json($containers)['data'];
     console.log(containers);
-    // var products = @json($products);
-    //console.log(products);
+    var products = @json($products);
+    console.log(products);
+    $("#productId").autocomplete({
+        source: products.map(product => ({
+            label: product.name,
+            value: product.id,
+            sku: product.sku
+        })),
+        select: function(event, ui) {
+            console.log(ui.item);
+            $('#productId').val(ui.item.label); // Set the visible input value to the label
+            $('#productIDValue').val(ui.item.value); // Set the hidden input value to the ID
+            return false; // Prevent the widget from automatically updating the value of the input with the selected value
+        },
+        focus: function(event, ui) {
+            $('#productId').val(ui.item.label);
+            $('#productSku').text('SKU: ' + ui.item.sku);
+            return false; // Prevent the widget from replacing the input's value with the value during focus
+        }
+    });
+
+    $("#searchProductID").autocomplete({
+        source: products.map(product => ({
+            label: product.name,
+            value: product.id
+        })),
+        select: function(event, ui) {
+            //console.log(ui.item);
+            $('#searchProductID').val(ui.item.label);
+            $('#searchProductIDValue').val(ui.item.value);
+            return false;
+        },
+        // focus: function(event, ui) {
+        //     $('#searchProductID').val(ui.item.label);
+        //     return false;
+        // }
+    });
 
     function fetchData(url) {
         $.ajax({
@@ -484,13 +426,6 @@
         $(this).text($(this).text() === '+' ? '-' : '+');
     });
 
-    function notify500(){
-        $('#successModal').modal('show');
-        setTimeout(function() {
-            $('#successModal').modal('hide');
-        }, 500);
-    }
-
     function updateCount() {
         var count = $('.checkItem:checked').length;
         $('#selectedCount').text(count);
@@ -544,13 +479,6 @@
         });//kết thúc ajax
     });//kết thúc searchProduct
 
-    $('.selectpicker').on('shown.bs.select', function () {//chức năng ẩn hiện lựa chọn
-        $(this).selectpicker('refresh');
-    });
-    function clearSelection() {// Xóa sản phẩm đã chọn
-        document.getElementById('search_product_id').value = ""; // Thiết lập giá trị của select về giá trị mặc định
-        $('.selectpicker').selectpicker('refresh'); // Refresh selectpicker để cập nhật giao diện, nếu bạn đang sử dụng Bootstrap Select
-    }
     function clearSearch() {
         document.getElementById('search_container_id').value = ""; // Xóa nội dung của ô nhập liệu
     }

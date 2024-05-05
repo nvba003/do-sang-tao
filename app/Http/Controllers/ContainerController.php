@@ -30,7 +30,7 @@ class ContainerController extends Controller
         $products = ProductApi::all();
         $branches = Branch::all();
         $containerMenuOptions = ContainerMenuOption::all();
-        $existingCodes = Container::pluck('id')->toArray();
+        $existingCodes = Container::pluck('container_id')->toArray();
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
         $query = Container::query()
@@ -80,7 +80,7 @@ class ContainerController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request);
+        // dd($request);
         // Validate dữ liệu request
         $validatedData = $request->validate([
             'id' => 'required|string|max:7|unique:containers,container_id', // Sửa tên trường thành 'id'
