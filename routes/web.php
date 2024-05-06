@@ -37,8 +37,8 @@ Route::get('/show-web-products', [ProductApiController::class, 'showWebProducts'
 
 Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới
-Route::post('/container/search/product', [ContainerController::class, 'searchProduct'])->name('containers.searchProduct');//lấy dữ liệu sản phẩm bằng ajax để hiển thị thùng hàng
-Route::post('/container/search/container', [ContainerController::class, 'searchContainer'])->name('containers.searchContainer');//lấy dữ liệu thùng hàng bằng ajax để hiển thị thùng hàng
+//Route::post('/container/search/product', [ContainerController::class, 'searchProduct'])->name('containers.searchProduct');//lấy dữ liệu sản phẩm bằng ajax để hiển thị thùng hàng
+//Route::post('/container/search/container', [ContainerController::class, 'searchContainer'])->name('containers.searchContainer');//lấy dữ liệu thùng hàng bằng ajax để hiển thị thùng hàng
 
 Route::get('/container-transactions', [InventoryTransactionController::class, 'show'])->name('transactions.show');//trang hiện giao dịch thùng hàng
 Route::post('/container-transactions', [InventoryTransactionController::class, 'store'])->name('transactions.store');//tạo giao dịch thùng hàng

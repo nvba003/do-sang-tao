@@ -1,5 +1,4 @@
 @extends('layouts.app')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
@@ -11,22 +10,22 @@
                 Thêm Thùng
             </button>
         @endif
-        <form id="searchProduct" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
+        <form id="searchProduct" action="" method="POST" class="mb-1 bg-white p-2 sm:p-4 rounded shadow-md">
             @csrf
-            <div class="flex flex-wrap -mx-3">
-                <div class="w-full sm:w-4/12 px-3 mb-2 md:mb-4">
+            <div class="flex flex-wrap -mx-1 text-sm">
+                <div class="w-full sm:w-8/24 px-1 md:px-3 mb-1 md:mb-2 text-sm">
                     <label for="search_product_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 z-0">Nhập sản phẩm:</label>
                     <div class="relative">
-                        <input type="text" id="searchProductID" class="shadow appearance-none border rounded mt-1 block w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
+                        <input type="text" id="searchProductID" class="z-0 text-sm shadow appearance-none border rounded mt-1 block w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
                         <input type="hidden" id="searchProductIDValue" name="searchProductID">
-                        <div class="absolute inset-y-0 right-0 flex items-center px-2">
-                            <button class="bg-yellow-600 text-gray-50 p-2 rounded-r-md hover:bg-yellow-800 z-10" type="button" onclick="clearSearchProduct()">Xóa</button>
+                        <div class="absolute inset-y-0 right-0 flex items-right px-2">
+                            <button class="bg-gray-200 hover:bg-gray-300 text-gray-500 bg-opacity-75 hover:bg-opacity-100 p-2 rounded-r-md z-10" type="button" onclick="clearSearchProduct()">Xóa</button>
                         </div>
                     </div>
                 </div>
-                <div class="w-full sm:w-1/12 px-3 mb-2 md:mb-4">
-                    <label for="parent_location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Vị trí:</label>
-                    <select name="parent_location_id" id="parent_location_id" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                <div class="w-full sm:w-3/24 px-1 md:px-2 mb-1 md:mb-2 text-sm">
+                    <label for="parent_location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 ">Vị trí:</label>
+                    <select name="parent_location_id" id="parent_location_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                         <option value="">Chọn</option>
                         @foreach($locations as $location)
                             @if($location->isParent())
@@ -35,62 +34,64 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                <div class="w-full sm:w-4/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="branch_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Chi nhánh:</label>
-                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="branch_id">
+                    <select id="branch_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="branch_id">
                         <option value="">Chọn chi nhánh</option>
                         @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                <div class="w-full sm:w-4/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="container_status_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Trạng thái:</label>
-                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
+                    <select id="container_status_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
                         <option value="">Chọn trạng thái</option>
                         @foreach($containerStatuses as $status)
                         <option value="{{ $status->id }}">{{ $status->status_name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
+                <div class="w-full sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="bundle_type" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Loại SP:</label>
-                    <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="bundle_type">
+                    <select id="bundle_type" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="bundle_type">
                         <option value="">Chọn loại bundle</option>
                         @foreach($bundleTypes as $type)
                         <option value="{{ $type->id }}">{{ $type->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-1/12 px-3 mt-1 md:mb-0">
-                    <button type="submit" class="bg-blue-500 text-white py-1 px-4 w-full rounded hover:bg-blue-600 mt-2 sm:mt-6">Tìm</button>
+                <div class="w-full sm:w-2/24 px-1 md:px-3 md:mb-0">
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-1 w-full rounded hover:bg-blue-600 mt-2 sm:mt-6">Tìm</button>
                 </div>
             </div>
         </form>
 
-        <form id="searchContainer" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
+        <form id="searchContainer" action="" method="POST" class="mb-2 bg-white p-2 sm:p-4 rounded shadow-md">
             @csrf    
             <div class="flex flex-wrap -mx-2 w-full">
-                <div class="flex flex-wrap w-full lg:flex-nowrap px-2 space-x-2">
-                    <div class="flex-grow lg:w-6/12 flex items-center mb-2 md:mb-0 space-x-2">
-                        <input type="text" class="flex-1 px-2 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-                        <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
-                        <button type="button" class="bg-gray-200 text-black px-2 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearchContainer()">Xóa</button>
-                    </div>
-                    <div class="flex-initial flex-wrap:wrap lg:w-6/12 flex items-center space-x-2">
-                        <select name="location_id" id="location_id" class="block appearance-none bg-white border border-gray-300 hover:border-gray-400 px-2 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                            <option value="">Số thùng</option>
+                <div class="flex flex-wrap md:flex-nowrap px-2 space-x-2">
+                    <div class="flex-grow w-full md:w-6/12 md:mr-2 flex items-center mb-2 md:mb-0 space-x-2 text-sm">
+                        <div class="relative">
+                            <input type="text" class="flex-1 px-2 py-2 border text-sm border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
+                            <div class="absolute inset-y-0 right-0 flex items-right px-2">
+                                <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-500 bg-opacity-75 hover:bg-opacity-100 p-2 rounded-r-md z-10" onclick="clearSearchContainer()">Xóa</button>
+                            </div>
+                        </div>
+                        <select name="location_id" id="location_id" class="appearance-none text-sm bg-white border border-gray-300 hover:border-gray-400 px-2 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="">No.</option>
                             @foreach($locations as $location)
                                 @if($location->isChild())
                                 <option value="{{ $location->id }}">{{ $location->location_name }}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1" checked>
-                        <label class="text-gray-700" for="display">Trưng Bày</label>
-                        <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1" checked>
-                        <label class="text-gray-700" for="stock">Thùng Kho</label>
-                        <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa lọc</button>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm</button>
+                    </div>
+                    <div class="flex-initial flex-wrap:wrap w-full md:w-6/12 flex items-center space-x-2 text-sm">
+                        <button type="button" id="displayToggle" data-state="on" class="bg-purple-700 bg-opacity-75 hover:bg-opacity-100 text-white py-2 px-2 rounded">Ẩn Trưng Bày</button>
+                        <button type="button" id="stockToggle" data-state="on" class="bg-purple-700 bg-opacity-75 hover:bg-opacity-100 text-white py-2 px-2 rounded">Ẩn Thùng Kho</button>
+                        <button type="button" class="ml-2 bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out" onclick="clearForm()">Xóa lọc</button>
                     </div>
                 </div>
             </div>
@@ -99,19 +100,19 @@
         </form>
     </div>
 
-    <div class="bg-white shadow-md rounded my-1 overflow-x-auto p-2 sm:p-4">
+    <div class="bg-white shadow-md rounded-lg my-1 overflow-x-auto p-2 sm:p-4">
         <table class="w-full leading-normal" id="containerTable">
             <thead class="text-white bg-gray-500">
                 <tr>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                    <th scope="col" class="w-1/24 px-2 py-3 mt-1 text-center text-xs md:text-sm hidden sm:block font-semibold uppercase tracking-wider">
                         <input type="checkbox" id="checkAll">
                     </th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider"></th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">ID thùng</th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Số lượng</th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Vị trí</th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Thùng số</th>
-                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Tên sản phẩm</th>
+                    <th scope="col" class="w-1/24 px-2 py-3 text-center text-xs md:text-sm font-semibold uppercase tracking-wider"></th>
+                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">ID</th>
+                    <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">SL</th>
+                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">V.Trí</th>
+                    <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">No.</th>
+                    <th scope="col" class="w-12/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tên sản phẩm</th>
                 </tr>
             </thead>
             <tbody>
@@ -166,12 +167,12 @@
 
 @push('scripts')
 <script>
-    console.log(@json($containerStatuses));
-    console.log(@json($bundleTypes));
-    console.log(@json($locations));
+    // console.log(@json($containerStatuses));
+    // console.log(@json($bundleTypes));
+    // console.log(@json($locations));
     function openModal() {
         const modal = document.getElementById('addContainerModal');
-        modal.classList.remove('hidden'); // Giả sử bạn đã ẩn modal với class 'hidden' của Tailwind
+        modal.classList.remove('hidden');
     }
     function closeModal() {
         const modal = document.getElementById('addContainerModal');
@@ -193,17 +194,31 @@
 
     function clearSearchProduct() {
         document.getElementById('searchProductID').value = "";
-        // document.getElementById('searchProductIDvalue').value = "";
+        document.getElementById('searchProductIDValue').value = "";
     }
-
+    function clearSearchProductForm() {
+        document.getElementById('searchProductID').value = "";
+        document.getElementById('searchProductIDValue').value = "";
+        document.getElementById('parent_location_id').value = "";
+        document.getElementById('branch_id').value = "";
+        document.getElementById('container_status_id').value = "";
+        document.getElementById('bundle_type').value = "";
+    }
     function clearSearchContainer() {
-        document.getElementById('search_container_id').value = ""; // Xóa nội dung của ô nhập liệu
+        document.getElementById('search_container_id').value = "";
     }
-
-    var containers = @json($containers);
-    var currentData = containers; // Biến toàn cục giữ dữ liệu hiện tại
-    var currentType = 'container';
-    var path = "{{ route('containers.searchProduct') }}"; // Định nghĩa URL cho AJAX request
+    function clearSearchContainerForm() {
+        document.getElementById('search_container_id').value = "";
+        document.getElementById('location_id').value = "";
+    }
+    function clearForm() {
+        event.preventDefault();
+        clearSearchProductForm();
+        clearSearchContainerForm();
+    }
+    // var containers = @json($containers);
+    // var currentData = containers; // Biến toàn cục giữ dữ liệu hiện tại
+    // var currentType = 'container';
 
     //===============CHỨC NĂNG TẠO MÃ THÙNG=============
     var existingCodes = @json($existingCodes);
@@ -261,7 +276,6 @@
         document.getElementById('parent_menu').addEventListener('change', function() { generateContainerCode(this); });
         document.getElementById('child_menu').addEventListener('change', function() { generateContainerCode(this); });
         document.getElementById('display_box').addEventListener('change', generateContainerCode);
-        document.getElementById('refesh_data').addEventListener('click', refeshData);// Thêm sự kiện 'click' vào nút bấm
         //var existingCodes = @json($existingCodes);
 
         function generateContainerCode(element) {
@@ -346,59 +360,54 @@
     }
 
     //===============LỌC XEM THEO TRƯNG BÀY HAY KHO=============
-    function filterContainers(group) {
+    function toggleDisplay(type, button) {
+        const isOn = button.dataset.state === 'on';
+        button.dataset.state = isOn ? 'off' : 'on'; // Toggle trạng thái
+        const isHiding = button.textContent.includes('Ẩn');
         const rows = document.querySelectorAll('[data-container-id]');
         rows.forEach(row => {
             const containerId = row.getAttribute('data-container-id');
             const lastDigit = containerId.charAt(containerId.length - 1);
-
-            let show = false;
-            if (group === 'display' && lastDigit === '0') {
-                show = true;
-            } else if (group === 'stock' && lastDigit !== '0') {
-                show = true;
+            let shouldToggle = (type === 'display' && lastDigit === '0') || (type === 'stock' && lastDigit !== '0');
+            if (shouldToggle) {
+                row.style.display = isHiding ? 'none' : ''; // Toggle hiển thị dựa trên trạng thái hiện tại của nút
+                // Xử lý ẩn hàng chi tiết liên quan
+                const detailRows = document.querySelectorAll(`[data-related-container-id="${containerId}"]`);
+                detailRows.forEach(detailRow => {
+                    detailRow.style.display = isHiding ? 'none' : '';
+                });
             }
-            row.style.display = show ? '' : 'none'; // Ẩn hoặc hiển thị hàng chính
-            // Xử lý ẩn hàng chi tiết liên quan
-            const detailRows = document.querySelectorAll(`[data-related-container-id="${containerId}"]`);
-            detailRows.forEach(detailRow => {
-                detailRow.style.display = show ? '' : 'none';
-            });
         });
+        // Cập nhật text của nút để phản ánh trạng thái mới
+        button.textContent = isHiding ? `Hiện ${type === 'display' ? 'Trưng Bày' : 'Thùng Kho'}` : `Ẩn ${type === 'display' ? 'Trưng Bày' : 'Thùng Kho'}`;
     }
-    document.addEventListener('DOMContentLoaded', function() {
-        const displayCheckbox = document.getElementById('display');
-        const stockCheckbox = document.getElementById('stock');
-
-        // Gọi hàm lọc ban đầu dựa trên trạng thái checkbox
-        if (displayCheckbox.checked) {
-            filterContainers('display');
-        }
-        if (stockCheckbox.checked) {
-            filterContainers('stock');
-        }
+    document.getElementById('displayToggle').addEventListener('click', function() {
+        event.preventDefault();
+        this.classList.toggle('bg-purple-700');
+        this.classList.toggle('bg-yellow-500');
+        toggleDisplay('display', this);
     });
-
-    // Gán sự kiện để gọi hàm lọc khi cần
-    document.getElementById('display').addEventListener('change', function() {
-        if (this.checked) {
-            filterContainers('display'); // Áp dụng lọc 'display' nếu hộp kiểm được chọn
-        } else {
-            resetFilters(); // Xóa lọc nếu hộp kiểm không được chọn
-        }
+    document.getElementById('stockToggle').addEventListener('click', function() {
+        event.preventDefault();
+        this.classList.toggle('bg-purple-700');
+        this.classList.toggle('bg-yellow-500');
+        toggleDisplay('stock', this);
     });
-    document.getElementById('stock').addEventListener('change', function() {
-        if (this.checked) {
-            filterContainers('stock'); // Áp dụng lọc 'stock' nếu hộp kiểm được chọn
-        } else {
-            resetFilters(); // Xóa lọc nếu hộp kiểm không được chọn
+    function setInitialState() {
+        const displayToggle = document.getElementById('displayToggle');
+        const stockToggle = document.getElementById('stockToggle');
+        displayToggle.dataset.state = 'on';
+        stockToggle.dataset.state = 'on';
+        displayToggle.textContent = 'Ẩn Trưng Bày';
+        stockToggle.textContent = 'Ẩn Thùng Kho';
+        if (!displayToggle.classList.contains('bg-purple-700')) {
+            displayToggle.classList.add('bg-purple-700');
+            displayToggle.classList.remove('bg-yellow-500');
         }
-    });
-    function resetFilters() {
-        const rows = document.querySelectorAll('[data-container-id]');
-        rows.forEach(row => {
-            row.style.display = ''; // Hiển thị tất cả các hàng
-        });
+        if (!stockToggle.classList.contains('bg-purple-700')) {
+            stockToggle.classList.add('bg-purple-700');
+            stockToggle.classList.remove('bg-yellow-500');
+        }
     }
 
     //===========================================================================================
@@ -411,10 +420,10 @@
     var containers = @json($containers)['data'];
     console.log(containers);
     var products = @json($products);
-    console.log(products);
+    // console.log(products);
     $("#productId").autocomplete({
         source: products.map(product => ({
-            label: product.name,
+            label: product.sku + " - " + product.name,
             value: product.id,
             sku: product.sku
         })),
@@ -433,7 +442,7 @@
 
     $("#searchProductID").autocomplete({
         source: products.map(product => ({
-            label: product.name,
+            label: product.sku + " - " + product.name,
             value: product.id
         })),
         select: function(event, ui) {
@@ -505,7 +514,7 @@
         var targetId = $(this).data('target');
         $(targetId).toggle();
         // Thay đổi nút từ "+" sang "-" và ngược lại
-        $(this).text($(this).text() === '+' ? '-' : '+');
+        $(this).text($(this).text() === '-' ? '+' : '-');
     });
 
     function updateCount() {
@@ -522,42 +531,17 @@
         openEditForm(promotion);
     });
 
-    $("#searchContainer").on('submit', function(e) { //tìm mã thùng
+    $("#searchContainer").on('submit', function(e) { //tìm mã thùng, form tự gửi data đến server
         e.preventDefault(); // Ngăn form gửi theo cách truyền thống
-        $.ajax({
-            url: "{{ route('containers.searchContainer') }}", // Sửa lại đường dẫn phù hợp với route của bạn
-            type: "POST",
-            data: $(this).serialize(), // Serialize dữ liệu form
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(xhr, status, error) {
-                // Xử lý lỗi
-                console.error(error);
-            }
-        });//kết thúc ajax
+        setInitialState(); // Set ẩn hiện thùng về ban đầu
+        clearSearchProductForm(); // Tìm thùng thì xóa bộ lọc Sản phẩm
     });//kết thúc searchContainer
 
-    $("#searchProduct").on('submit', function(e) {//tìm sản phẩm
+    $("#searchProduct").on('submit', function(e) {//tìm sản phẩm, form tự gửi data đến server
         e.preventDefault(); // Ngăn form gửi theo cách truyền thống
-        var data = $(this).serialize();
-        $.ajax({
-            url: path, // Sửa lại đường dẫn phù hợp với route của bạn
-            type: "POST",
-            data: data, // Serialize dữ liệu form
-            success: function(response) {
-                currentData = data;
-                currentType = 'searchProduct';
-                console.log(currentData);
-            },
-            error: function(xhr, status, error) {
-                // Xử lý lỗi
-                console.error(error);
-            }
-        });//kết thúc ajax
+        setInitialState(); // Set ẩn hiện thùng về ban đầu
+        clearSearchContainerForm(); // Tìm sản phẩm thì xóa bộ lọc mã thùng
     });//kết thúc searchProduct
-
-    
 
 });
     

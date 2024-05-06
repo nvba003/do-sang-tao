@@ -77,25 +77,25 @@ class ContainerController extends Controller
         return view('containers.container', compact('products', 'branches', 'bundleTypes', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
     }
 
-    public function searchProduct(Request $request)
-    {
-        $productId = $request->input('search_product_id');
-        $containers = Container::with(['location.parent', 'productapi', 'branch'])->where('product_id', $productId)->paginate(2); // Phân trang cho kết quả
-        // Trả về kết quả dưới dạng JSON
-        return response()->json(['search_product_containers' => $containers]);
+    // public function searchProduct(Request $request)
+    // {
+    //     $productId = $request->input('search_product_id');
+    //     $containers = Container::with(['location.parent', 'productapi', 'branch'])->where('product_id', $productId)->paginate(2); // Phân trang cho kết quả
+    //     // Trả về kết quả dưới dạng JSON
+    //     return response()->json(['search_product_containers' => $containers]);
 
-        // Thực hiện truy vấn tìm kiếm dựa trên tên sản phẩm
-        //$products = Product::where('name', 'like', '%' . $searchTerm . '%')->get();
-        // Trả về kết quả dưới dạng JSON
-        //return response()->json($searchTerm);
-    }
+    //     // Thực hiện truy vấn tìm kiếm dựa trên tên sản phẩm
+    //     //$products = Product::where('name', 'like', '%' . $searchTerm . '%')->get();
+    //     // Trả về kết quả dưới dạng JSON
+    //     //return response()->json($searchTerm);
+    // }
 
-    public function searchContainer(Request $request)
-    {
-        $containerId = $request->container_id;
-        $containers = Container::with(['location.parent', 'productapi', 'branch'])->where('id', $containerId)->paginate(2); // Phân trang cho kết quả
-        return response()->json(['search_containers' => $containers]);
-    }
+    // public function searchContainer(Request $request)
+    // {
+    //     $containerId = $request->container_id;
+    //     $containers = Container::with(['location.parent', 'productapi', 'branch'])->where('id', $containerId)->paginate(2); // Phân trang cho kết quả
+    //     return response()->json(['search_containers' => $containers]);
+    // }
 
     public function store(Request $request)
     {
