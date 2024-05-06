@@ -25,7 +25,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            <div class="flex flex-row">
+            <div class="flex flex-row min-h-full">
                 @include('components.sidebar')
                 <div id="content" class="content w-full">
                     <div class="navigation">

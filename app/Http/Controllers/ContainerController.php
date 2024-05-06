@@ -12,13 +12,14 @@ use App\Models\ProductContainer;
 use App\Models\ContainerMenuOption;
 use App\Models\ContainerStatus;
 use App\Models\Location;
+use App\Models\BundleType;
 //use Illuminate\Support\Facades\DB;
 
 class ContainerController extends Controller
 {
     public function showContainers(Request $request)
     {
-        $perPage = $request->input('per_page',20);
+        $perPage = $request->input('per_page',10);
         // Kiểm tra quyền
         //if (!Gate::allows('add-container')) {
             //abort(403);
@@ -29,14 +30,39 @@ class ContainerController extends Controller
 
         $products = ProductApi::all();
         $branches = Branch::all();
-        $containerMenuOptions = ContainerMenuOption::all();
+        $bundleTypes = BundleType::all();
+        $containerMenuOptions = ContainerMenuOption::all();//cho chức năng thêm thùng
         $existingCodes = Container::pluck('container_id')->toArray();
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
         $query = Container::query()
             ->with(['transaction', 'inventoryTransaction', 'productapi'])
+            ->when($request->filled('searchProductID'), function ($q) use ($request) {
+                $q->where('product_id', $request->input('searchProductID'));
+            })
+            ->when($request->filled('parent_location_id'), function ($query) use ($request) {
+                $query->whereHas('location', function ($q) use ($request) {
+                    $q->where('parent_id', $request->input('parent_location_id'));
+                });
+            })
+            ->when($request->filled('branch_id'), function ($q) use ($request) {
+                $q->whereHas('branch', function ($q) use ($request) {
+                    $q->where('id', $request->input('branch_id'));
+                });
+            })
+            ->when($request->filled('container_status_id'), function ($q) use ($request) {
+                $q->where('container_status_id', $request->input('container_status_id'));
+            })
+            ->when($request->filled('bundle_type'), function ($query) use ($request) {
+                $query->whereHas('product', function ($q) use ($request) {
+                    $q->where('bundle_type_id', $request->input('bundle_type'));
+                });
+            }) 
             ->when($request->filled('container_id'), function ($q) use ($request) {
                 $q->where('container_id', $request->input('container_id'));
+            })
+            ->when($request->filled('location_id'), function ($q) use ($request) {
+                $q->where('location_id', $request->input('location_id'));
             })
             ->orderBy('id', 'desc');
 
@@ -48,14 +74,7 @@ class ContainerController extends Controller
         }
         
         $header = 'Quản lý thùng hàng';
-        return view('containers.container', compact('products', 'branches', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
-        //return view('containers.show', compact('products', 'branches', 'containerMenuOptions', 'existingCodes'), ['header' => 'Quản lý thùng hàng']);
-    }
-
-    public function getContainers()
-    {
-        $containers = Container::with(['location.parent', 'productapi', 'branch'])->paginate(4);// Sử dụng khi chọn phân trang
-        return response()->json(['containers' => $containers]);
+        return view('containers.container', compact('products', 'branches', 'bundleTypes', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
     }
 
     public function searchProduct(Request $request)

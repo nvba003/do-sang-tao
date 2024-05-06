@@ -12,20 +12,21 @@
             </button>
         @endif
         <form id="searchProduct" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
+            @csrf
             <div class="flex flex-wrap -mx-3">
                 <div class="w-full sm:w-4/12 px-3 mb-2 md:mb-4">
-                    <label for="search_product_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Nhập sản phẩm:</label>
+                    <label for="search_product_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 z-0">Nhập sản phẩm:</label>
                     <div class="relative">
                         <input type="text" id="searchProductID" class="shadow appearance-none border rounded mt-1 block w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
                         <input type="hidden" id="searchProductIDValue" name="searchProductID">
                         <div class="absolute inset-y-0 right-0 flex items-center px-2">
-                            <button class="bg-yellow-600 text-gray-50 p-2 rounded-r-md hover:bg-yellow-800 z-40" type="button" onclick="clearSelection()">Xóa</button>
+                            <button class="bg-yellow-600 text-gray-50 p-2 rounded-r-md hover:bg-yellow-800 z-10" type="button" onclick="clearSearchProduct()">Xóa</button>
                         </div>
                     </div>
                 </div>
                 <div class="w-full sm:w-1/12 px-3 mb-2 md:mb-4">
-                    <label for="location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Vị trí:</label>
-                    <select name="location_id" id="location_id" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <label for="parent_location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Vị trí:</label>
+                    <select name="parent_location_id" id="parent_location_id" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                         <option value="">Chọn</option>
                         @foreach($locations as $location)
                             @if($location->isParent())
@@ -46,9 +47,9 @@
                 <div class="w-full sm:w-2/12 px-3 mb-2 md:mb-4">
                     <label for="container_status_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Trạng thái:</label>
                     <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
-                        <option value="">Chọn trạng thái container</option>
+                        <option value="">Chọn trạng thái</option>
                         @foreach($containerStatuses as $status)
-                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                        <option value="{{ $status->id }}">{{ $status->status_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -56,7 +57,9 @@
                     <label for="bundle_type" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Loại SP:</label>
                     <select class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="bundle_type">
                         <option value="">Chọn loại bundle</option>
-                        <!-- Additional options for bundle type here -->
+                        @foreach($bundleTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="w-full sm:w-1/12 px-3 mt-1 md:mb-0">
@@ -66,50 +69,49 @@
         </form>
 
         <form id="searchContainer" action="" method="POST" class="mb-3 bg-white p-2 sm:p-4 rounded-lg shadow-md">
-            <div class="flex flex-wrap -mx-3">
-                <div class="w-full sm:w-3/6 px-3 mb-2 md:mb-4 md:w-6/12 lg:w-4/12">
-                    <input type="text" class="px-2 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-                    <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
-                    <button type="button" class="bg-gray-200 text-black px-2 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearch()">Xóa</button>
-                </div>
-                <div class="w-full sm:w-3/6 px-1 mt-2 mb-2 ml-2 md:mb-4 md:w-6/12 lg:w-6/12">
-                    <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1">
-                    <label class="text-gray-700" for="display">Trưng Bày</label>
-                <!-- </div>
-                <div class="w-full sm:w-1/6 px-1 mt-2 mb-2 ml-2 md:mb-4 md:w-3/12 lg:w-2/12"> -->
-                    <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1">
-                    <label class="text-gray-700" for="stock">Thùng Kho</label>
-                <!-- </div>
-                <div class="w-full sm:w-1/6 px-1 mt-1 mb-2 md:mb-4 md:w-2/12 lg:w-2/12"> -->
-                    <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa lọc</button>
+            @csrf    
+            <div class="flex flex-wrap -mx-2 w-full">
+                <div class="flex flex-wrap w-full lg:flex-nowrap px-2 space-x-2">
+                    <div class="flex-grow lg:w-6/12 flex items-center mb-2 md:mb-0 space-x-2">
+                        <input type="text" class="flex-1 px-2 py-2 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
+                        <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 transition duration-150 ease-in-out">Tìm thùng</button>
+                        <button type="button" class="bg-gray-200 text-black px-2 py-2 rounded hover:bg-gray-300 transition duration-150 ease-in-out" onclick="clearSearchContainer()">Xóa</button>
+                    </div>
+                    <div class="flex-initial flex-wrap:wrap lg:w-6/12 flex items-center space-x-2">
+                        <select name="location_id" id="location_id" class="block appearance-none bg-white border border-gray-300 hover:border-gray-400 px-2 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="">Số thùng</option>
+                            @foreach($locations as $location)
+                                @if($location->isChild())
+                                <option value="{{ $location->id }}">{{ $location->location_name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="display" name="display" value="1" checked>
+                        <label class="text-gray-700" for="display">Trưng Bày</label>
+                        <input class="form-checkbox h-5 w-5 text-blue-500" type="checkbox" id="stock" name="stock" value="1" checked>
+                        <label class="text-gray-700" for="stock">Thùng Kho</label>
+                        <button id="refesh_data" class="ml-2 bg-gray-500 text-white px-2 py-2 rounded hover:bg-gray-600 transition duration-150 ease-in-out">Xóa lọc</button>
+                    </div>
                 </div>
             </div>
+
+
         </form>
     </div>
 
     <div class="bg-white shadow-md rounded my-1 overflow-x-auto p-2 sm:p-4">
-        <table class="min-w-full leading-normal" id="containerTable">
+        <table class="w-full leading-normal" id="containerTable">
             <thead class="text-white bg-gray-500">
                 <tr>
-                    <th scope="col" class="px-2 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">
                         <input type="checkbox" id="checkAll">
                     </th>
-                    <th scope="col" class="px-2 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider"></th>
-                    <th scope="col" class="px-3 py-3 border-b-2 border-gray-200 text-center text-sm font-semibold uppercase tracking-wider">
-                        ID thùng
-                    </th>
-                    <th scope="col" class="px-3 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">
-                        Số lượng
-                    </th>
-                    <th scope="col" class="px-3 py-3 border-b-2 border-gray-200 text-right text-sm font-semibold uppercase tracking-wider">
-                        Vị trí
-                    </th>
-                    <th scope="col" class="px-3 py-3 border-b-2 border-gray-200 text-right text-sm font-semibold uppercase tracking-wider">
-                        Thùng số
-                    </th>
-                    <th scope="col" class="px-3 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">
-                        Tên sản phẩm
-                    </th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider"></th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">ID thùng</th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Số lượng</th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Vị trí</th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Thùng số</th>
+                    <th scope="col" class="px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider">Tên sản phẩm</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,23 +119,26 @@
             </tbody>
         </table>
     </div>
-    <div class="mx-auto mt-2">
-        <div class="grid grid-cols-10 gap-4 m-2">
-            <div class="col-span-8" id="pagination-links">
+
+    <div class="mx-auto mt-2 max-w-full">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 m-2">
+            <div class="lg:col-span-3 md:col-span-1"></div>
+            <div class="lg:col-span-7 col-span-1 md:col-span-9" id="pagination-links">
                 <!-- Pagination links here -->
             </div>
-            <div class="col-span-2">
-                <div class="flex items-center space-x-2 w-full">
-                    <label for="perPage" class="text-sm flex-1 text-right pr-2">Số hàng:</label>
-                    <select id="perPage" class="form-control form-control-sm text-sm flex-1">
-                        <option value="20">20</option>
+            <div class="lg:col-span-2 col-span-1 md:col-span-2 justify-end">
+                <div class="flex items-center space-x-2">
+                    <label for="perPage" class="text-sm flex-grow text-right pr-2">Số hàng:</label>
+                    <select id="perPage" class="px-1 py-2 text-sm w-20">
+                        <option value="10">10</option>
                         <option value="100">100</option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
-    
+
+
 </div>
 
 <!-- Modal thông báo -->
@@ -161,6 +166,9 @@
 
 @push('scripts')
 <script>
+    console.log(@json($containerStatuses));
+    console.log(@json($bundleTypes));
+    console.log(@json($locations));
     function openModal() {
         const modal = document.getElementById('addContainerModal');
         modal.classList.remove('hidden'); // Giả sử bạn đã ẩn modal với class 'hidden' của Tailwind
@@ -183,15 +191,18 @@
         modal.style.display = show ? 'block' : 'none';
     }
 
-    function clearSelection() {
+    function clearSearchProduct() {
         document.getElementById('searchProductID').value = "";
         // document.getElementById('searchProductIDvalue').value = "";
+    }
+
+    function clearSearchContainer() {
+        document.getElementById('search_container_id').value = ""; // Xóa nội dung của ô nhập liệu
     }
 
     var containers = @json($containers);
     var currentData = containers; // Biến toàn cục giữ dữ liệu hiện tại
     var currentType = 'container';
-    var origin_path = "{{ route('containers.data') }}"; // Định nghĩa URL cho AJAX request
     var path = "{{ route('containers.searchProduct') }}"; // Định nghĩa URL cho AJAX request
 
     //===============CHỨC NĂNG TẠO MÃ THÙNG=============
@@ -333,6 +344,63 @@
         containerCodeError.style.display = 'none';
         }
     }
+
+    //===============LỌC XEM THEO TRƯNG BÀY HAY KHO=============
+    function filterContainers(group) {
+        const rows = document.querySelectorAll('[data-container-id]');
+        rows.forEach(row => {
+            const containerId = row.getAttribute('data-container-id');
+            const lastDigit = containerId.charAt(containerId.length - 1);
+
+            let show = false;
+            if (group === 'display' && lastDigit === '0') {
+                show = true;
+            } else if (group === 'stock' && lastDigit !== '0') {
+                show = true;
+            }
+            row.style.display = show ? '' : 'none'; // Ẩn hoặc hiển thị hàng chính
+            // Xử lý ẩn hàng chi tiết liên quan
+            const detailRows = document.querySelectorAll(`[data-related-container-id="${containerId}"]`);
+            detailRows.forEach(detailRow => {
+                detailRow.style.display = show ? '' : 'none';
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const displayCheckbox = document.getElementById('display');
+        const stockCheckbox = document.getElementById('stock');
+
+        // Gọi hàm lọc ban đầu dựa trên trạng thái checkbox
+        if (displayCheckbox.checked) {
+            filterContainers('display');
+        }
+        if (stockCheckbox.checked) {
+            filterContainers('stock');
+        }
+    });
+
+    // Gán sự kiện để gọi hàm lọc khi cần
+    document.getElementById('display').addEventListener('change', function() {
+        if (this.checked) {
+            filterContainers('display'); // Áp dụng lọc 'display' nếu hộp kiểm được chọn
+        } else {
+            resetFilters(); // Xóa lọc nếu hộp kiểm không được chọn
+        }
+    });
+    document.getElementById('stock').addEventListener('change', function() {
+        if (this.checked) {
+            filterContainers('stock'); // Áp dụng lọc 'stock' nếu hộp kiểm được chọn
+        } else {
+            resetFilters(); // Xóa lọc nếu hộp kiểm không được chọn
+        }
+    });
+    function resetFilters() {
+        const rows = document.querySelectorAll('[data-container-id]');
+        rows.forEach(row => {
+            row.style.display = ''; // Hiển thị tất cả các hàng
+        });
+    }
+
     //===========================================================================================
 
     $(document).ready(function() {
@@ -396,7 +464,14 @@
 
     fetchData('{{ route('containers.show') }}');
 
-    $('#searchForm').on('submit', function(e) {
+    $('#searchProduct').on('submit', function(e) {
+        e.preventDefault();
+        perPage = $('#perPage').val();
+        currentSearchParams = updateSearchParams('per_page', perPage, $(this).serialize());
+        fetchData('{{ route('containers.show') }}?' + currentSearchParams);
+    });
+
+    $('#searchContainer').on('submit', function(e) {
         e.preventDefault();
         perPage = $('#perPage').val();
         currentSearchParams = updateSearchParams('per_page', perPage, $(this).serialize());
@@ -454,9 +529,7 @@
             type: "POST",
             data: $(this).serialize(), // Serialize dữ liệu form
             success: function(response) {
-                //console.log(response);
-                updateTableContent(response.search_containers.data);//cập nhật nội dung
-                updatePagination(response.search_containers);// Cập nhật phân trang
+                console.log(response);
             },
             error: function(xhr, status, error) {
                 // Xử lý lỗi
@@ -475,9 +548,7 @@
             success: function(response) {
                 currentData = data;
                 currentType = 'searchProduct';
-                //console.log(currentData);
-                updateTableContent(response.search_product_containers.data);//cập nhật nội dung
-                updatePagination(response.search_product_containers);// Cập nhật phân trang
+                console.log(currentData);
             },
             error: function(xhr, status, error) {
                 // Xử lý lỗi
@@ -486,9 +557,7 @@
         });//kết thúc ajax
     });//kết thúc searchProduct
 
-    function clearSearch() {
-        document.getElementById('search_container_id').value = ""; // Xóa nội dung của ô nhập liệu
-    }
+    
 
 });
     

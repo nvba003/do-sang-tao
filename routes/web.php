@@ -20,8 +20,8 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -36,7 +36,6 @@ Route::get('/fetch-products', [ProductApiController::class, 'fetchAndStoreProduc
 Route::get('/show-web-products', [ProductApiController::class, 'showWebProducts'])->name('web.products');
 
 Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
-Route::post('/containers/data', [ContainerController::class, 'getContainers'])->name('containers.data');//lấy danh sách json containers
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới
 Route::post('/container/search/product', [ContainerController::class, 'searchProduct'])->name('containers.searchProduct');//lấy dữ liệu sản phẩm bằng ajax để hiển thị thùng hàng
 Route::post('/container/search/container', [ContainerController::class, 'searchContainer'])->name('containers.searchContainer');//lấy dữ liệu thùng hàng bằng ajax để hiển thị thùng hàng
