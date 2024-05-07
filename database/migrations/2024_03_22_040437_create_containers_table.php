@@ -16,7 +16,7 @@ class CreateContainersTable extends Migration
         Schema::create('containers', function (Blueprint $table) {
             //$table->id();
             $table->smallIncrements('id');
-            $table->string('container_id',7)->unique();// ContainerID
+            $table->string('container_code',7)->unique();// ContainerCode
             $table->unsignedTinyInteger('container_status_id')->nullable();
             $table->foreign('container_status_id')->references('id')->on('container_statuses')->onDelete('set null'); // Add a foreign key to the ContainerStatuses table
             $table->unsignedSmallInteger('location_id')->nullable();

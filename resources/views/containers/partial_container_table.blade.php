@@ -1,5 +1,5 @@
 @forelse ($containers as $container)
-    <tr class="bg-white hover:bg-gray-100 border-b" data-container-id="{{ $container->container_id }}">
+    <tr class="bg-white hover:bg-gray-100 border-b" data-container-id="{{ $container->container_code }}">
         <td class="p-2 w-1/24 text-center mt-1 hidden sm:block"> <!-- Reduced padding and set a fixed width -->
             <input type="checkbox" class="checkItem">
         </td>
@@ -8,7 +8,7 @@
                 +
             </button>
         </td>
-        <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $container->container_id }}</td>
+        <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $container->container_code }}</td>
         <td class="w-2/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">
             @php
                 $quantity = floatval($container->product_quantity);
@@ -23,7 +23,7 @@
         <td class="w-2/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $container->location->location_name ?? '_' }}</td>
         <td class="w-12/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $container->productapi->name }}</td>
     </tr>
-    <tr id="details{{ $container->id }}" class="bg-gray-50 details-row hidden" data-related-container-id="{{ $container->container_id }}">
+    <tr id="details{{ $container->id }}" class="bg-gray-50 details-row hidden" data-related-container-id="{{ $container->container_code }}">
         <td></td>
         <td colspan="6" class="px-2 sm:px-4 py-2 text-xs md:text-base">
             <div><strong>Cập nhật:</strong> {{ $container->updated_at }}</div>

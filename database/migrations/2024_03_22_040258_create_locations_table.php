@@ -15,7 +15,7 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('location_name')->unique()->comment('Parent: Location, Child: No.Thung');; // Mã vị trí (nếu là cha) hoặc mã số thùng (nếu là con)
+            $table->string('location_name')->unique()->comment('Parent: Location, Child: No.Thung'); // Mã vị trí (nếu là cha) hoặc mã số thùng (nếu là con)
             $table->text('description')->nullable(); // Mô tả chi tiết về vị trí
             $table->unsignedSmallInteger('parent_id')->nullable(); // Cột này cho phép NULL cho menu cha
             $table->timestamps(); // Các trường created_at và updated_at tự động

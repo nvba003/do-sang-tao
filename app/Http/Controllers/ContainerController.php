@@ -32,7 +32,7 @@ class ContainerController extends Controller
         $branches = Branch::all();
         $bundleTypes = BundleType::all();
         $containerMenuOptions = ContainerMenuOption::all();//cho chức năng thêm thùng
-        $existingCodes = Container::pluck('container_id')->toArray();
+        $existingCodes = Container::pluck('container_code')->toArray();
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
         $query = Container::query()
@@ -59,7 +59,7 @@ class ContainerController extends Controller
                 });
             }) 
             ->when($request->filled('container_id'), function ($q) use ($request) {
-                $q->where('container_id', $request->input('container_id'));
+                $q->where('container_code', $request->input('container_id'));
             })
             ->when($request->filled('location_id'), function ($q) use ($request) {
                 $q->where('location_id', $request->input('location_id'));
@@ -102,7 +102,7 @@ class ContainerController extends Controller
         // dd($request);
         // Validate dữ liệu request
         $validatedData = $request->validate([
-            'id' => 'required|string|max:7|unique:containers,container_id', // Sửa tên trường thành 'id'
+            'id' => 'required|string|max:7|unique:containers,container_code', // Sửa tên trường thành 'id'
             'productId' => 'required|exists:products,product_api_id', // Đảm bảo giá trị này tồn tại trong bảng `products`
             'unit' => 'required|string',
             'branch_id' => 'required|exists:branches,id',
@@ -110,7 +110,7 @@ class ContainerController extends Controller
         
         // Tạo container mới và lưu vào database sử dụng Mass Assignment
         $container = Container::create([
-            'container_id' => $validatedData['id'], // Sửa thành 'id' để khớp với tên trường được validate
+            'container_code' => $validatedData['id'], // Sửa thành 'id' để khớp với tên trường được validate
             'product_id' => $validatedData['productId'],
             'unit' => $validatedData['unit'],
             'branch_id' => $validatedData['branch_id'],
@@ -128,10 +128,10 @@ class ContainerController extends Controller
             $otherContainerId = $otherBranchId . substr($containerId, 1); // Tạo mã thùng mới cho chi nhánh khác
             // Lưu thùng hàng cho chi nhánh khác
             Container::create([
-                'container_id' => $otherContainerId,
+                'container_code' => $otherContainerId,
                 'product_id' => $validatedData['productId'],
                 'unit' => $validatedData['unit'],
-                'branch_id' => $validatedData['branch_id'],
+                'branch_id' => $otherBranchId,
             ]);
         }
 

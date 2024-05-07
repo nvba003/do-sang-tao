@@ -32,4 +32,4 @@ Route::group(['middleware' => ['auth:api']], function () {
 });
 
 Route::get('/container-menu-options/children/{parentId}', [MenuOptionController::class, 'getChildren']);
-Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);
+//Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);

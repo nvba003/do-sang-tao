@@ -412,7 +412,7 @@
 
     //===========================================================================================
 
-    $(document).ready(function() {
+$(document).ready(function() {
     // Xử lý form tìm kiếm
     let currentSearchParams = "";
     let currentPerPage = "";
