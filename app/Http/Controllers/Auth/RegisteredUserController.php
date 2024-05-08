@@ -38,17 +38,15 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+        // Gán role 'unapproved' cho người dùng mới
+        $user->assignRole('unapproved');
+        // Gửi sự kiện đăng ký nếu cần thiết
         event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('login')->with('status', 'Tài khoản của bạn đã được tạo và đang chờ phê duyệt bởi quản trị viên.');
     }
 }

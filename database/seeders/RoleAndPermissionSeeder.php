@@ -10,6 +10,8 @@ class RoleAndPermissionSeeder extends Seeder
 {
     public function run()
     {
+        // Xóa cache trước khi bắt đầu để đảm bảo dữ liệu mới nhất được sử dụng
+        app()['cache']->forget('spatie.permission.cache');
         // // Tạo quyền
         // $permission1 = Permission::create(['name' => 'edit posts']);
         // $permission2 = Permission::create(['name' => 'delete posts']);
@@ -27,6 +29,7 @@ class RoleAndPermissionSeeder extends Seeder
         $approveComments = Permission::create(['name' => 'approve comments']);
         $deleteComments = Permission::create(['name' => 'delete comments']);
         $manageUsers = Permission::create(['name' => 'manage users']);
+        $approveUsers = Permission::create(['name' => 'approve users']);
 
         // Tạo vai trò Admin và gán tất cả quyền
         $admin = Role::create(['name' => 'admin']);
@@ -43,5 +46,6 @@ class RoleAndPermissionSeeder extends Seeder
         // Tạo vai trò User với quyền hạn giới hạn
         $user = Role::create(['name' => 'user']);
         // Có thể không cần gán quyền cụ thể nếu User chỉ có quyền cơ bản
+        Role::create(['name' => 'unapproved']);
     }
 }

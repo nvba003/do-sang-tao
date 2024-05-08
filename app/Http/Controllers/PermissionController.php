@@ -18,7 +18,8 @@ class PermissionController extends Controller
     // Hiển thị form tạo quyền mới
     public function create()
     {
-        return view('permissions.create');
+        $header = "Tạo Mới Quyền";
+        return view('permissions.create', compact('header'));
     }
 
     // Lưu quyền mới

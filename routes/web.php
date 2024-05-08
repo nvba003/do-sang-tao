@@ -48,9 +48,14 @@ Route::get('/container-transactions/{transaction}/edit', [InventoryTransactionCo
 
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class);
-Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/prepare-edit-user', [UserController::class, 'prepareEdit'])->name('users.prepareEdit');
+Route::get('/edit-user', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+Route::get('/create-user', [UserController::class, 'create'])->name('users.create');
+Route::post('/store-user', [UserController::class, 'store'])->name('users.store');
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 // Định nghĩa các resource routes cho UserController
-Route::resource('users', UserController::class);
+// Route::resource('users', UserController::class);
 
 

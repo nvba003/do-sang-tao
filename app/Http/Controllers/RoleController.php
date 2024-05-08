@@ -20,15 +20,34 @@ class RoleController extends Controller
     public function create()
     {
         $permissions = Permission::all();
-        return view('roles.create', compact('permissions'));
+        $header = "Tạo Mới Vai Trò";
+        return view('roles.create', compact('permissions','header'));
     }
 
     // Lưu vai trò mới
+    // public function store(Request $request)
+    // {
+    //     $role = Role::create(['name' => $request->name]);
+    //     $role->syncPermissions($request->permissions);
+
+    //     return redirect()->route('roles.index')->with('success', 'Role created successfully');
+    // }
     public function store(Request $request)
     {
-        $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
-
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:roles',
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+        // dd($validatedData);
+        // Tạo role mới
+        $role = Role::create(['name' => $validatedData['name']]);
+        // Lấy tên các permissions từ ID
+        $permissionNames = Permission::whereIn('id', $validatedData['permissions'])->pluck('name')->toArray();
+        // Đồng bộ quyền với role, dựa trên tên của quyền
+        $role->syncPermissions($permissionNames);
+        // Chuyển hướng sau khi lưu thành công
         return redirect()->route('roles.index')->with('success', 'Role created successfully');
     }
 
