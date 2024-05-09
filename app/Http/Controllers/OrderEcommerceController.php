@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ecommerce\OrderSendo;
 use App\Models\Ecommerce\OrderSendoDetail;
-use App\Models\PlatForm;
+use App\Models\Platform;
 use Carbon\Carbon;
 
 class OrderEcommerceController extends Controller
