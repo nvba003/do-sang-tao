@@ -16,17 +16,21 @@ class OrderEcommerceController extends Controller
             foreach ($orders as $orderData) {
                 // Xử lý ngày giờ đặt hàng
                 $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);
-                // Lưu thông tin đơn hàng
-                $order = OrderSendo::create([
-                    'order_code' => $orderData['order_code'],
-                    'customer_name' => $orderData['customer_name'] ?? null,
-                    'customer_phone' => $orderData['customer_phone'] ?? null,
-                    'total_amount' => $orderData['total_amount'] ?? null,
-                    'carrier' => $orderData['carrier'] ?? null,
-                    'customer_address' => $orderData['customer_address'] ?? null,
-                    'order_date' => $orderDate,
-                ]);
-                // Lưu chi tiết đơn hàng
+                // Kiểm tra xem order_code đã tồn tại chưa
+                $order = OrderSendo::updateOrCreate(
+                    ['order_code' => $orderData['order_code']],
+                    [
+                        'customer_name' => $orderData['customer_name'] ?? null,
+                        'customer_phone' => $orderData['customer_phone'] ?? null,
+                        'total_amount' => $orderData['total_amount'] ?? null,
+                        'carrier' => $orderData['carrier'] ?? null,
+                        'customer_address' => $orderData['customer_address'] ?? null,
+                        'order_date' => $orderDate,
+                    ]
+                );
+                // Xóa chi tiết đơn hàng cũ nếu đang cập nhật đơn hàng
+                OrderSendoDetail::where('order_sendo_id', $order->id)->delete();
+                // Lưu chi tiết đơn hàng mới
                 foreach ($orderData['products'] as $product) {
                     // Lấy mã sau dấu "-"
                     $skuParts = explode('-', $product['sku']);
