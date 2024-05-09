@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderSapoController;
 use App\Http\Controllers\Api\MenuOptionController;
 use App\Http\Controllers\Api\InventoryTransactionController;
+use App\Http\Controllers\OrderEcommerceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,5 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::get('/container-menu-options/children/{parentId}', [MenuOptionController::class, 'getChildren']);
 //Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);
+
+Route::post('/store-order-sendos', [OrderEcommerceController::class, 'storeOrderSendos']);

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<x-conditional-content :condition="auth()->user()->hasRole('admin')">
 <div class="container mx-auto px-4 py-6">
     <a href="{{ route('users.create') }}" class="inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded mb-4">Thêm Người Dùng Mới</a>
 
@@ -39,4 +40,5 @@
         </table>
     </div>
 </div>
+</x-conditional-content>
 @endsection

@@ -13,7 +13,7 @@
        :class="{ 'w-80': !collapsed && !hideSidebar, 'w-10': collapsed && !hideSidebar, 'hidden': hideSidebar, 
         'md:relative': !collapsed || hideSidebar, 'relative': collapsed || hideSidebar }" 
        class="fixed inset-y-0 min-h-screen min-h-full bg-gray-800 text-white fixed z-40 transform transition-width">
-    <div :class="{'right-sidebar-expanded': !collapsed, 'right-sidebar-collapsed': collapsed}" class="sidebar-toggle-container fixed top-10 z-50">
+    <div :class="{'right-sidebar-expanded': !collapsed, 'right-sidebar-collapsed': collapsed}" class="sidebar-toggle-container fixed top-10">
         <button @click="toggleSidebar" class="toggle-sidebar absolute flex items-center justify-between px-2 py-2 bg-gray-700 opacity-100 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="bi bi-list w-4 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
@@ -54,7 +54,7 @@
         
     </nav>
 
-    <div x-show="showModal && collapsed" class="submenuModal fixed bg-gray-800 text-white pb-2"
+    <div x-show="showModal && collapsed" class="submenuModal fixed bg-gray-800 text-white pb-2 z-50"
         :style="'top: ' + modalTop + '; left: ' + modalLeft"
         @mouseenter="mouseEnterModal" @mouseleave="mouseLeaveModal" x-transition>
         <ul>
