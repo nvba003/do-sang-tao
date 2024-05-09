@@ -36,3 +36,4 @@ Route::get('/container-menu-options/children/{parentId}', [MenuOptionController:
 //Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);
 
 Route::post('/store-order-sendos', [OrderEcommerceController::class, 'storeOrderSendos']);
+Route::get('/platforms', [OrderEcommerceController::class, 'getPlatForms']);

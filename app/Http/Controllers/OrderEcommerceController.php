@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ecommerce\OrderSendo;
 use App\Models\Ecommerce\OrderSendoDetail;
+use App\Models\PlatForm;
 use Carbon\Carbon;
 
 class OrderEcommerceController extends Controller
 {
+    public function getPlatForms()
+    {
+        $platforms = Platform::select('id', 'name')->get();
+        return response()->json($platforms);
+    }
+
     public function storeOrderSendos(Request $request)
     {
         try {
