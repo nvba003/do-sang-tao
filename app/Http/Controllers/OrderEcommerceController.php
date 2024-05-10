@@ -19,7 +19,8 @@ class OrderEcommerceController extends Controller
     public function storeOrderSendos(Request $request)
     {
         try {
-            $orders = $request->all();
+            $platformId = $request->input('platform_id');
+            $orders = $request->input('orders');
             foreach ($orders as $orderData) {
                 // Xử lý ngày giờ đặt hàng
                 $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);
@@ -33,6 +34,7 @@ class OrderEcommerceController extends Controller
                         'carrier' => $orderData['carrier'] ?? null,
                         'customer_address' => $orderData['customer_address'] ?? null,
                         'order_date' => $orderDate,
+                        'platform_id' => $platformId,
                     ]
                 );
                 // Xóa chi tiết đơn hàng cũ nếu đang cập nhật đơn hàng

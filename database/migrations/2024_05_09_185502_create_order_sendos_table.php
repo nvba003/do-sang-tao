@@ -23,6 +23,8 @@ class CreateOrderSendosTable extends Migration
             $table->unsignedMediumInteger('total_amount')->nullable();
             $table->string('tracking_number')->nullable();
             $table->string('carrier')->nullable();
+            $table->unsignedTinyInteger('platform_id')->nullable();
+            $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
             $table->timestamps();
         });
     }
