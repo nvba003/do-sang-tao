@@ -25,6 +25,8 @@ class CreateOrderSendosTable extends Migration
             $table->string('carrier')->nullable();
             $table->unsignedTinyInteger('platform_id')->nullable();
             $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
+            $table->unsignedInteger('order_id')->nullable();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('set null');
             $table->timestamps();
         });
     }

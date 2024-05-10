@@ -28,7 +28,7 @@ class OrderEcommerceController extends Controller
                 $order = OrderSendo::updateOrCreate(
                     ['order_code' => $orderData['order_code']],
                     [
-                        'customer_name' => $orderData['customer_name'] ?? null,
+                        'customer_account' => $orderData['customer_account'] ?? null,
                         'customer_phone' => $orderData['customer_phone'] ?? null,
                         'total_amount' => $orderData['total_amount'] ?? null,
                         'carrier' => $orderData['carrier'] ?? null,

@@ -36,4 +36,8 @@ Route::get('/container-menu-options/children/{parentId}', [MenuOptionController:
 //Route::get('/inventory-transactions/product/{containerIdValue}', [InventoryTransactionController::class, 'getProduct']);
 
 Route::post('/store-order-sendos', [OrderEcommerceController::class, 'storeOrderSendos']);
+Route::post('/store-order-shopees', [OrderEcommerceController::class, 'storeOrderShopees']);
+Route::post('/store-order-lazadas', [OrderEcommerceController::class, 'storeOrderLazadas']);
+Route::post('/store-order-tikis', [OrderEcommerceController::class, 'storeOrderTikis']);
+Route::post('/store-order-tiktoks', [OrderEcommerceController::class, 'storeOrderTiktoks']);
 Route::get('/platforms', [OrderEcommerceController::class, 'getPlatForms']);
