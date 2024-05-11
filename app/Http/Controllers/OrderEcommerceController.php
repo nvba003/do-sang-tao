@@ -140,10 +140,33 @@ class OrderEcommerceController extends Controller
                                 'product_api_id' => $detail['product_api_id'],
                                 'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
                             ]);
-                            OrderDetail::where('id', $orderSendoDetail->order_detail_id)->update([
-                                'product_api_id' => $detail['product_api_id'],
-                                'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
-                            ]);
+                            // OrderDetail::where('id', $orderSendoDetail->order_detail_id)->update([
+                            //     'product_api_id' => $detail['product_api_id'],
+                            //     'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                            // ]);
+                            if (empty($orderSendoDetail->order_detail_id)) {
+                                // Nếu $orderSendoDetail->order_detail_id không có dữ liệu, tạo mới OrderDetail
+                                $orderDetail = OrderDetail::create([
+                                    'order_id' => $order->id,
+                                    'product_api_id' => $detail['product_api_id'],
+                                    'quantity' => $detail['quantity'],
+                                    // 'price' => $detail['price'],
+                                    // 'total' => $detail['total'],
+                                ]);
+                            
+                                // Cập nhật OrderSendoDetail với order_detail_id mới và product_api_id mới
+                                OrderSendoDetail::where('id', $detail['sendo_detail_id'])->update([
+                                    'order_detail_id' => $orderDetail->id,
+                                    'product_api_id' => $detail['product_api_id'], // cập nhật product_api_id mới
+                                ]);
+                            } else {
+                                // Nếu có dữ liệu, cập nhật OrderDetail
+                                OrderDetail::where('id', $orderSendoDetail->order_detail_id)->update([
+                                    'product_api_id' => $detail['product_api_id'],
+                                    'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                ]);
+                            }                            
+                            
                         }
                     }
                     // Cập nhật quy trình đơn hàng
