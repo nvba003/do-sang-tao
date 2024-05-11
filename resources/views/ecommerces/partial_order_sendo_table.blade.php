@@ -46,10 +46,16 @@
                     <select id="responsible_{{ $order->id }}" class="bg-white text-sm rounded py-2 px-8">
                         <option value="">Chọn</option>
                         @foreach($users as $user)
+                        <option value="{{ $user->id }}" 
+                            {{ (Auth::check() && Auth::user()->id == $user->id) || ($order->order && $order->order->orderProcess->responsible_user_id == $user->id) ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                        @endforeach
+                        <!-- @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ $order->order && $order->order->orderProcess->responsible_user_id == $user->id ? 'selected' : '' }}>
                                 {{ $user->name }}
                             </option>
-                        @endforeach
+                        @endforeach -->
                     </select>
                 </div>
                 <div class="flex items-center space-x-2">
