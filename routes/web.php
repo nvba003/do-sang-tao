@@ -8,6 +8,7 @@ use App\Http\Controllers\InventoryTransactionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderEcommerceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,5 +58,9 @@ Route::post('/store-user', [UserController::class, 'store'])->name('users.store'
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 // Định nghĩa các resource routes cho UserController
 // Route::resource('users', UserController::class);
+
+Route::get('/order-sendo-ct', [OrderEcommerceController::class, 'showOrderSendoCTs'])->name('orderSendoCT.show');
+Route::post('/order-sendo-ct', [OrderEcommerceController::class, 'storeOrderSendos'])->name('orderSendoCT.store');
+Route::post('/send-order-sendo-to-order', [OrderEcommerceController::class, 'sendOrderSendos'])->name('orderSendo.send');
 
 
