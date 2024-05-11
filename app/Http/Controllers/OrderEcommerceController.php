@@ -135,6 +135,9 @@ class OrderEcommerceController extends Controller
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng sendo
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
+                            if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                                continue;
+                            }
                             $orderSendoDetail = OrderSendoDetail::where('id', $detail['sendo_detail_id']);
                             $orderSendoDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
