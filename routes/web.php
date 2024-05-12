@@ -64,5 +64,11 @@ Route::get('/order-sendo/{platform_id}', [OrderEcommerceController::class, 'show
 Route::post('/send-order-sendo-to-order', [OrderEcommerceController::class, 'sendOrderSendos'])->name('orderSendo.send');
 Route::get('/order-shopee/{platform_id}', [OrderEcommerceController::class, 'showOrderShopees'])->name('orderShopee.show');
 Route::post('/send-order-shopee-to-order', [OrderEcommerceController::class, 'sendOrderShopees'])->name('orderShopee.send');
+Route::get('/order-lazada/{platform_id}', [OrderEcommerceController::class, 'showOrderLazadas'])->name('orderLazada.show');
+Route::post('/send-order-lazada-to-order', [OrderEcommerceController::class, 'sendOrderLazadas'])->name('orderLazada.send');
+Route::get('/order-tiki/{platform_id}', [OrderEcommerceController::class, 'showOrderTikis'])->name('orderTiki.show');
+Route::post('/send-order-tiki-to-order', [OrderEcommerceController::class, 'sendOrderTikis'])->name('orderTiki.send');
+Route::get('/order-tiktok/{platform_id}', [OrderEcommerceController::class, 'showOrderTiktoks'])->name('orderTiktok.show');
+Route::post('/send-order-tiktok-to-order', [OrderEcommerceController::class, 'sendOrderTiktoks'])->name('orderTiktok.send');
 
 
