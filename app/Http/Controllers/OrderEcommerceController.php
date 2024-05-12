@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ecommerce\OrderSendo;
 use App\Models\Ecommerce\OrderSendoDetail;
+use App\Models\Ecommerce\OrderShopee;
+use App\Models\Ecommerce\OrderShopeeDetail;
 use App\Models\Platform;
 use App\Models\ProductApi;
 use App\Models\Product;
