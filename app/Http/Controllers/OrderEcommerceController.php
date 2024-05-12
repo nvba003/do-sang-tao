@@ -254,6 +254,7 @@ class OrderEcommerceController extends Controller
         }
     }
 
+//====================================================================
     public function storeOrderShopees(Request $request) //save data Shopee from extension to server
     {
         try {
@@ -298,6 +299,54 @@ class OrderEcommerceController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to store orders', 'error' => $e->getMessage()], 500);
         }
+    }
+    public function showOrderShopees(Request $request)
+    {
+        $perPage = $request->input('per_page',10);
+        // Lấy platform_id từ đường dẫn
+        $platform_id = $request->route('platform_id');
+        $products = ProductApi::all(); 
+        $branches = Branch::all();
+        $users = User::all();
+        $carriers = Carrier::all();
+        $stringName = 'Shopee';
+        $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
+        $query = OrderShopee::query();
+            // Lọc dữ liệu dựa trên id truyền vào route
+            if ($platform_id == 1) {
+                $query->where('platform_id', 1);
+            } elseif ($platform_id == 2) {
+                $query->where('platform_id', 2);
+            }
+            $query->when($request->filled('searchOrderCode'), function ($q) use ($request) {
+                $q->where('order_code', $request->input('searchOrderCode'));
+            })
+            ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->input('searchCreatedAtFrom'));
+            })
+            ->when($request->filled('searchCreatedAtTo'), function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->input('searchCreatedAtTo'));
+            })
+            ->when($request->filled('searchCustomer'), function ($q) use ($request) {
+                $q->where('customer_phone', $request->input('searchCustomer'));
+            })
+            ->when($request->filled('order_id_check'), function ($q) use ($request) {
+                $orderIdCheck = $request->input('order_id_check');
+                if ($orderIdCheck == 0) {
+                    $q->whereNull('order_id');
+                } elseif ($orderIdCheck == 1) {
+                    $q->whereNotNull('order_id');
+                }
+            })
+            ->with(['details.product', 'order.orderProcess'])
+            ->orderBy('created_at', 'desc');
+        $orders = $query->paginate($perPage);
+        if ($request->ajax()) {
+            $view = view('ecommerces.partial_order_shopee_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
+            $links = $orders->links()->toHtml();
+            return response()->json(['table' => $view, 'links' => $links]);
+        }
+        return view('ecommerces.order_shopee', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Shopee']);
     }
 
 }

@@ -261,7 +261,7 @@
                     product_details: productDetails,
                 };
                 console.log(orderData);
-                fetch('{{ route('orderSendo.send') }}', {
+                fetch('{{ route('orderShopee.send') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -332,7 +332,7 @@
             });
         }
 
-        const baseUrl = `{{ url('/order-sendo') }}/${platformId}`;
+        const baseUrl = `{{ url('/order-shopee') }}/${platformId}`;
         fetchData(baseUrl);
 
         $('#searchOrder').on('submit', function(e) {
