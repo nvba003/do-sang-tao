@@ -132,7 +132,8 @@ function sidebarComponent(menusData) {
                 this.submenuItems = menu.children.map(child => ({
                     id: child.id,
                     name: child.name,
-                    url: child.url,
+                    url: new URL(child.url, window.location.origin).href, 
+                    // url: child.url,
                     menuId: menu.id,
                     class: parseInt(sessionStorage.getItem('activeSubmenu'), 10) === child.id ? 'active-submenu-item' : 'submenu-item'
                 }));
