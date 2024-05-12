@@ -262,6 +262,8 @@ class OrderEcommerceController extends Controller
             $orders = $request->input('orders');
             foreach ($orders as $orderData) {
                 // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Shopee không có ngày giờ đặt
+                $tracking_number = $orderData['tracking_number'] ?? null;
+                
                 $order = OrderShopee::updateOrCreate(
                     ['order_code' => $orderData['order_code']],
                     [
@@ -269,7 +271,7 @@ class OrderEcommerceController extends Controller
                         // 'customer_phone' => $orderData['customer_phone'] ?? null,//không có
                         'total_amount' => $orderData['total_amount'] ?? null,
                         'carrier' => $orderData['carrier'] ?? null,
-                        'tracking_number' => $orderData['tracking_number'] ?? null,
+                        'tracking_number' => $tracking_number,
                         // 'customer_address' => $orderData['customer_address'] ?? null, //không có
                         // 'order_date' => $orderDate,
                         'status' => $orderData['status'] ?? null,
@@ -277,6 +279,14 @@ class OrderEcommerceController extends Controller
                         'platform_id' => $platformId,
                     ]
                 );
+                if ($tracking_number && $order->order_id) {
+                    $orderProcess = OrderProcess::where('order_id', $order->order_id)->first();
+                    if ($orderProcess) {
+                        $orderProcess->update([
+                            'tracking_number' => $tracking_number,
+                        ]);
+                    }
+                }
                 foreach ($orderData['products'] as $index => $product) {// Lưu chi tiết đơn hàng mới
                     $sku = $product['sku'];
                     $searchProduct = ProductApi::where('sku', $sku)->first();
@@ -302,9 +312,10 @@ class OrderEcommerceController extends Controller
             return response()->json(['message' => 'Failed to store orders', 'error' => $e->getMessage()], 500);
         }
     }
+
     public function showOrderShopees(Request $request)
     {
-        $perPage = $request->input('per_page',10);
+        $perPage = $request->input('per_page',15);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
         $products = ProductApi::all(); 
@@ -315,10 +326,10 @@ class OrderEcommerceController extends Controller
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderShopee::query();
             // Lọc dữ liệu dựa trên id truyền vào route
-            if ($platform_id == 1) {
-                $query->where('platform_id', 1);
-            } elseif ($platform_id == 2) {
-                $query->where('platform_id', 2);
+            if ($platform_id == 3) {
+                $query->where('platform_id', 3);
+            } elseif ($platform_id == 4) {
+                $query->where('platform_id', 4);
             }
             $query->when($request->filled('searchOrderCode'), function ($q) use ($request) {
                 $q->where('order_code', $request->input('searchOrderCode'));
@@ -330,7 +341,7 @@ class OrderEcommerceController extends Controller
                 $q->whereDate('created_at', '<=', $request->input('searchCreatedAtTo'));
             })
             ->when($request->filled('searchCustomer'), function ($q) use ($request) {
-                $q->where('customer_phone', $request->input('searchCustomer'));
+                $q->where('customer_account', $request->input('searchCustomer'));
             })
             ->when($request->filled('order_id_check'), function ($q) use ($request) {
                 $orderIdCheck = $request->input('order_id_check');
@@ -338,6 +349,20 @@ class OrderEcommerceController extends Controller
                     $q->whereNull('order_id');
                 } elseif ($orderIdCheck == 1) {
                     $q->whereNotNull('order_id');
+                }
+            })
+            ->when($request->filled('shipping'), function ($q) use ($request) {
+                $shipping = $request->input('shipping');
+                if ($shipping == 0) {
+                    $q->whereNull('tracking_number');
+                } elseif ($shipping == 1) {
+                    $q->whereNotNull('tracking_number');
+                }
+            })
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $status = $request->input('status');
+                if ($status !== null) {
+                    $q->where('status', $status);
                 }
             })
             ->with(['details.product', 'order.orderProcess'])
@@ -349,6 +374,140 @@ class OrderEcommerceController extends Controller
             return response()->json(['table' => $view, 'links' => $links]);
         }
         return view('ecommerces.order_shopee', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Shopee']);
+    }
+
+    public function sendOrderShopees(Request $request)
+    {
+        try {
+            $data = $request->all();
+            //dd($data);
+            if ($data['platform_id'] !== $data['order_ecom']['platform_id']) {//nếu thay đổi platform_id thì mới update
+                $platformId = $data['platform_id'];//platformId mới
+                OrderShopee::where('id', $data['order_ecom']['id'])->update([
+                    'platform_id' => $platformId,
+                ]);
+            } else {
+                $platformId = $data['order_ecom']['platform_id'];
+            }
+            $platform = Platform::find($platformId);
+            $branchId = $platform->branch_id;
+            $sourceLink = $platform->url;
+            $orderSourceId = $platform->order_source_id;
+            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_shopees, trong đó có details
+            if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
+                // Cập nhật đơn hàng và chi tiết đơn hàng
+                $order = Order::find($data['order_id']);
+                //dd($order);
+                if ($order) {
+                    // Cập nhật đơn hàng
+                    $order->update([
+                        'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
+                        'branch_id' => $branchId,
+                        'order_source_id' => $orderSourceId,
+                        //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
+                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
+                        'notes' => $data['notes'] ?? null,
+                    ]);
+                    // Cập nhật chi tiết đơn hàng chính và đơn hàng shopee
+                    foreach ($data['product_details'] as $detail) {
+                        //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
+                        if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $orderShopeeDetail = OrderShopeeDetail::where('id', $detail['detail_ecom_id']);
+                            $orderShopeeDetail->update([
+                                'product_api_id' => $detail['product_api_id'],
+                                'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                            ]);
+                            if (empty($orderShopeeDetail->order_detail_id)) {// nếu chưa có order_detail thì tạo mới
+                                $orderDetail = OrderDetail::updateOrCreate(
+                                    [
+                                        'order_id' => $order->id,
+                                        'product_api_id' => $detail['product_api_id']
+                                    ],
+                                    [
+                                        'quantity' => $detail['quantity'],
+                                        // 'price' => $detail['price'],
+                                        // 'total' => $detail['total'],
+                                    ]
+                                );
+                                OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                                    'order_detail_id' => $orderDetail->id,
+                                    'product_api_id' => $detail['product_api_id'], // cập nhật product_api_id mới
+                                ]);
+                            } else {
+                                // Nếu có dữ liệu, cập nhật OrderDetail
+                                OrderDetail::where('id', $orderShopeeDetail->order_detail_id)->update([
+                                    'product_api_id' => $detail['product_api_id'],
+                                    'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                ]);
+                            }                            
+                        }
+                        //}
+                    }
+                    // Cập nhật quy trình đơn hàng
+                    $tracking_number = $data['tracking_number'] ?? $data['order_ecom']['tracking_number'];
+                    OrderProcess::updateOrCreate(
+                        ['order_id' => $order->id],
+                        [
+                            'responsible_user_id' => $data['responsible_user_id'],
+                            'tracking_number' => $tracking_number,
+                            'carrier_id' => $data['carrier_id'],
+                        ]
+                    );
+                }
+            } else {
+                // Tạo mới tài khoản khách hàng, mỗi đơn là mỗi tài khoản mới, không quan tâm cùng khách hay không
+                $customerAccount = CustomerAccount::create([
+                    'account_name' => $data['order_ecom']['customer_account'],
+                    'platform_id' => $platform->id,
+                ]);
+                //dd($customerAccount);
+                $order = Order::create([ // Tạo mới đơn hàng
+                    'order_code' => $data['order_ecom']['order_code'],
+                    'customer_account_id' => $customerAccount->id,
+                    'branch_id' => $branchId,
+                    'order_source_id' => $orderSourceId,
+                    'total_amount' => $data['order_ecom']['total_amount'] ?? null,
+                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
+                    'notes' => $data['notes'],
+                ]);
+
+                foreach ($data['product_details'] as $detail) {
+                    //dd($detail);
+                    if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                        continue;
+                    }
+                    $orderDetail = OrderDetail::create([
+                        'order_id' => $order->id,
+                        'product_api_id' => $detail['product_api_id'],
+                        'quantity' => $detail['quantity'],
+                        // 'price' => $detail['price'],
+                        // 'total' => $detail['total'],
+                    ]);
+                    OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                        'order_detail_id' => $orderDetail->id,
+                        'product_api_id' => $detail['product_api_id'],//cập nhật product_api_id mới, không cần quan tâm có thay đổi
+                    ]);
+                }
+
+                OrderShopee::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_shopees
+                    'order_id' => $order->id,
+                ]);
+
+                // Tạo mới quy trình đơn hàng
+                $tracking_number = $data['tracking_number'] ?? $data['order_ecom']['tracking_number'];
+                OrderProcess::create([
+                    'order_id' => $order->id,
+                    'status_id' => 1, //trạng thái đang xử lý
+                    'responsible_user_id' => $data['responsible_user_id'],
+                    'approval_time' => Carbon::now(),
+                    'tracking_number' => $tracking_number,
+                    'carrier_id' => $data['carrier_id'],
+                ]);
+            }
+            return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to store order and details', 'error' => $e->getMessage()], 500);
+        }
     }
 
 }

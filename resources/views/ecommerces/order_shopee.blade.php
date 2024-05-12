@@ -6,7 +6,7 @@
         <form id="searchOrder" method="GET" class="w-full mb-1">
             <div class="flex flex-wrap -mx-2">
                 <!-- Tìm đơn hàng -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-2/12 px-2 mb-1 md:mb-0">
                     <label for="searchOrderCode" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Tìm đơn hàng:</label>
                     <div class="relative">
                         <input type="text" id="searchOrderCode" name="searchOrderCode" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mã đơn hàng">
@@ -16,36 +16,54 @@
                     </div>
                 </div>
                 <!-- Tìm khách hàng -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-2/12 px-2 mb-1 md:mb-0">
                     <label for="searchCustomer" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Tìm khách hàng:</label>
                     <div class="relative">
-                        <input type="text" id="searchCustomer" name="searchCustomer" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập SĐT">
+                        <input type="text" id="searchCustomer" name="searchCustomer" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên khách hàng">
                         <div class="absolute inset-y-0 right-0 flex items-center px-2">
                             <button class="bg-gray-200 hover:bg-gray-300 text-gray-500 p-2 rounded-r-md" type="button" onclick="clearSearchCustomer()">Xóa</button>
                         </div>
                     </div>
                 </div>
                 <!-- Ngày tạo từ -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-2/12 px-2 mb-1 md:mb-0">
                     <label for="searchCreatedAtFrom" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Ngày tạo từ:</label>
                     <input type="text" id="searchCreatedAtFrom" name="searchCreatedAtFrom" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Chọn ngày">
                 </div>
                 <!-- Ngày tạo đến -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-2/12 px-2 mb-1 md:mb-0">
                     <label for="searchCreatedAtTo" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Ngày tạo đến:</label>
                     <input type="text" id="searchCreatedAtTo" name="searchCreatedAtTo" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Chọn ngày">
                 </div>
-                <!-- Trạng thái -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
-                    <label for="order_id_check" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
+                <!-- Xử lý đơn -->
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-1/12 px-2 mb-1 md:mb-0">
+                    <label for="order_id_check" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Xử lý đơn:</label>
                     <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="order_id_check" name="order_id_check">
                         <option value="">Chọn</option>
                         <option value="0">Chưa tạo đơn</option>
                         <option value="1">Đã tạo đơn</option>
                     </select>
                 </div>
+                <!-- Mã vận chuyển -->
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-1/12 px-2 mb-1 md:mb-0">
+                    <label for="shipping" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Mã VC:</label>
+                    <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="shipping" name="shipping">
+                        <option value="">Chọn</option>
+                        <option value="0">Chưa có</option>
+                        <option value="1">Đã có</option>
+                    </select>
+                </div>
+                <!-- Trạng thái -->
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-1/12 px-2 mb-1 md:mb-0">
+                    <label for="status" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
+                    <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" name="status">
+                        <option value="">Chọn</option>
+                        <option value="0" selected>Đang XL</option>
+                        <option value="1">Đơn hủy</option>
+                    </select>
+                </div>
                 <!-- Nút Tìm -->
-                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 flex items-end">
+                <div class="w-full sm:w-1/3 md:w-3/12 xl:w-1/12 mt-2 px-2 flex items-end">
                     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">Tìm</button>
                 </div>
             </div>
@@ -62,19 +80,19 @@
                         <input type="checkbox" id="checkAll">
                     </th>
                     <th scope="col" class="w-1/24 px-2 py-3 text-left text-center text-xs md:text-sm font-semibold uppercase tracking-wider"></th>
-                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã đơn</th>
-                    <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Khách hàng</th>
-                    <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Phone</th>
-                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Địa chỉ</th>
-                    <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tổng tiền</th>
-                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">NVC</th>
-                    <!-- <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã VC</th> -->
-                    <th scope="col" class="w-6/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Ngày đặt</th>
+                    <th scope="col" class="w-5/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã đơn</th>
+                    <th scope="col" class="w-5/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Khách hàng</th>
+                    <!-- <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Phone</th>
+                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Địa chỉ</th> -->
+                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tổng tiền</th>
+                    <th scope="col" class="w-4/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">NVC</th>
+                    <th scope="col" class="w-4/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã VC</th>
+                    <!-- <th scope="col" class="w-6/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Ngày đặt</th> -->
                     <th scope="col" class="w-1/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Check</th>
                 </tr>
             </thead>
             <tbody>
-                @include('ecommerces.partial_order_sendo_table', ['orders' => $orders, 'users' => $users, 'carriers' => $carriers])
+                @include('ecommerces.partial_order_shopee_table', ['orders' => $orders, 'users' => $users, 'carriers' => $carriers])
             </tbody>
         </table>
     </div>
@@ -89,7 +107,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="perPage" class="text-sm flex-grow text-right pr-2">Số hàng:</label>
                     <select id="perPage" class="px-1 py-2 text-sm w-20">
-                        <option value="10">10</option>
+                        <option value="15">15</option>
                         <option value="100">100</option>
                     </select>
                 </div>
@@ -151,49 +169,6 @@
         const modal = document.getElementById('successModal');
         modal.style.display = show ? 'block' : 'none';
     }
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
-    // document.addEventListener('alpine:init', () => {
-    //         Alpine.data('orderTable', () => ({
-    //             openDetails: null,
-    //             toggleDetails(orderId) {
-    //                 this.openDetails = this.openDetails === orderId ? null : orderId;
-    //                 $(this).text($(this).text() === '-' ? '+' : '-');
-    //             },
-
-    //         sendOrder(order) {
-    //             const orderId = order.id;
-    //             const orderRow = document.querySelector(`#details${orderId}`);
-    //             const carrierId = orderRow.querySelector(`#carrier_${orderId}`).value;
-    //             const trackingNumber = orderRow.querySelector(`#tracking_${orderId}`).value;
-    //             const responsibleUserId = orderRow.querySelector(`#responsible_${orderId}`).value;
-
-    //             const orderDetails = [];
-    //             orderRow.querySelectorAll('.autocomplete-product').forEach(input => {
-    //                 orderDetails.push({
-    //                     detail_id: input.dataset.detailId,
-    //                     product_api_id: input.getAttribute('data-product-id')
-    //                 });
-    //             });
-
-    //             const orderData = {
-    //                 order_id: orderId,
-    //                 carrier_id: carrierId,
-    //                 tracking_number: trackingNumber,
-    //                 responsible_user_id: responsibleUserId,
-    //                 order: {
-    //                     id: orderId,
-    //                     details: orderDetails
-    //                 }
-    //             };
-
-    //             console.log(orderData);
-    //         }
-    //     }));
-    // });
     document.addEventListener('alpine:init', () => {
         Alpine.data('orderTable', () => ({
             // openDetails: null,
@@ -225,6 +200,9 @@
                     const detailId = input.dataset.detailId;
                     const productApiId = input.getAttribute('data-product-id');//product id trong table details => người dùng có thể thay đổi
                     const initialProductApiId = input.dataset.initialProductId;//ban đầu product id trong mối quan hệ product
+                    
+                    const serialElement = input.closest('tr').querySelector('td[data-serial]');
+                    const serial = serialElement ? serialElement.dataset.serial : null;
                     // Lấy quantity từ cột tương ứng
                     const quantityElement = input.closest('tr').querySelector('td[data-quantity]');
                     const quantity = quantityElement ? quantityElement.dataset.quantity : null;
@@ -232,22 +210,12 @@
                     // console.log(productApiId);
                     // Check if the product API ID has changed: //nếu khác nhau có nghĩa là do người dùng thay đổi => lấy thông tin được thay đổi => không thì giữ nguyên
                     productDetails.push({
-                        sendo_detail_id: detailId,
+                        serial: serial,
+                        detail_ecom_id: detailId,
                         product_api_id: productApiId !== initialProductApiId ? productApiId : initialProductApiId,
                         product_api_id_before: initialProductApiId,//lấy data để xem có cần ghi vào sendo_details không
                         quantity: quantity,
                     });
-                    // if (productApiId !== initialProductApiId) { //nếu khác nhau có nghĩa là do người dùng thay đổi
-                    //     productDetails.push({
-                    //         detail_id: detailId,
-                    //         product_api_id: productApiId //lấy thông tin được thay đổi
-                    //     });
-                    // } else {
-                    //     productDetails.push({
-                    //         detail_id: detailId,
-                    //         product_api_id: initialProductApiId // If it hasn't changed, add the original data
-                    //     });
-                    // }
                 });
 
                 const orderData = {

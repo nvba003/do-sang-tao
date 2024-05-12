@@ -10,12 +10,18 @@
         </td>
         <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->order_code }}</td>
         <td class="w-2/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->customer_account }}</td>
-        <td class="w-2/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->customer_phone }}</td>
-        <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->customer_address }}</td>
+        <!-- <td class="w-2/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->customer_phone }}</td>
+        <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->customer_address }}</td> -->
         <td class="w-2/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->total_amount }}</td>
         <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->carrier }}</td>
-        <!-- <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->tracking_number }}</td> -->
-        <td class="w-6/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->order_date }}</td>
+        <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
+            @if ($order->status === 1)
+                <span class="text-red-500 ml-1">{{ $order->notes }}</span>
+            @else
+                {{ $order->tracking_number ?? '_' }}
+            @endif
+        </td>
+        <!-- <td class="w-6/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->order_date }}</td> -->
         <!-- <td class="w-1/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
             <span>{{ $order->order_id }}</span>
             @if($order->order_id)
@@ -75,7 +81,7 @@
                     <label for="platform_{{ $order->id }}" class="text-gray-700">Kênh BH:</label>
                     <select id="platform_{{ $order->id }}" class="bg-white text-sm rounded py-2 px-6">
                         @foreach($platforms as $platform)
-                            <option value="{{ $platform->id }}" {{ $order->order && $order->platform_id == $platform->id ? 'selected' : '' }}>
+                            <option value="{{ $platform->id }}" {{ $order->platform_id == $platform->id ? 'selected' : '' }}>
                                 {{ $platform->name }}
                             </option>
                         @endforeach
@@ -85,7 +91,8 @@
             <table class="min-w-full bg-white border border-gray-200 rounded-lg">
                 <thead class="bg-cyan-500 text-white">
                     <tr>
-                        <th class="py-2 px-4 text-left">SKU Sendo</th>
+                        <th class="py-2 px-4 text-left">STT</th>    
+                        <th class="py-2 px-4 text-left">SKU Ban Đầu</th>
                         <th class="py-2 px-4 text-left">SKU Sản phẩm</th>
                         <th class="py-2 px-4 text-left">Tên Sản Phẩm</th>
                         <th class="py-2 px-4 text-left">Image</th>
@@ -96,6 +103,7 @@
                 <tbody>
                     @forelse ($order->details as $detail)
                         <tr class="border-t border-gray-200">
+                            <td class="py-2 px-4" data-serial="{{ $detail->serial }}">{{ $detail->serial + 1 }}</td>
                             <td class="py-2 px-4">{{ $detail->sku }}</td>
                             <td class="py-2 px-4">
                                 <input type="text" id="product_{{ $detail->id }}" class="autocomplete-product bg-gray-200 text-sm rounded p-2" value="{{ $detail->product ? $detail->product->sku : '' }}" data-detail-id="{{ $detail->id }}" data-order-id="{{ $order->id }}" data-product-id="{{ $detail->product ? $detail->product_api_id : '' }}" data-initial-product-id="{{ $detail->product ? $detail->product->id : '' }}" require>
