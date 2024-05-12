@@ -4,6 +4,7 @@ namespace App\Models\Ecommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;//import do khác namespace
 
 class OrderShopee extends Model
 {

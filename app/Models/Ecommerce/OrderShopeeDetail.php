@@ -4,6 +4,7 @@ namespace App\Models\Ecommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductApi;//import do khác namespace
 
 class OrderShopeeDetail extends Model
 {
