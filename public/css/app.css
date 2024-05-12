@@ -2082,6 +2082,10 @@ select {
     width: 33.333333333%;
   }
 
+  .sm\:w-1\/2 {
+    width: 50%;
+  }
+
   .sm\:max-w-md {
     max-width: 28rem;
   }

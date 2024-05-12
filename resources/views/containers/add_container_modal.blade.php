@@ -1,5 +1,5 @@
 <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50" id="addContainerModal">
-    <div class="relative top-10 mx-auto p-5 border w-1/2 shadow-lg rounded-md bg-white">
+    <div class="relative top-10 mx-auto p-5 border w-full sm:w-1/2 shadow-lg rounded-md bg-white">
         <div class="text-center">
             <div class="flex items-center justify-between px-4 bg-green-200 rounded">
                 <h3 class="text-lg leading-normal font-medium text-gray-900" id="addContainerModalLabel">Thêm Thùng Hàng Mới</h3>

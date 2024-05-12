@@ -60,7 +60,9 @@ Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.
 // Route::resource('users', UserController::class);
 
 Route::get('/order-sendo/{platform_id}', [OrderEcommerceController::class, 'showOrderSendos'])->name('orderSendo.show');
-Route::post('/order-sendo-ct', [OrderEcommerceController::class, 'storeOrderSendos'])->name('orderSendoCT.store');
+// Route::post('/store-order-sendo', [OrderEcommerceController::class, 'storeOrderSendos'])->name('orderSendo.store');
 Route::post('/send-order-sendo-to-order', [OrderEcommerceController::class, 'sendOrderSendos'])->name('orderSendo.send');
+Route::get('/order-shopee/{platform_id}', [OrderEcommerceController::class, 'showOrderShopees'])->name('orderShopee.show');
+Route::post('/send-order-shopee-to-order', [OrderEcommerceController::class, 'sendOrderShopees'])->name('orderShopee.send');
 
 

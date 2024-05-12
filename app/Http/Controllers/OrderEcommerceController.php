@@ -252,4 +252,47 @@ class OrderEcommerceController extends Controller
         }
     }
 
+    public function storeOrderShopees(Request $request) //save data Shopee from extension to server
+    {
+        try {
+            $platformId = $request->input('platform_id');
+            $orders = $request->input('orders');
+            foreach ($orders as $orderData) {
+                // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Shopee không có ngày giờ đặt
+                $order = OrderShopee::updateOrCreate(
+                    ['order_code' => $orderData['order_code']],
+                    [
+                        'customer_account' => $orderData['customer_account'] ?? null,
+                        // 'customer_phone' => $orderData['customer_phone'] ?? null,//không có
+                        'total_amount' => $orderData['total_amount'] ?? null,
+                        'carrier' => $orderData['carrier'] ?? null,
+                        'tracking_number' => $orderData['tracking_number'] ?? null,
+                        // 'customer_address' => $orderData['customer_address'] ?? null, //không có
+                        // 'order_date' => $orderDate,
+                        'platform_id' => $platformId,
+                    ]
+                );
+                foreach ($orderData['products'] as $product) {// Lưu chi tiết đơn hàng mới
+                    $sku = $product['sku'];
+                    $searchProduct = ProductApi::where('sku', $sku)->first();
+                    $productId = $searchProduct ? $searchProduct->id : null;
+                    OrderShopeeDetail::updateOrCreate(
+                        ['order_shopee_id' => $order->id],
+                        [
+                            'sku' => $sku,
+                            'product_api_id' => $productId,
+                            'image' => $product['image'] ?? null,
+                            'name' => $product['name'] ?? null,
+                            'quantity' => $product['quantity'] ?? null,
+                            //'price' => isset($product['price']) ? $product['price'] : null,
+                        ]
+                    );
+                }
+            }
+            return response()->json(['message' => 'Orders stored successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to store orders', 'error' => $e->getMessage()], 500);
+        }
+    }
+
 }
