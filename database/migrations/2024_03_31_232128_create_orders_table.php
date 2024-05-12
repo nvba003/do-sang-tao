@@ -18,9 +18,9 @@ class CreateOrdersTable extends Migration
             $table->string('order_code')->unique();
             $table->unsignedMediumInteger('customer_id')->nullable();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
-            $table->unsignedMediumInteger('customer_account_id')->nullable();
+            $table->unsignedInteger('customer_account_id')->nullable();
             $table->foreign('customer_account_id')->references('id')->on('customer_accounts')->onDelete('set null');
-            $table->unsignedTinyInteger('branch_id');
+            $table->unsignedTinyInteger('branch_id')->nullable();
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
             $table->unsignedTinyInteger('order_source_id')->nullable();
             $table->foreign('order_source_id')->references('id')->on('order_sources')->onDelete('set null');

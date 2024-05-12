@@ -3,10 +3,10 @@
 @section('content')
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
     <div class="flex flex-wrap mx-auto mt-2 p-4 bg-white rounded shadow-md mb-2">
-        <form id="searchOrder" method="GET" class="w-full">
-            <div class="flex flex-wrap -mx-2 mb-4">
+        <form id="searchOrder" method="GET" class="w-full mb-1">
+            <div class="flex flex-wrap -mx-2">
                 <!-- Tìm đơn hàng -->
-                <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
                     <label for="searchOrderCode" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Tìm đơn hàng:</label>
                     <div class="relative">
                         <input type="text" id="searchOrderCode" name="searchOrderCode" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mã đơn hàng">
@@ -15,28 +15,37 @@
                         </div>
                     </div>
                 </div>
+                <!-- Tìm khách hàng -->
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                    <label for="searchCustomer" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Tìm khách hàng:</label>
+                    <div class="relative">
+                        <input type="text" id="searchCustomer" name="searchCustomer" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập SĐT">
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2">
+                            <button class="bg-gray-200 hover:bg-gray-300 text-gray-500 p-2 rounded-r-md" type="button" onclick="clearSearchCustomer()">Xóa</button>
+                        </div>
+                    </div>
+                </div>
                 <!-- Ngày tạo từ -->
-                <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
                     <label for="searchCreatedAtFrom" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Ngày tạo từ:</label>
                     <input type="text" id="searchCreatedAtFrom" name="searchCreatedAtFrom" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Chọn ngày">
                 </div>
                 <!-- Ngày tạo đến -->
-                <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
                     <label for="searchCreatedAtTo" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Ngày tạo đến:</label>
                     <input type="text" id="searchCreatedAtTo" name="searchCreatedAtTo" class="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Chọn ngày">
                 </div>
-                <!-- Chi nhánh -->
-                <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
-                    <label for="branch_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Chi nhánh:</label>
-                    <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="branch_id" name="branch_id">
-                        <option value="">Chọn chi nhánh</option>
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
+                <!-- Trạng thái -->
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
+                    <label for="order_id_check" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
+                    <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="order_id_check" name="order_id_check">
+                        <option value="">Chọn</option>
+                        <option value="0">Chưa tạo đơn</option>
+                        <option value="1">Đã tạo đơn</option>
                     </select>
                 </div>
                 <!-- Nút Tìm -->
-                <div class="w-full md:w-1/3 px-2 flex items-end">
+                <div class="w-full sm:w-1/3 lg:w-1/6 px-2 flex items-end">
                     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">Tìm</button>
                 </div>
             </div>
@@ -127,6 +136,9 @@
     function clearSearchOrder() {
         document.getElementById('searchOrderCode').value = '';
     }
+    function clearSearchCustomer() {
+        document.getElementById('searchCustomer').value = '';
+    }
     window.onload = function() {
         @if(session('success'))
             toggleModal(true); // Hiển thị modal khi có thông báo thành công
@@ -138,19 +150,6 @@
     function toggleModal(show) {
         const modal = document.getElementById('successModal');
         modal.style.display = show ? 'block' : 'none';
-    }
-
-    function clearSearchProduct() {
-        document.getElementById('searchProductID').value = "";
-        document.getElementById('searchProductIDValue').value = "";
-    }
-    function clearSearchContainer() {
-        document.getElementById('search_container_code').value = "";
-    }
-    function clearForm() {
-        event.preventDefault();
-        clearSearchProduct();
-        clearSearchContainer();
     }
     // $.ajaxSetup({
     //     headers: {
@@ -219,6 +218,7 @@
                 const notes = orderRow.querySelector(`#notes_${orderId}`).value;
                 const responsibleUserId = orderRow.querySelector(`#responsible_${orderId}`).value;
                 const platformId = orderRow.querySelector(`#platform_${orderId}`).value;
+                const updatedOrderId = document.querySelector(`#order-id-${orderId} span`).textContent.trim();// Lấy order_id từ thẻ span đã cập nhật
 
                 const productDetails = [];
                 orderRow.querySelectorAll('.autocomplete-product').forEach(input => {
@@ -251,7 +251,8 @@
                 });
 
                 const orderData = {
-                    order: order,
+                    order_ecom: order,
+                    order_id: updatedOrderId,
                     carrier_id: carrierId,
                     tracking_number: trackingNumber,
                     notes: notes,
@@ -275,6 +276,9 @@
                     return response.json();
                 })
                 .then(data => {
+                    const orderIdCheck = document.getElementById('order-id-' + orderId);//orderId là id trong order_sendos
+                    const orderIdSpan = orderIdCheck.querySelector('span');
+                    orderIdSpan.textContent = data.order_id;//data.order_id là id trong orders được trả về từ server
                     toggleModal(true); // Hiển thị modal khi có thông báo thành công
                     setTimeout(function() {
                         toggleModal(false); // Ẩn modal sau 500ms
@@ -292,10 +296,13 @@
         let currentSearchParams = "";
         let currentPerPage = "";
         let perPage = $('#perPage').val();
+        // Truyền giá trị platform_id từ Blade vào JavaScript
+        const platformId = {{ $platform_id }};
+        console.log(platformId);
         var orders = @json($orders)['data'];
         console.log(orders);
         var products = @json($products);
-        console.log(products);
+        //console.log(products);
 
         $('#orderTable').on('focus', '.autocomplete-product', function() {
             $(this).autocomplete({
@@ -325,20 +332,14 @@
             });
         }
 
-        fetchData('{{ route('orderSendoCT.show') }}');
-
-        $('#searchProduct').on('submit', function(e) {
-            e.preventDefault();
-            perPage = $('#perPage').val();
-            currentSearchParams = updateSearchParams('per_page', perPage, $(this).serialize());
-            fetchData('{{ route('orderSendoCT.show') }}?' + currentSearchParams);
-        });
+        const baseUrl = `{{ url('/order-sendo') }}/${platformId}`;
+        fetchData(baseUrl);
 
         $('#searchOrder').on('submit', function(e) {
             e.preventDefault();
             perPage = $('#perPage').val();
             currentSearchParams = updateSearchParams('per_page', perPage, $(this).serialize());
-            fetchData('{{ route('orderSendoCT.show') }}?' + currentSearchParams);
+            fetchData(`${baseUrl}?${currentSearchParams}`);
         });
         $('#searchOrder').submit();//tự động submit form khi tải trang ban đầu
 
@@ -357,7 +358,7 @@
         $('#perPage').on('change', function() {
             perPage = $(this).val();
             currentSearchParams = updateSearchParams('per_page', perPage, currentSearchParams);
-            fetchData('{{ route('orderSendoCT.show') }}?' + currentSearchParams);
+            fetchData(`${baseUrl}?${currentSearchParams}`);
         });
         function updateSearchParams(key, value, paramsString) {
             var searchParams = new URLSearchParams(paramsString);
@@ -378,16 +379,6 @@
         //     var promotion = $(this).data('promotion');
         //     openEditForm(promotion);
         // });
-
-        $("#searchContainer").on('submit', function(e) { //tìm mã thùng, form tự gửi data đến server
-            e.preventDefault(); // Ngăn form gửi theo cách truyền thống
-            clearSearchProduct(); // Tìm thùng thì xóa tìm Sản phẩm
-        });//kết thúc searchContainer
-
-        $("#searchProduct").on('submit', function(e) {//tìm sản phẩm, form tự gửi data đến server
-            e.preventDefault(); // Ngăn form gửi theo cách truyền thống
-            clearSearchContainer(); // Tìm sản phẩm thì xóa tìm mã thùng
-        });//kết thúc searchProduct
         
 
     });

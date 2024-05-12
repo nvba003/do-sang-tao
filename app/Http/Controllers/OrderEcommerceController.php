@@ -70,17 +70,25 @@ class OrderEcommerceController extends Controller
         }
     }
 
-    public function showOrderSendoCTs(Request $request)
+    public function showOrderSendos(Request $request)
     {
         $perPage = $request->input('per_page',10);
+        // Lấy platform_id từ đường dẫn
+        $platform_id = $request->route('platform_id');
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
         $carriers = Carrier::all();
         $stringName = 'Sendo';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
-        $query = OrderSendo::query()
-            ->when($request->filled('searchOrderCode'), function ($q) use ($request) {
+        $query = OrderSendo::query();
+            // Lọc dữ liệu dựa trên id truyền vào route
+            if ($platform_id == 1) {
+                $query->where('platform_id', 1);
+            } elseif ($platform_id == 2) {
+                $query->where('platform_id', 2);
+            }
+            $query->when($request->filled('searchOrderCode'), function ($q) use ($request) {
                 $q->where('order_code', $request->input('searchOrderCode'));
             })
             ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
@@ -89,15 +97,26 @@ class OrderEcommerceController extends Controller
             ->when($request->filled('searchCreatedAtTo'), function ($q) use ($request) {
                 $q->whereDate('created_at', '<=', $request->input('searchCreatedAtTo'));
             })
+            ->when($request->filled('searchCustomer'), function ($q) use ($request) {
+                $q->where('customer_phone', $request->input('searchCustomer'));
+            })
+            ->when($request->filled('order_id_check'), function ($q) use ($request) {
+                $orderIdCheck = $request->input('order_id_check');
+                if ($orderIdCheck == 0) {
+                    $q->whereNull('order_id');
+                } elseif ($orderIdCheck == 1) {
+                    $q->whereNotNull('order_id');
+                }
+            })
             ->with(['details.product', 'order.orderProcess'])
             ->orderBy('created_at', 'desc');
         $orders = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('ecommerces.partial_order_sendo_table', compact('orders', 'users', 'carriers', 'platforms'))->render();
+            $view = view('ecommerces.partial_order_sendo_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
             $links = $orders->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
-        return view('ecommerces.order_sendo', compact('products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Sendo']);
+        return view('ecommerces.order_sendo', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Sendo']);
     }
     
     public function sendOrderSendos(Request $request)
@@ -105,31 +124,31 @@ class OrderEcommerceController extends Controller
         try {
             $data = $request->all();
             //dd($data);
-            if ($data['platform_id'] !== $data['order']['platform_id']) {//nếu thay đổi platform_id thì mới update
+            if ($data['platform_id'] !== $data['order_ecom']['platform_id']) {//nếu thay đổi platform_id thì mới update
                 $platformId = $data['platform_id'];//platformId mới
-                OrderSendo::where('id', $data['order']['id'])->update([
+                OrderSendo::where('id', $data['order_ecom']['id'])->update([
                     'platform_id' => $platformId,
                 ]);
             } else {
-                $platformId = $data['order']['platform_id'];
+                $platformId = $data['order_ecom']['platform_id'];
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
             $sourceLink = $platform->url;
             $orderSourceId = $platform->order_source_id;
-            // Kiểm tra nếu order.id tồn tại | order là thông tin đơn hàng tại order_sendos, trong đó có details
-            if (isset($data['order']['order_id']) && $data['order']['order_id']) {
+            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_sendos, trong đó có details
+            if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
-                $order = Order::find($data['order']['order_id']);
+                $order = Order::find($data['order_id']);
                 //dd($order);
                 if ($order) {
                     // Cập nhật đơn hàng
                     $order->update([
-                        'order_code' => $data['order']['order_code'],//không cần cũng được, do code cố định
+                        'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
                         'order_source_id' => $orderSourceId,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order']['order_code'] : null,
+                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng sendo
@@ -141,19 +160,7 @@ class OrderEcommerceController extends Controller
                                 'product_api_id' => $detail['product_api_id'],
                                 'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
                             ]);
-                            // OrderDetail::where('id', $orderSendoDetail->order_detail_id)->update([
-                            //     'product_api_id' => $detail['product_api_id'],
-                            //     'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
-                            // ]);
                             if (empty($orderSendoDetail->order_detail_id)) {
-                                // Nếu $orderSendoDetail->order_detail_id không có dữ liệu, tạo mới OrderDetail
-                                // $orderDetail = OrderDetail::create([
-                                //     'order_id' => $order->id,
-                                //     'product_api_id' => $detail['product_api_id'],
-                                //     'quantity' => $detail['quantity'],
-                                //     // 'price' => $detail['price'],
-                                //     // 'total' => $detail['total'],
-                                // ]);
                                 $orderDetail = OrderDetail::updateOrCreate(
                                     [
                                         'order_id' => $order->id,
@@ -165,7 +172,6 @@ class OrderEcommerceController extends Controller
                                         // 'total' => $detail['total'],
                                     ]
                                 );
-                            
                                 // Cập nhật OrderSendoDetail với order_detail_id mới và product_api_id mới
                                 OrderSendoDetail::where('id', $detail['sendo_detail_id'])->update([
                                     'order_detail_id' => $orderDetail->id,
@@ -194,17 +200,17 @@ class OrderEcommerceController extends Controller
             } else {
                 // Tạo mới tài khoản khách hàng, mỗi đơn là mỗi tài khoản mới, không quan tâm cùng khách hay không
                 $customerAccount = CustomerAccount::create([
-                    'account_name' => $data['order']['customer_phone'],
+                    'account_name' => $data['order_ecom']['customer_phone'],
                     'platform_id' => $platform->id,
                 ]);
                 //dd($customerAccount);
                 $order = Order::create([ // Tạo mới đơn hàng
-                    'order_code' => $data['order']['order_code'],
+                    'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
                     'order_source_id' => $orderSourceId,
-                    'total_amount' => $data['order']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order']['order_code'] : null,
+                    'total_amount' => $data['order_ecom']['total_amount'] ?? null,
+                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
@@ -226,7 +232,7 @@ class OrderEcommerceController extends Controller
                     ]);
                 }
 
-                OrderSendo::where('id', $data['order']['id'])->update([//gắn order_id vào table order_sendos
+                OrderSendo::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_sendos
                     'order_id' => $order->id,
                 ]);
 

@@ -42,7 +42,7 @@
                         </button>
                         <div x-show="activeMenu === '{{ $menu->id }}' && !collapsed && sidebarExpanded" class="flex flex-col pl-4 bg-gray-800 w-full">
                             @foreach ($menu->children as $child)
-                                <a href="{{ $child->url }}" @click="handleSubmenuClick('{{ $child->id }}', '{{ $menu->id }}', '{{ $child->url }}', $event)" 
+                                    <a href="{{ url($child->url) }}" @click="handleSubmenuClick('{{ $child->id }}', '{{ $menu->id }}', '{{ url($child->url) }}', $event)" 
                                    :class="{ 'active-submenu': isActiveSubmenu('{{ $child->id }}') }"
                                    class="block px-4 py-2 hover:bg-gray-600 text-white cursor-pointer no-underline">{{ $child->name }}</a>
                             @endforeach
@@ -116,7 +116,8 @@ function sidebarComponent(menusData) {
             // console.log(menuId);
             sessionStorage.setItem('activeSubmenu', submenuId);
             sessionStorage.setItem('activeMenu', menuId);
-            window.location.href = url;
+            // window.location.href = url;
+            window.location.href = new URL(url, window.location.origin).href;
         },
         isActiveSubmenu(submenuId) {
             return sessionStorage.getItem('activeSubmenu') === submenuId.toString();

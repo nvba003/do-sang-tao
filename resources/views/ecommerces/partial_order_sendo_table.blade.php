@@ -16,9 +16,15 @@
         <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->carrier }}</td>
         <!-- <td class="w-3/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->tracking_number }}</td> -->
         <td class="w-6/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">{{ $order->order_date }}</td>
-        <td class="w-1/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
+        <!-- <td class="w-1/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
             <span>{{ $order->order_id }}</span>
             @if($order->order_id)
+                <span class="text-green-500 ml-1">&#10004;</span>
+            @endif
+        </td> -->
+        <td id="order-id-{{ $order->id }}" class="w-1/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
+            <span>{{ $order->order_id }}</span>
+            @if ($order->order_id)
                 <span class="text-green-500 ml-1">&#10004;</span>
             @endif
         </td>

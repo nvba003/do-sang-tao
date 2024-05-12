@@ -59,7 +59,7 @@ Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.
 // Định nghĩa các resource routes cho UserController
 // Route::resource('users', UserController::class);
 
-Route::get('/order-sendo-ct', [OrderEcommerceController::class, 'showOrderSendoCTs'])->name('orderSendoCT.show');
+Route::get('/order-sendo/{platform_id}', [OrderEcommerceController::class, 'showOrderSendos'])->name('orderSendo.show');
 Route::post('/order-sendo-ct', [OrderEcommerceController::class, 'storeOrderSendos'])->name('orderSendoCT.store');
 Route::post('/send-order-sendo-to-order', [OrderEcommerceController::class, 'sendOrderSendos'])->name('orderSendo.send');
 
