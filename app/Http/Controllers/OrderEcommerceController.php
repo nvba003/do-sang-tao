@@ -281,7 +281,7 @@ class OrderEcommerceController extends Controller
                     OrderShopeeDetail::updateOrCreate(
                         [
                             'order_shopee_id' => $order->id,
-                            'serial' => $index + 1 // Sử dụng $index làm serial
+                            'serial' => $index // Sử dụng $index làm serial
                         ],
                         [
                             'sku' => $sku,
