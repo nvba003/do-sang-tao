@@ -272,6 +272,8 @@ class OrderEcommerceController extends Controller
                         'tracking_number' => $orderData['tracking_number'] ?? null,
                         // 'customer_address' => $orderData['customer_address'] ?? null, //không có
                         // 'order_date' => $orderDate,
+                        'status' => $orderData['status'] ?? null,
+                        'notes' => $orderData['notes'] ?? null,
                         'platform_id' => $platformId,
                     ]
                 );

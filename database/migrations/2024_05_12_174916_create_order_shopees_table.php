@@ -23,6 +23,8 @@ class CreateOrderShopeesTable extends Migration
             $table->unsignedMediumInteger('total_amount')->nullable();
             $table->string('tracking_number')->nullable();
             $table->string('carrier')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->comment('0: normal, 1: cancel');
+            $table->text('notes')->nullable();
             $table->unsignedTinyInteger('platform_id')->nullable();
             $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
             $table->unsignedInteger('order_id')->nullable();
