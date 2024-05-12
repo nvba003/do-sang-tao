@@ -519,8 +519,19 @@ class OrderEcommerceController extends Controller
             $platformId = $request->input('platform_id');
             $orders = $request->input('orders');
             foreach ($orders as $orderData) {
-                $orderDateTime = Carbon::createFromFormat('d M Y H:i', $orderData['order_date']);
-                $orderDate = $orderDateTime->format('Y-m-d H:i:s');
+                // $orderDateTime = Carbon::createFromFormat('d M Y H:i', $orderData['order_date']);
+                // $orderDate = $orderDateTime->format('Y-m-d H:i:s');
+                $orderDate = null;
+
+                try {
+                    // Chuyển đổi chuỗi ngày tháng giờ thành đối tượng Carbon
+                    $orderDateTime = Carbon::createFromFormat('d M Y H:i', $orderData['order_date']);
+                    // Chuyển đổi đối tượng Carbon thành định dạng ngày giờ chuẩn của MySQL
+                    $orderDate = $orderDateTime->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    // Nếu xảy ra lỗi, giá trị của $orderDate sẽ là null
+                    $orderDate = null;
+                }
 
                 $tracking_number = $orderData['tracking_number'] ?? null;
                 
