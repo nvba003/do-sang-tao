@@ -274,12 +274,15 @@ class OrderEcommerceController extends Controller
                         'platform_id' => $platformId,
                     ]
                 );
-                foreach ($orderData['products'] as $product) {// Lưu chi tiết đơn hàng mới
+                foreach ($orderData['products'] as $index => $product) {// Lưu chi tiết đơn hàng mới
                     $sku = $product['sku'];
                     $searchProduct = ProductApi::where('sku', $sku)->first();
                     $productId = $searchProduct ? $searchProduct->id : null;
                     OrderShopeeDetail::updateOrCreate(
-                        ['order_shopee_id' => $order->id],
+                        [
+                            'order_shopee_id' => $order->id,
+                            'serial' => $index // Sử dụng $index làm serial
+                        ],
                         [
                             'sku' => $sku,
                             'product_api_id' => $productId,

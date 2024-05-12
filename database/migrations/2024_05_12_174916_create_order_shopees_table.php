@@ -15,7 +15,7 @@ class CreateOrderShopeesTable extends Migration
     {
         Schema::create('order_shopees', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('order_code')->unique();
+            $table->string('order_code')->unique();
             $table->timestamp('order_date')->nullable();
             $table->string('customer_account')->nullable();
             $table->string('customer_phone')->nullable();
