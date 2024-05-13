@@ -522,14 +522,12 @@ class OrderEcommerceController extends Controller
                 // $orderDateTime = Carbon::createFromFormat('d M Y H:i', $orderData['order_date']);
                 // $orderDate = $orderDateTime->format('Y-m-d H:i:s');
                 $orderDate = null;
-            try {
-                // Loại bỏ khoảng trắng không mong muốn
-                $cleanOrderDate = preg_replace('/\s+/', ' ', trim($orderData['order_date']));
-                $orderDateTime = Carbon::createFromFormat('d M Y H:i', $cleanOrderDate);
-                $orderDate = $orderDateTime; // Lưu đối tượng Carbon trực tiếp
-            } catch (\Exception $e) {
-                $orderDate = null;
-            }
+                try {
+                    $orderDateTime = Carbon::parse($orderData['order_date']);
+                    $orderDate = $orderDateTime;
+                } catch (\Exception $e) {
+                    $orderDate = null;
+                }
 
                 $tracking_number = $orderData['tracking_number'] ?? null;
                 
