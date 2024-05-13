@@ -776,39 +776,39 @@ class OrderEcommerceController extends Controller
             $platformId = $request->input('platform_id');
             $orders = $request->input('orders');
             foreach ($orders as $orderData) {
-                // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Shopee không có ngày giờ đặt
+                $orderDate = 
                 $tracking_number = $orderData['tracking_number'] ?? null;
                 
-                $order = OrderShopee::updateOrCreate(
+                $order = OrderTiki::updateOrCreate(
                     ['order_code' => $orderData['order_code']],
                     [
                         'customer_account' => $orderData['customer_account'] ?? null,
                         // 'customer_phone' => $orderData['customer_phone'] ?? null,//không có
                         'total_amount' => $orderData['total_amount'] ?? null,
-                        'carrier' => $orderData['carrier'] ?? null,
-                        'tracking_number' => $tracking_number,
-                        // 'customer_address' => $orderData['customer_address'] ?? null, //không có
-                        // 'order_date' => $orderDate,
+                        // 'carrier' => $orderData['carrier'] ?? null,
+                        // 'tracking_number' => $tracking_number,
+                        'customer_address' => $orderData['customer_address'] ?? null, //không có
+                        'order_date' => $orderDate,
                         'status' => $orderData['status'] ?? null,
                         'notes' => $orderData['notes'] ?? null,
                         'platform_id' => $platformId,
                     ]
                 );
-                if ($tracking_number && $order->order_id) {
-                    $orderProcess = OrderProcess::where('order_id', $order->order_id)->first();
-                    if ($orderProcess) {
-                        $orderProcess->update([
-                            'tracking_number' => $tracking_number,
-                        ]);
-                    }
-                }
+                // if ($tracking_number && $order->order_id) {
+                //     $orderProcess = OrderProcess::where('order_id', $order->order_id)->first();
+                //     if ($orderProcess) {
+                //         $orderProcess->update([
+                //             'tracking_number' => $tracking_number,
+                //         ]);
+                //     }
+                // }
                 foreach ($orderData['products'] as $index => $product) {// Lưu chi tiết đơn hàng mới
                     $sku = $product['sku'];
                     $searchProduct = ProductApi::where('sku', $sku)->first();
                     $productId = $searchProduct ? $searchProduct->id : null;
-                    OrderShopeeDetail::updateOrCreate(
+                    OrderTikiDetail::updateOrCreate(
                         [
-                            'order_shopee_id' => $order->id,
+                            'order_tiki_id' => $order->id,
                             'serial' => $index // Sử dụng $index làm serial
                         ],
                         [
@@ -837,16 +837,11 @@ class OrderEcommerceController extends Controller
         $branches = Branch::all();
         $users = User::all();
         $carriers = Carrier::all();
-        $stringName = 'Shopee';
+        $stringName = 'Tiki';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
-        $query = OrderShopee::query();
-            // Lọc dữ liệu dựa trên id truyền vào route
-            if ($platform_id == 3) {
-                $query->where('platform_id', 3);
-            } elseif ($platform_id == 4) {
-                $query->where('platform_id', 4);
-            }
-            $query->when($request->filled('searchOrderCode'), function ($q) use ($request) {
+        $query = OrderTiki::query();
+            $query->where('platform_id', 7)//platform của tiki hcm là 7
+            ->when($request->filled('searchOrderCode'), function ($q) use ($request) {
                 $q->where('order_code', $request->input('searchOrderCode'));
             })
             ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
@@ -884,11 +879,11 @@ class OrderEcommerceController extends Controller
             ->orderBy('created_at', 'desc');
         $orders = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('ecommerces.partial_order_shopee_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
+            $view = view('ecommerces.partial_order_tiki_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
             $links = $orders->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
-        return view('ecommerces.order_shopee', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Shopee']);
+        return view('ecommerces.order_tiki', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Tiki']);
     }
 
     public function sendOrderTikis(Request $request)
@@ -898,7 +893,7 @@ class OrderEcommerceController extends Controller
             //dd($data);
             if ($data['platform_id'] !== $data['order_ecom']['platform_id']) {//nếu thay đổi platform_id thì mới update
                 $platformId = $data['platform_id'];//platformId mới
-                OrderShopee::where('id', $data['order_ecom']['id'])->update([
+                OrderTiki::where('id', $data['order_ecom']['id'])->update([
                     'platform_id' => $platformId,
                 ]);
             } else {
@@ -906,7 +901,7 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_shopees, trong đó có details
+            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_Tikis, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
                 $order = Order::find($data['order_id']);
@@ -920,16 +915,16 @@ class OrderEcommerceController extends Controller
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
                         'notes' => $data['notes'] ?? null,
                     ]);
-                    // Cập nhật chi tiết đơn hàng chính và đơn hàng shopee
+                    // Cập nhật chi tiết đơn hàng chính và đơn hàng Tiki
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
-                            $orderShopeeDetail = OrderShopeeDetail::where('id', $detail['detail_ecom_id']);
-                            $orderShopeeDetail->update([
+                            $orderTikiDetail = OrderTikiDetail::where('id', $detail['detail_ecom_id']);
+                            $orderTikiDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
                                 'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
                             ]);
-                            if (empty($orderShopeeDetail->order_detail_id)) {// nếu chưa có order_detail thì tạo mới
+                            if (empty($orderTikiDetail->order_detail_id)) {// nếu chưa có order_detail thì tạo mới
                                 $orderDetail = OrderDetail::updateOrCreate(
                                     [
                                         'order_id' => $order->id,
@@ -941,13 +936,13 @@ class OrderEcommerceController extends Controller
                                         // 'total' => $detail['total'],
                                     ]
                                 );
-                                OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                                OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
                                     'order_detail_id' => $orderDetail->id,
                                     'product_api_id' => $detail['product_api_id'], // cập nhật product_api_id mới
                                 ]);
                             } else {
                                 // Nếu có dữ liệu, cập nhật OrderDetail
-                                OrderDetail::where('id', $orderShopeeDetail->order_detail_id)->update([
+                                OrderDetail::where('id', $orderTikiDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
                                 ]);
@@ -994,13 +989,13 @@ class OrderEcommerceController extends Controller
                         // 'price' => $detail['price'],
                         // 'total' => $detail['total'],
                     ]);
-                    OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                    OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
                         'product_api_id' => $detail['product_api_id'],//cập nhật product_api_id mới, không cần quan tâm có thay đổi
                     ]);
                 }
 
-                OrderShopee::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_shopees
+                OrderTiki::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_Tikis
                     'order_id' => $order->id,
                 ]);
 
