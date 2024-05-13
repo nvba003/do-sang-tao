@@ -142,8 +142,6 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            $sourceLink = $platform->url;
-            $orderSourceId = $platform->order_source_id;
             // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_sendos, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
@@ -154,9 +152,8 @@ class OrderEcommerceController extends Controller
                     $order->update([
                         'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
-                        'order_source_id' => $orderSourceId,
+                        'platform_id' => $platform->id,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng sendo
@@ -216,9 +213,8 @@ class OrderEcommerceController extends Controller
                     'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
-                    'order_source_id' => $orderSourceId,
+                    'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
@@ -397,8 +393,6 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            $sourceLink = $platform->url;
-            $orderSourceId = $platform->order_source_id;
             // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_shopees, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
@@ -409,9 +403,8 @@ class OrderEcommerceController extends Controller
                     $order->update([
                         'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
-                        'order_source_id' => $orderSourceId,
+                        'platform_id' => $platform->id,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng shopee
@@ -471,9 +464,8 @@ class OrderEcommerceController extends Controller
                     'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
-                    'order_source_id' => $orderSourceId,
+                    'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
@@ -662,8 +654,6 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            $sourceLink = $platform->url;
-            $orderSourceId = $platform->order_source_id;
             // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_lazadas, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
@@ -674,9 +664,8 @@ class OrderEcommerceController extends Controller
                     $order->update([
                         'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
-                        'order_source_id' => $orderSourceId,
+                        'platform_id' => $platform->id,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng Lazada
@@ -736,9 +725,8 @@ class OrderEcommerceController extends Controller
                     'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
-                    'order_source_id' => $orderSourceId,
+                    'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
@@ -918,8 +906,6 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            $sourceLink = $platform->url;
-            $orderSourceId = $platform->order_source_id;
             // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_shopees, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
@@ -930,9 +916,8 @@ class OrderEcommerceController extends Controller
                     $order->update([
                         'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
-                        'order_source_id' => $orderSourceId,
+                        'platform_id' => $platform->id,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng shopee
@@ -992,9 +977,8 @@ class OrderEcommerceController extends Controller
                     'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
-                    'order_source_id' => $orderSourceId,
+                    'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
@@ -1175,8 +1159,6 @@ class OrderEcommerceController extends Controller
             }
             $platform = Platform::find($platformId);
             $branchId = $platform->branch_id;
-            $sourceLink = $platform->url;
-            $orderSourceId = $platform->order_source_id;
             // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_Tiktoks, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
@@ -1187,9 +1169,8 @@ class OrderEcommerceController extends Controller
                     $order->update([
                         'order_code' => $data['order_ecom']['order_code'],//không cần cũng được, do code cố định
                         'branch_id' => $branchId,
-                        'order_source_id' => $orderSourceId,
+                        'platform_id' => $platform->id,
                         //'total_amount' => $data['order']['total_amount'] ?? null, //cố định nên không cần update
-                        'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
                     // Cập nhật chi tiết đơn hàng chính và đơn hàng Tiktok
@@ -1249,7 +1230,7 @@ class OrderEcommerceController extends Controller
                     'order_code' => $data['order_ecom']['order_code'],
                     'customer_account_id' => $customerAccount->id,
                     'branch_id' => $branchId,
-                    'order_source_id' => $orderSourceId,
+                    'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
                     'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],

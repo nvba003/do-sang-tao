@@ -22,11 +22,11 @@ class CreateOrdersTable extends Migration
             $table->foreign('customer_account_id')->references('id')->on('customer_accounts')->onDelete('set null');
             $table->unsignedTinyInteger('branch_id')->nullable();
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
-            $table->unsignedTinyInteger('order_source_id')->nullable();
-            $table->foreign('order_source_id')->references('id')->on('order_sources')->onDelete('set null');
+            $table->unsignedTinyInteger('platform_id')->nullable();
+            $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
             $table->unsignedMediumInteger('discount')->default(0);//đ
             $table->unsignedMediumInteger('total_amount')->default(0);//đ
-            $table->string('source_link')->nullable();//đường dẫn đến đơn gốc
+            $table->string('source_info')->nullable();//thông tin về nguồn gốc đơn hàng
             $table->text('notes')->nullable();
             $table->boolean('is_cancelled_or_returned')->default(false);
             $table->timestamps();
