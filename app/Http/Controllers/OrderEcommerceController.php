@@ -1232,7 +1232,6 @@ class OrderEcommerceController extends Controller
                     'branch_id' => $branchId,
                     'platform_id' => $platform->id,
                     'total_amount' => $data['order_ecom']['total_amount'] ?? null,
-                    'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                     'notes' => $data['notes'],
                 ]);
 
