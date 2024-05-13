@@ -815,7 +815,7 @@ class OrderEcommerceController extends Controller
                             'image' => $product['image'] ?? null,
                             'name' => $product['name'] ?? null,
                             'quantity' => $product['quantity'] ?? null,
-                            //'price' => isset($product['price']) ? $product['price'] : null,
+                            'price' => $product['price'] ?? null,
                         ]
                     );
                 }
