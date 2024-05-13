@@ -9,6 +9,10 @@ use App\Models\Ecommerce\OrderShopee;
 use App\Models\Ecommerce\OrderShopeeDetail;
 use App\Models\Ecommerce\OrderLazada;
 use App\Models\Ecommerce\OrderLazadaDetail;
+use App\Models\Ecommerce\OrderTiki;
+use App\Models\Ecommerce\OrderTikiDetail;
+use App\Models\Ecommerce\OrderTiktok;
+use App\Models\Ecommerce\OrderTiktokDetail;
 use App\Models\Platform;
 use App\Models\ProductApi;
 use App\Models\Product;
@@ -692,7 +696,7 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        'price' => $detail['price'],
+                                        // 'price' => $detail['price'],
                                         // 'total' => $detail['total'],
                                     ]
                                 );
@@ -747,7 +751,7 @@ class OrderEcommerceController extends Controller
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        'price' => $detail['price'],
+                        // 'price' => $detail['price'],
                         // 'total' => $detail['total'],
                     ]);
                     OrderLazadaDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -1040,10 +1044,17 @@ class OrderEcommerceController extends Controller
             $platformId = $request->input('platform_id');
             $orders = $request->input('orders');
             foreach ($orders as $orderData) {
-                // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Shopee không có ngày giờ đặt
+                $orderDate = null;
+                try {
+                    $orderDateTime = Carbon::createFromFormat('d/m/Y H:i:s', $orderData['order_date']);
+                    $orderDate = $orderDateTime; // Lưu đối tượng Carbon trực tiếp
+                } catch (\Exception $e) {
+                    $orderDate = null;
+                }
+                // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Tiktok không có ngày giờ đặt
                 $tracking_number = $orderData['tracking_number'] ?? null;
                 
-                $order = OrderShopee::updateOrCreate(
+                $order = OrderTiktok::updateOrCreate(
                     ['order_code' => $orderData['order_code']],
                     [
                         'customer_account' => $orderData['customer_account'] ?? null,
@@ -1052,7 +1063,7 @@ class OrderEcommerceController extends Controller
                         'carrier' => $orderData['carrier'] ?? null,
                         'tracking_number' => $tracking_number,
                         // 'customer_address' => $orderData['customer_address'] ?? null, //không có
-                        // 'order_date' => $orderDate,
+                        'order_date' => $orderDate,
                         'status' => $orderData['status'] ?? null,
                         'notes' => $orderData['notes'] ?? null,
                         'platform_id' => $platformId,
@@ -1070,9 +1081,9 @@ class OrderEcommerceController extends Controller
                     $sku = $product['sku'];
                     $searchProduct = ProductApi::where('sku', $sku)->first();
                     $productId = $searchProduct ? $searchProduct->id : null;
-                    OrderShopeeDetail::updateOrCreate(
+                    OrderTiktokDetail::updateOrCreate(
                         [
-                            'order_shopee_id' => $order->id,
+                            'order_tiktok_id' => $order->id,
                             'serial' => $index // Sử dụng $index làm serial
                         ],
                         [
@@ -1101,9 +1112,9 @@ class OrderEcommerceController extends Controller
         $branches = Branch::all();
         $users = User::all();
         $carriers = Carrier::all();
-        $stringName = 'Shopee';
+        $stringName = 'Tiktok';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
-        $query = OrderShopee::query();
+        $query = OrderTiktok::query();
             // Lọc dữ liệu dựa trên id truyền vào route
             if ($platform_id == 3) {
                 $query->where('platform_id', 3);
@@ -1148,11 +1159,11 @@ class OrderEcommerceController extends Controller
             ->orderBy('created_at', 'desc');
         $orders = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('ecommerces.partial_order_shopee_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
+            $view = view('ecommerces.partial_order_tiktok_table', compact('platform_id', 'orders', 'users', 'carriers', 'platforms'))->render();
             $links = $orders->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
-        return view('ecommerces.order_shopee', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Shopee']);
+        return view('ecommerces.order_tiktok', compact('platform_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Đơn hàng Tiktok']);
     }
 
     public function sendOrderTiktoks(Request $request)
@@ -1162,7 +1173,7 @@ class OrderEcommerceController extends Controller
             //dd($data);
             if ($data['platform_id'] !== $data['order_ecom']['platform_id']) {//nếu thay đổi platform_id thì mới update
                 $platformId = $data['platform_id'];//platformId mới
-                OrderShopee::where('id', $data['order_ecom']['id'])->update([
+                OrderTiktok::where('id', $data['order_ecom']['id'])->update([
                     'platform_id' => $platformId,
                 ]);
             } else {
@@ -1172,7 +1183,7 @@ class OrderEcommerceController extends Controller
             $branchId = $platform->branch_id;
             $sourceLink = $platform->url;
             $orderSourceId = $platform->order_source_id;
-            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_shopees, trong đó có details
+            // Kiểm tra nếu order.id tồn tại | order_ecom là thông tin đơn hàng tại order_Tiktoks, trong đó có details
             if (isset($data['order_id']) && $data['order_id']) {//$data['order_id'] là id trong orders
                 // Cập nhật đơn hàng và chi tiết đơn hàng
                 $order = Order::find($data['order_id']);
@@ -1187,16 +1198,16 @@ class OrderEcommerceController extends Controller
                         'source_link' => $sourceLink ? $sourceLink . $data['order_ecom']['order_code'] : null,
                         'notes' => $data['notes'] ?? null,
                     ]);
-                    // Cập nhật chi tiết đơn hàng chính và đơn hàng shopee
+                    // Cập nhật chi tiết đơn hàng chính và đơn hàng Tiktok
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
-                            $orderShopeeDetail = OrderShopeeDetail::where('id', $detail['detail_ecom_id']);
-                            $orderShopeeDetail->update([
+                            $orderTiktokDetail = OrderTiktokDetail::where('id', $detail['detail_ecom_id']);
+                            $orderTiktokDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
                                 'quantity' => $detail['quantity'],//bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
                             ]);
-                            if (empty($orderShopeeDetail->order_detail_id)) {// nếu chưa có order_detail thì tạo mới
+                            if (empty($orderTiktokDetail->order_detail_id)) {// nếu chưa có order_detail thì tạo mới
                                 $orderDetail = OrderDetail::updateOrCreate(
                                     [
                                         'order_id' => $order->id,
@@ -1208,7 +1219,7 @@ class OrderEcommerceController extends Controller
                                         // 'total' => $detail['total'],
                                     ]
                                 );
-                                OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                                OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
                                     'order_detail_id' => $orderDetail->id,
                                     'product_api_id' => $detail['product_api_id'], // cập nhật product_api_id mới
                                 ]);
@@ -1262,13 +1273,13 @@ class OrderEcommerceController extends Controller
                         // 'price' => $detail['price'],
                         // 'total' => $detail['total'],
                     ]);
-                    OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
+                    OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
                         'product_api_id' => $detail['product_api_id'],//cập nhật product_api_id mới, không cần quan tâm có thay đổi
                     ]);
                 }
 
-                OrderShopee::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_shopees
+                OrderTiktok::where('id', $data['order_ecom']['id'])->update([//gắn order_id vào table order_Tiktoks
                     'order_id' => $order->id,
                 ]);
 

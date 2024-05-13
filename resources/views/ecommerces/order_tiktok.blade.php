@@ -92,7 +92,7 @@
                 </tr>
             </thead>
             <tbody>
-                @include('ecommerces.partial_order_lazada_table', ['orders' => $orders, 'users' => $users, 'carriers' => $carriers])
+                @include('ecommerces.partial_order_tiktok_table', ['orders' => $orders, 'users' => $users, 'carriers' => $carriers])
             </tbody>
         </table>
     </div>
@@ -229,7 +229,7 @@
                     product_details: productDetails,
                 };
                 console.log(orderData);
-                fetch('{{ route('orderLazada.send') }}', {
+                fetch('{{ route('orderTiktok.send') }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -300,7 +300,7 @@
             });
         }
 
-        const baseUrl = `{{ url('/order-lazada') }}/${platformId}`;
+        const baseUrl = `{{ url('/order-tiktok') }}/${platformId}`;
         fetchData(baseUrl);
 
         $('#searchOrder').on('submit', function(e) {
