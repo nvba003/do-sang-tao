@@ -1051,7 +1051,6 @@ class OrderEcommerceController extends Controller
                 } catch (\Exception $e) {
                     $orderDate = null;
                 }
-                // $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Đơn Tiktok không có ngày giờ đặt
                 $tracking_number = $orderData['tracking_number'] ?? null;
                 
                 $order = OrderTiktok::updateOrCreate(
@@ -1115,13 +1114,8 @@ class OrderEcommerceController extends Controller
         $stringName = 'Tiktok';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderTiktok::query();
-            // Lọc dữ liệu dựa trên id truyền vào route
-            if ($platform_id == 3) {
-                $query->where('platform_id', 3);
-            } elseif ($platform_id == 4) {
-                $query->where('platform_id', 4);
-            }
-            $query->when($request->filled('searchOrderCode'), function ($q) use ($request) {
+            $query->where('platform_id', 8)//tiktok hcm có platform là 8
+            ->when($request->filled('searchOrderCode'), function ($q) use ($request) {
                 $q->where('order_code', $request->input('searchOrderCode'));
             })
             ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
