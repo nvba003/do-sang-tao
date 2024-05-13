@@ -523,9 +523,10 @@ class OrderEcommerceController extends Controller
                 // $orderDate = $orderDateTime->format('Y-m-d H:i:s');
                 $orderDate = null;
             try {
-                // Tạo đối tượng Carbon từ timestamp
-                $orderDateTime = Carbon::createFromTimestamp(strtotime($orderData['order_date']));
-                $orderDate = $orderDateTime->toDateTimeString(); // 'Y-m-d H:i:s'
+                // Loại bỏ khoảng trắng không mong muốn
+                $cleanOrderDate = preg_replace('/\s+/', ' ', trim($orderData['order_date']));
+                $orderDateTime = Carbon::createFromFormat('d M Y H:i', $cleanOrderDate);
+                $orderDate = $orderDateTime->format('Y-m-d H:i:s');
             } catch (\Exception $e) {
                 $orderDate = null;
             }
