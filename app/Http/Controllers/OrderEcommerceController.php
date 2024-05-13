@@ -776,9 +776,7 @@ class OrderEcommerceController extends Controller
             $platformId = $request->input('platform_id');
             $orders = $request->input('orders');
             foreach ($orders as $orderData) {
-                $orderDate = 
-                $tracking_number = $orderData['tracking_number'] ?? null;
-                
+                // $tracking_number = $orderData['tracking_number'] ?? null;
                 $order = OrderTiki::updateOrCreate(
                     ['order_code' => $orderData['order_code']],
                     [
@@ -788,7 +786,7 @@ class OrderEcommerceController extends Controller
                         // 'carrier' => $orderData['carrier'] ?? null,
                         // 'tracking_number' => $tracking_number,
                         'customer_address' => $orderData['customer_address'] ?? null, //không có
-                        'order_date' => $orderDate,
+                        'order_date' => $orderData['order_date'] ?? null,
                         'status' => $orderData['status'] ?? null,
                         'notes' => $orderData['notes'] ?? null,
                         'platform_id' => $platformId,
