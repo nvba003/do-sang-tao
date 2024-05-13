@@ -526,7 +526,7 @@ class OrderEcommerceController extends Controller
                 // Loại bỏ khoảng trắng không mong muốn
                 $cleanOrderDate = preg_replace('/\s+/', ' ', trim($orderData['order_date']));
                 $orderDateTime = Carbon::createFromFormat('d M Y H:i', $cleanOrderDate);
-                $orderDate = $orderDateTime->format('Y-m-d H:i:s');
+                $orderDate = $orderDateTime; // Lưu đối tượng Carbon trực tiếp
             } catch (\Exception $e) {
                 $orderDate = null;
             }
