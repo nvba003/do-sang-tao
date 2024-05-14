@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use App\Models\ProductApi;
 use App\Models\Product;
+use Carbon\Carbon;
+use App\Jobs\FetchAndStoreProductsJob;
 //use Illuminate\Support\Carbon;
 
 class ProductApiController extends Controller
@@ -47,67 +51,139 @@ class ProductApiController extends Controller
     //     return back()->with('success', 'Cập nhật sản phẩm thành công!');
     // }
 
+    // public function getDataByPage($page)
+    // {
+    //     $spikey = "4ccfe3d9305b4288bb2b5cf9184c8e5d";
+    //     $apisecret = "c9830e0a36b348c786f8df30a72d75c8";
+    //     $GetProducts = "@do-vat-sang-tao.mysapo.net/admin/products";
+    //     $Fields = ".json?fields=image,name,variants,product_type,alias";
+    //     $Indexs = "&limit=250&page=";//giới hạn 250 bản ghi
+    //     //$Page = "2";
+    //     //$Count = "/count.json";
+    //     $LinkGetdataSapo = 'https://'.$spikey.':'.$apisecret.$GetProducts.$Fields.$Indexs.$page;
+    //     $response = Http::get($LinkGetdataSapo);
+    //     $data = json_decode($response); // '{"id": 1420053, "name": "guzzle", ...}'
+    //     return $data;
+    // }
+    // public function fetchAndStoreProducts()
+    // {
+        
+    //     $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
+    //     $response = Http::get($countProduct);
+    //     $count = json_decode($response)->count;//lấy tổng số sản phẩm chính
+    //     $page = ceil($count/250);//tính số trang
+    //     $collectedData = collect();
+    //     for ($i = 1; $i <= $page; $i++) {//chia nhỏ để ghi dữ liệu với 250 bản ghi/lần có thời gian tối ưu nhất
+    //         $kq = collect();//tạo mảng php trống
+    //         $dulieu = $this->getDataByPage($i)->products;
+    //         foreach ($dulieu as $value) {
+    //             if(empty($value->image)){
+    //                 $image = '';
+    //             }
+    //             else{
+    //                 $image = $value->image->src;
+    //             }
+    //             foreach ($value->variants as $giatri) {
+    //                 $kq->push([
+    //                     'id'        => $giatri->id,
+    //                     'sku'       => $giatri->sku,
+    //                     'name'=> $giatri->title == "Default Title" ? $value->name : $value->name .' '. $giatri->title,
+    //                     'product_type'      => $value->product_type,
+    //                     'images'   => $image ?? null,
+    //                     'alias'     => $value->alias,
+    //                     'inventory_quantity'   => $giatri->inventory_quantity,
+    //                     'price'    => $giatri->price,
+    //                     'weight'   => $giatri->weight,
+    //                     'updated_at'=> Carbon::now('Asia/Ho_Chi_Minh')
+    //                 ]);
 
-public function fetchAndStoreProducts()
-{
-    $client = new Client();
-    $allProducts = [];
-    $page = 1;
-    $perPage = 1000; // Số sản phẩm mỗi trang, có thể thay đổi nếu cần thiết
+    //             }//end foreach $value
+    //         }//end foreach $dulieu
+    //         $collectedData = $collectedData->concat($kq);//tổng hợp dữ liệu từng trang
 
-    do {
-        $response = $client->request('GET', 'https://do-vat-sang-tao.mysapo.net/admin/products.json', [
-            'auth' => ['4ccfe3d9305b4288bb2b5cf9184c8e5d', 'c9830e0a36b348c786f8df30a72d75c8'],
-            'query' => [
-                'page' => $page,
-                'limit' => $perPage
-            ]
-        ]);
+    //         //-------cập nhật dữ liệu bảng sapoweb--------
+    //         DB::table('product_apis')->upsert($kq->all(), //hoặc $kq->toArray() đều được
+    //             ['id'], ['sku','name','product_type','images','alias','inventory_quantity','price','weight','updated_at']);
 
-        $data = json_decode($response->getBody()->getContents(), true);
+    //     }//end for
 
-        if (isset($data['products']) && !empty($data['products'])) {
-            $allProducts = array_merge($allProducts, $data['products']);
+    //     return $collectedData;
+    // }
+
+    public function fetchAndStoreProducts()
+    {
+        $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
+        $response = Http::get($countProduct);
+        $count = json_decode($response->body())->count;
+        $pages = ceil($count / 250);
+        //dd($pages);
+        for ($i = 1; $i <= $pages; $i++) {
+            FetchAndStoreProductsJob::dispatch($i);
         }
 
-        $page++;
-    } while (count($data['products']) == $perPage); // Tiếp tục nếu còn đủ sản phẩm trên trang hiện tại
+        return response()->json(['message' => 'Products are being processed.']);
+    }
 
-    $products = collect($allProducts)->map(function ($item) {
-        return [
-            'id' => $item['variants'][0]['id'],
-            'sku' => $item['variants'][0]['sku'],
-            'name' => $item['name'],
-            'product_type' => $item['product_type'],
-            'images' => $item['images'][0]['src'] ?? null,
-            'alias' => $item['alias'],
-            'inventory_quantity' => $item['variants'][0]['inventory_quantity'],
-            'price' => $item['variants'][0]['price'],
-            'weight' => $item['variants'][0]['weight'],
-            'created_at' => $item['variants'][0]['created_on'],
-            'updated_at' => $item['variants'][0]['modified_on']
-        ];
-    });
+// public function fetchAndStoreProducts()
+// {
+//     $client = new Client();
+//     $allProducts = [];
+//     $page = 1;
+//     $perPage = 1000; // Số sản phẩm mỗi trang, có thể thay đổi nếu cần thiết
 
-    DB::transaction(function () use ($products) {
-        // Vô hiệu hóa kiểm tra khóa ngoại
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+//     do {
+//         $response = $client->request('GET', 'https://do-vat-sang-tao.mysapo.net/admin/products.json', [
+//             'auth' => ['4ccfe3d9305b4288bb2b5cf9184c8e5d', 'c9830e0a36b348c786f8df30a72d75c8'],
+//             'query' => [
+//                 'page' => $page,
+//                 'limit' => $perPage
+//             ]
+//         ]);
 
-        // Xóa toàn bộ dữ liệu hiện tại trong bảng product_apis
-        ProductApi::query()->delete();
+//         $data = json_decode($response->getBody()->getContents(), true);
 
-        // Kích hoạt lại kiểm tra khóa ngoại
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+//         if (isset($data['products']) && !empty($data['products'])) {
+//             $allProducts = array_merge($allProducts, $data['products']);
+//         }
 
-        // Chèn dữ liệu mới
-        foreach ($products as $product) {
-            ProductApi::create($product);
-            $this->handleProductApi($product); // Gọi hàm cùng controller
-        }
-    });
+//         $page++;
+//     } while (count($data['products']) == $perPage); // Tiếp tục nếu còn đủ sản phẩm trên trang hiện tại
 
-    return back()->with('success', 'Cập nhật sản phẩm thành công!');
-}
+//     $products = collect($allProducts)->map(function ($item) {
+//         return [
+//             'id' => $item['variants'][0]['id'],
+//             'sku' => $item['variants'][0]['sku'],
+//             'name' => $item['name'],
+//             'product_type' => $item['product_type'],
+//             'images' => $item['images'][0]['src'] ?? null,
+//             'alias' => $item['alias'],
+//             'inventory_quantity' => $item['variants'][0]['inventory_quantity'],
+//             'price' => $item['variants'][0]['price'],
+//             'weight' => $item['variants'][0]['weight'],
+//             'created_at' => $item['variants'][0]['created_on'],
+//             'updated_at' => $item['variants'][0]['modified_on']
+//         ];
+//     });
+
+//     DB::transaction(function () use ($products) {
+//         // Vô hiệu hóa kiểm tra khóa ngoại
+//         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+//         // Xóa toàn bộ dữ liệu hiện tại trong bảng product_apis
+//         ProductApi::query()->delete();
+
+//         // Kích hoạt lại kiểm tra khóa ngoại
+//         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+//         // Chèn dữ liệu mới
+//         foreach ($products as $product) {
+//             ProductApi::create($product);
+//             $this->handleProductApi($product); // Gọi hàm cùng controller
+//         }
+//     });
+
+//     return back()->with('success', 'Cập nhật sản phẩm thành công!');
+// }
 
 public function handleProductApi($productApiData)
 {
