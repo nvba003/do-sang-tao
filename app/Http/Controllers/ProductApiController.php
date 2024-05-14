@@ -84,8 +84,8 @@ class ProductApiController extends Controller
         for ($i = 1; $i <= $pages; $i++) {
             FetchAndStoreProductsJob::dispatch($i);
         }
-        //return back()->with('success', 'Cập nhật sản phẩm thành công!');
-        return response()->json(['message' => 'Products are being processed.']);
+        return back()->with('success', 'Cập nhật sản phẩm thành công!');
+        // return response()->json(['message' => 'Products are being processed.']);
     }
 
     public function handleProductApi($productApiData)

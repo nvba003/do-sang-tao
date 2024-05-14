@@ -64,6 +64,15 @@ class FetchAndStoreProductsJob implements ShouldQueue
         })->collapse();
         //dd($products);
         DB::table('product_apis')->upsert($products->toArray(), ['id'], ['sku','name','product_type','images','alias','inventory_quantity','price','weight','updated_at']);
+        // Kiểm tra và cập nhật cột product_api_id trong bảng products
+        $existingApiIds = DB::table('product_apis')->pluck('id');
+        $productsToUpdate = DB::table('products')->whereNotIn('product_api_id', $existingApiIds)->get();
+
+        foreach ($productsToUpdate as $product) {
+            // Thêm giá trị id mới nếu cần
+            DB::table('products')->where('id', $product->id)->update(['product_api_id' => $existingApiIds->random()]);
+        }
+        
     }
 
 }
