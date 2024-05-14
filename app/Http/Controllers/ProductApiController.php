@@ -88,22 +88,6 @@ class ProductApiController extends Controller
         // return response()->json(['message' => 'Products are being processed.']);
     }
 
-    public function handleProductApi($productApiData)
-    {
-        $productApi = ProductApi::updateOrCreate(
-            ['id' => $productApiData['id']],
-            $productApiData
-        );
-
-        // Kiểm tra và thêm mới Product nếu không tìm thấy
-        $product = Product::firstOrCreate(
-            ['product_api_id' => $productApi->id],
-            [
-                // Thêm các trường khác ở đây nếu cần
-            ]
-        );
-    }
-
     public function showWebProducts(Request $request)
     {
         $perPage = $request->input('per_page',20); // Số lượng mặc định là 3 nếu không có tham số per_page
