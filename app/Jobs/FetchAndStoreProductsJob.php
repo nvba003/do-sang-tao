@@ -64,15 +64,24 @@ class FetchAndStoreProductsJob implements ShouldQueue
         })->collapse();
         //dd($products);
         DB::table('product_apis')->upsert($products->toArray(), ['id'], ['sku','name','product_type','images','alias','inventory_quantity','price','weight','updated_at']);
-        // Kiểm tra và cập nhật cột product_api_id trong bảng products
-        $existingApiIds = DB::table('product_apis')->pluck('id');
-        $productsToUpdate = DB::table('products')->whereNotIn('product_api_id', $existingApiIds)->get();
-
-        foreach ($productsToUpdate as $product) {
-            // Thêm giá trị id mới nếu cần
-            DB::table('products')->where('id', $product->id)->update(['product_api_id' => $existingApiIds->random()]);
+        // Lấy danh sách tất cả các product_api_id từ bảng product_apis
+        $apiIds = DB::table('product_apis')->pluck('id');
+        // Lấy danh sách các product_api_id đã tồn tại trong bảng products
+        $existingApiIdsInProducts = DB::table('products')->whereIn('product_api_id', $apiIds)->pluck('product_api_id');
+        // Tìm các product_api_id mới không có trong bảng products
+        $newApiIds = $apiIds->diff($existingApiIdsInProducts);
+        // Giả sử bạn muốn thêm các product_api_id mới này vào các sản phẩm cụ thể hoặc tạo sản phẩm mới
+        foreach ($newApiIds as $newApiId) {
+            // Thêm product_api_id mới vào bảng products
+            // Bạn cần thay đổi logic này phù hợp với nhu cầu cụ thể của bạn (ví dụ: tạo sản phẩm mới hoặc cập nhật sản phẩm hiện có)
+            DB::table('products')->insert([
+                'product_api_id' => $newApiId,
+                // Thay đổi các trường dữ liệu cần thiết
+                'created_at' => Carbon::now(),
+                // 'updated_at' => Carbon::now()
+            ]);
         }
-        
+
     }
 
 }
