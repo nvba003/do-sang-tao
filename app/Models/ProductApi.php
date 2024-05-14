@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductApi extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id', 'sku', 'name', 'product_type', 'images', 'alias', 'inventory_quantity', 'price', 'weight', 'created_at', 'updated_at'
-    ];
+    protected $guarded = [];
     public function containers()
     {
         return $this->hasMany(Container::class, 'product_id');
