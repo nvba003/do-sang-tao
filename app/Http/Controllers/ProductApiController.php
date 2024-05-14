@@ -84,8 +84,8 @@ class ProductApiController extends Controller
         for ($i = 1; $i <= $pages; $i++) {
             FetchAndStoreProductsJob::dispatch($i);
         }
-        return back()->with('success', 'Cập nhật sản phẩm thành công!');
-        //return response()->json(['message' => 'Products are being processed.']);
+        //return back()->with('success', 'Cập nhật sản phẩm thành công!');
+        return response()->json(['message' => 'Products are being processed.']);
     }
 
     public function handleProductApi($productApiData)
@@ -103,23 +103,6 @@ class ProductApiController extends Controller
             ]
         );
     }
-
-    // public function handleProductApi($productApiData)
-    // {
-    //     $productApi = ProductApi::updateOrCreate(
-    //         ['id' => $productApiData['id']],
-    //         $productApiData
-    //     );
-
-    //     // Kiểm tra và thêm mới Product nếu không tìm thấy
-    //     $product = Product::firstOrCreate(
-    //         ['product_api_id' => $productApi->id],
-    //         [
-    //             //'name' => $productApi->name, // Ví dụ
-    //             // Thêm các trường khác ở đây
-    //         ]
-    //     );
-    // }
 
     public function showWebProducts(Request $request)
     {
