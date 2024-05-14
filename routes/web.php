@@ -28,6 +28,11 @@ Route::get('/get-path', function () {
     return base_path();
 });
 
+Route::get('/get-php-path', function () {
+    $path = shell_exec('which php');
+    return response()->json(['path' => $path]);
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
