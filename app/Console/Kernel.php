@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
             for ($i = 1; $i <= $pages; $i++) {
                 FetchAndStoreProductsJob::dispatch($i);
             }
-        })->everyTenMinutes()->between('7:00', '23:00'); // everyMinute();
+        })->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
     }
 
     /**
