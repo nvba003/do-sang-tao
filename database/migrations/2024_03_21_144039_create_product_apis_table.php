@@ -15,7 +15,7 @@ class CreateProductApisTable extends Migration
     {
         Schema::create('product_apis', function (Blueprint $table) {
             $table->unsignedInteger('id')->primary(); // Sử dụng 'id' như một khóa chính không tự động tăng
-            $table->string('sku')->unique();
+            $table->string('sku');
             $table->string('name');
             $table->string('product_type')->nullable();
             $table->string('images')->nullable();

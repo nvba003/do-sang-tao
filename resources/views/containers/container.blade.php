@@ -52,15 +52,13 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
+                <!-- <div class="w-full sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="bundle_type" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Loại SP:</label>
                     <select id="bundle_type" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="bundle_type">
                         <option value="">Chọn loại bundle</option>
-                        @foreach($bundleTypes as $type)
-                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                        @endforeach
+                        
                     </select>
-                </div>
+                </div> -->
                 <div class="w-full sm:w-2/24 px-1 md:px-3 md:mb-0">
                     <button type="submit" class="bg-blue-500 text-white py-2 px-1 w-full rounded hover:bg-blue-600 mt-2 sm:mt-6">Tìm</button>
                 </div>
@@ -168,7 +166,6 @@
 @push('scripts')
 <script>
     // console.log(@json($containerStatuses));
-    // console.log(@json($bundleTypes));
     // console.log(@json($locations));
     function openModal() {
         const modal = document.getElementById('addContainerModal');

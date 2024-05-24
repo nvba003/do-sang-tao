@@ -39,37 +39,52 @@ class OrderEcommerceController extends Controller
         try {
             $platformId = $request->input('platform_id');
             $orders = $request->input('orders');
-            // Đơn hàng chỉ lưu 1 lần, nếu có lỗi thì thêm chức năng xóa đơn để chạy lại
             foreach ($orders as $orderData) {
-                $existingOrder = OrderSendo::where('order_code', $orderData['order_code'])->first(); // Kiểm tra xem order_code đã tồn tại chưa
-                if (!$existingOrder) { // Nếu đơn hàng chưa tồn tại, thêm mới đơn hàng
-                    $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Xử lý ngày giờ đặt hàng
-                    $order = OrderSendo::create([
-                        'order_code' => $orderData['order_code'],
+                $orderDate = Carbon::createFromFormat('H:i - d/m/Y', $orderData['order_date']);// Xử lý ngày giờ đặt hàng
+                // $tracking_number = $orderData['tracking_number'] ?? null;
+                $order = OrderSendo::updateOrCreate(
+                    ['order_code' => $orderData['order_code']],
+                    [
                         'customer_account' => $orderData['customer_account'] ?? null,
-                        'customer_phone' => $orderData['customer_phone'] ?? null,
+                        'customer_phone' => $orderData['customer_phone'] ?? null,//không có
                         'total_amount' => $orderData['total_amount'] ?? null,
                         'carrier' => $orderData['carrier'] ?? null,
-                        'customer_address' => $orderData['customer_address'] ?? null,
+                        // 'tracking_number' => $tracking_number,
+                        'customer_address' => $orderData['customer_address'] ?? null, //không có
                         'order_date' => $orderDate,
+                        'status' => $orderData['status'] ?? 0,//mặc định là 0
+                        'notes' => $orderData['notes'] ?? null,
                         'platform_id' => $platformId,
-                    ]);
-                    foreach ($orderData['products'] as $product) {// Lưu chi tiết đơn hàng mới
-                        // Lấy mã sau dấu "-" do 1 số sku có dạng "4032_85089635-G2TPMSBV0340"
-                        $skuParts = explode('-', $product['sku']);
-                        $sku = count($skuParts) > 1 ? $skuParts[1] : $skuParts[0];
-                        $searchProduct = ProductApi::where('sku', $sku)->first();
-                        $productId = $searchProduct ? $searchProduct->id : null;
-                        OrderSendoDetail::create([
+                    ]
+                );
+                // if ($tracking_number && $order->order_id) {
+                //     $orderProcess = OrderProcess::where('order_id', $order->order_id)->first();
+                //     if ($orderProcess) {
+                //         $orderProcess->update([
+                //             'tracking_number' => $tracking_number,
+                //         ]);
+                //     }
+                // }
+                foreach ($orderData['products'] as $index => $product) {// Lưu chi tiết đơn hàng mới
+                    // Lấy mã sau dấu "-" do 1 số sku có dạng "4032_85089635-G2TPMSBV0340"
+                    $skuParts = explode('-', $product['sku']);
+                    $sku = count($skuParts) > 1 ? $skuParts[1] : $skuParts[0];
+                    $searchProduct = ProductApi::where('sku', $sku)->first();
+                    $productId = $searchProduct ? $searchProduct->id : null;
+                    OrderSendoDetail::updateOrCreate(
+                        [
                             'order_sendo_id' => $order->id,
+                            'serial' => $index // Sử dụng $index làm serial
+                        ],
+                        [
                             'sku' => $sku,
                             'product_api_id' => $productId,
                             'image' => $product['image'] ?? null,
                             'name' => $product['name'] ?? null,
                             'quantity' => $product['quantity'] ?? null,
                             //'price' => isset($product['price']) ? $product['price'] : null,
-                        ]);
-                    }
+                        ]
+                    );
                 }
             }
             return response()->json(['message' => 'Orders stored successfully'], 200);
@@ -1268,6 +1283,104 @@ class OrderEcommerceController extends Controller
     }
 
 //====================================================================
+    // public function storeOrderSapo(Request $request)
+    // {
+    //     $platformId = $request->input('platform_id');
+    //     $platform = Platform::find($platformId);
+    //     $branchId = $platform->branch_id;
+    //     $data = $request->input('orders');
+
+    //     $customerAccount = CustomerAccount::create([
+    //         'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
+    //         'platform_id' => $platform->id,
+    //     ]);
+    //     // Tạo đơn hàng mới
+    //     $order = new Order;
+    //     $order->order_code = $data['orderID'];
+    //     $order->branch_id = $branchId;
+    //     $order->platform_id = $platformId;
+    //     $order->customer_account_id = $customerAccount->id;
+    //     $order->total_discount = (int) str_replace(',', '', $data['totalDiscount']);
+    //     $order->total_amount = (int) str_replace(',', '', $data['totalAmount']);
+    //     $order->customer_shipping_fee = (int) str_replace(',', '', $data['shippingFee']);
+    //     $order->notes = $data['note'];
+    //     $order->save();
+
+    //     foreach ($data['products'] as $product) {
+    //         $productItem = Product::find($product['sku']);
+
+    //         $detail = new OrderDetail;
+    //         $detail->order_id = $order->id;
+    //         $detail->product_api_id = $productItem->product_api_id;
+    //         $detail->bundle_id = $productItem->bundle_id;
+    //         $detail->quantity = $product['quantity'];
+    //         $detail->price = (int) str_replace(',', '', $product['unitPrice']);
+    //         $detail->discount = (int) str_replace(',', '', $product['discount']);
+    //         $detail->total = (int) str_replace(',', '', $product['totalPrice']);
+    //         $detail->save();
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Order created successfully!',
+    //         'order_id' => $order->id
+    //     ]);
+    // }
+    public function storeOrderSapo(Request $request)
+    {
+        $platformId = $request->input('platform_id');
+        $platform = Platform::find($platformId);
+        $branchId = $platform->branch_id;
+        $data = $request->input('orders');
+        $order = Order::where('order_code', $data['orderID'])->first();
+        if (!$order) {// Nếu đơn hàng không tồn tại
+            $customerAccount = CustomerAccount::create([
+                'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
+                'platform_id' => $platform->id,
+            ]);
+            $order = new Order;
+            $order->order_code = $data['orderID'];
+            $order->branch_id = $branchId;
+            $order->platform_id = $platformId;
+            $order->customer_account_id = $customerAccount->id;
+            $order->total_discount = (int) str_replace(',', '', $data['totalDiscount']);
+            $order->total_amount = (int) str_replace(',', '', $data['totalAmount']);
+            $order->customer_shipping_fee = (int) str_replace(',', '', $data['shippingFee']);
+            $order->notes = $data['note'];
+            $order->save();
+        } else {
+            // Cập nhật đơn hàng nếu đã tồn tại
+            $order->branch_id = $branchId;
+            $order->platform_id = $platformId;
+            $order->total_discount = (int) str_replace(',', '', $data['totalDiscount']);
+            $order->total_amount = (int) str_replace(',', '', $data['totalAmount']);
+            $order->customer_shipping_fee = (int) str_replace(',', '', $data['shippingFee']);
+            $order->notes = $data['note'];
+            $order->save();
+            CustomerAccount::where('id', $order->customer_account_id)->update([
+                'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
+                'platform_id' => $platform->id,
+            ]);
+        }
+        // Xử lý sản phẩm trong đơn hàng
+        foreach ($data['products'] as $product) {
+            $productItem = Product::find($product['sku']); // Giả sử bạn đã có SKU là unique key để tìm kiếm
+
+            $detail = new OrderDetail;
+            $detail->order_id = $order->id;
+            $detail->product_api_id = $productItem->product_api_id;
+            $detail->bundle_id = $productItem->bundle_id;
+            $detail->quantity = $product['quantity'];
+            $detail->price = (int) str_replace(',', '', $product['unitPrice']);
+            $detail->discount = (int) str_replace(',', '', $product['discount']);
+            $detail->total = (int) str_replace(',', '', $product['totalPrice']);
+            $detail->save();
+        }
+
+        return response()->json([
+            'message' => 'Order processed successfully!',
+            'order_id' => $order->id
+        ]);
+    }
 
 
 }

@@ -15,6 +15,6 @@ class OrderDetail extends Model
     }
     public function product()
     {
-        return $this->belongsTo(ProductApi::class);
+        return $this->belongsTo(Product::class, 'product_api_id', 'product_api_id');
     }
 }

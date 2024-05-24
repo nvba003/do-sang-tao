@@ -40,4 +40,5 @@ Route::post('/store-order-shopees', [OrderEcommerceController::class, 'storeOrde
 Route::post('/store-order-lazadas', [OrderEcommerceController::class, 'storeOrderLazadas']);
 Route::post('/store-order-tikis', [OrderEcommerceController::class, 'storeOrderTikis']);
 Route::post('/store-order-tiktoks', [OrderEcommerceController::class, 'storeOrderTiktoks']);
+Route::post('/store-order-sapo', [OrderEcommerceController::class, 'storeOrderSapo']);
 Route::get('/platforms', [OrderEcommerceController::class, 'getPlatForms']);

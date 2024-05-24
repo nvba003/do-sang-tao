@@ -21,6 +21,9 @@ class CreateShipmentScansTable extends Migration
             $table->boolean('scanned')->default(false);
             $table->timestamp('scan_date')->nullable();
             $table->timestamps();
+
+            $table->unsignedMediumInteger('user_id')->nullable(); // ID của người dùng thực hiện thao tác, nullable nếu hành động được thực hiện bởi hệ thống
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Task\Task;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -59,4 +60,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(InventoryTransaction::class, 'user_id');
     }
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_users')->withPivot('is_primary');
+    }
+
+
 }

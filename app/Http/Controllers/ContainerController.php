@@ -30,7 +30,7 @@ class ContainerController extends Controller
 
         $products = ProductApi::all();
         $branches = Branch::all();
-        $bundleTypes = BundleType::all();
+        // $bundleTypes = BundleType::all();
         $containerMenuOptions = ContainerMenuOption::all();//cho chức năng thêm thùng
         $existingCodes = Container::pluck('container_code')->toArray();
         $containerStatuses = ContainerStatus::all();
@@ -53,11 +53,11 @@ class ContainerController extends Controller
             ->when($request->filled('container_status_id'), function ($q) use ($request) {
                 $q->where('container_status_id', $request->input('container_status_id'));
             })
-            ->when($request->filled('bundle_type'), function ($query) use ($request) {
-                $query->whereHas('product', function ($q) use ($request) {
-                    $q->where('bundle_type_id', $request->input('bundle_type'));
-                });
-            }) 
+            // ->when($request->filled('bundle_type'), function ($query) use ($request) {
+            //     $query->whereHas('product', function ($q) use ($request) {
+            //         $q->where('bundle_type_id', $request->input('bundle_type'));
+            //     });
+            // }) 
             ->when($request->filled('container_id'), function ($q) use ($request) {
                 $q->where('container_code', $request->input('container_id'));
             })
@@ -74,7 +74,7 @@ class ContainerController extends Controller
         }
         
         $header = 'Quản lý thùng hàng';
-        return view('containers.container', compact('products', 'branches', 'bundleTypes', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
+        return view('containers.container', compact('products', 'branches', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
     }
 
     // public function searchProduct(Request $request)

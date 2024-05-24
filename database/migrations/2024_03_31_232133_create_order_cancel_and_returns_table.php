@@ -22,6 +22,7 @@ class CreateOrderCancelAndReturnsTable extends Migration
             $table->foreign('reason_id')->references('id')->on('cancel_return_reasons')->onDelete('set null');
             $table->unsignedMediumInteger('processed_by')->nullable(); // ID của người xử lý (nhân viên)
             $table->foreign('processed_by')->references('id')->on('users')->onDelete('set null');
+            $table->date('carrier_return_date')->nullable();//ngày NVC báo đã hoàn
             $table->text('notes')->nullable(); // Ghi chú thêm về việc hủy hoặc trả hàng
             $table->timestamps(); // Thời gian tạo và cập nhật bản ghi
         });

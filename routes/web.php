@@ -9,6 +9,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderEcommerceController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AuxpackingController;
+use App\Http\Controllers\TaskController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,4 +78,19 @@ Route::post('/send-order-tiki-to-order', [OrderEcommerceController::class, 'send
 Route::get('/order-tiktok/{platform_id}', [OrderEcommerceController::class, 'showOrderTiktoks'])->name('orderTiktok.show');
 Route::post('/send-order-tiktok-to-order', [OrderEcommerceController::class, 'sendOrderTiktoks'])->name('orderTiktok.send');
 
+Route::get('/order/{branch_id}', [OrderController::class, 'showOrders'])->name('order.show');
+Route::get('/order-process/{branch_id}', [OrderController::class, 'showOrderProcesses'])->name('orderProcess.show');
 
+Route::get('/cal', [AuxpackingController::class, 'updateProductSummaries']);
+Route::get('/auxpacking-product/{branch_id}', [AuxpackingController::class, 'showProducts']);
+Route::post('/update-auxpacking-container', [AuxpackingController::class, 'updateContainer'])->name('auxPackingContainer.update');
+
+Route::get('/auxpacking-order/{branch_id}', [AuxpackingController::class, 'showOrders']);
+Route::get('/auxpacking-container/{branch_id}', [AuxpackingController::class, 'showContainers']);
+Route::get('/auxpacking-scan/{branch_id}', [AuxpackingController::class, 'showScans'])->name('scans.show');
+Route::post('/auxpacking-scan/store', [AuxpackingController::class, 'storeScan'])->name('scans.store');
+
+Route::resource('tasks', TaskController::class);
+Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.addComment');
+Route::post('/tasks/{task}/attachments', [TaskController::class, 'addAttachment'])->name('tasks.addAttachment');
+Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('tasks.addTag');

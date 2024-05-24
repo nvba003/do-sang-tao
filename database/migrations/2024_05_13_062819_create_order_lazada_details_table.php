@@ -22,7 +22,7 @@ class CreateOrderLazadaDetailsTable extends Migration
             $table->unsignedTinyInteger('serial')->nullable();//STT danh sách sản phẩm
             $table->string('sku')->nullable();
             $table->unsignedInteger('product_api_id')->nullable();
-            $table->foreign('product_api_id')->references('id')->on('product_apis')->onDelete('set null');
+            $table->foreign('product_api_id')->references('product_api_id')->on('products')->onDelete('set null');
             $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->unsignedSmallInteger('quantity')->nullable();

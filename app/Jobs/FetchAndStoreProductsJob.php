@@ -65,23 +65,37 @@ class FetchAndStoreProductsJob implements ShouldQueue
         //dd($products);
         DB::table('product_apis')->upsert($products->toArray(), ['id'], ['sku','name','product_type','images','alias','inventory_quantity','price','weight','updated_at']);
         // Lấy danh sách tất cả các product_api_id từ bảng product_apis
-        $apiIds = DB::table('product_apis')->pluck('id');
+        // code cũ $apiIds = DB::table('product_apis')->pluck('id');
+        $apiProducts = DB::table('product_apis')->select('id', 'sku', 'name', 'inventory_quantity')->get();
+        $apiIds = $apiProducts->pluck('id');
         // Lấy danh sách các product_api_id đã tồn tại trong bảng products
         $existingApiIdsInProducts = DB::table('products')->whereIn('product_api_id', $apiIds)->pluck('product_api_id');
         // Tìm các product_api_id mới không có trong bảng products
         $newApiIds = $apiIds->diff($existingApiIdsInProducts);
         // Giả sử bạn muốn thêm các product_api_id mới này vào các sản phẩm cụ thể hoặc tạo sản phẩm mới
-        foreach ($newApiIds as $newApiId) {
-            // Thêm product_api_id mới vào bảng products
-            // Bạn cần thay đổi logic này phù hợp với nhu cầu cụ thể của bạn (ví dụ: tạo sản phẩm mới hoặc cập nhật sản phẩm hiện có)
+        // foreach ($newApiIds as $newApiId) {
+        //     DB::table('products')->insert([
+        //         'product_api_id' => $newApiId,
+        //         'name' => ....,
+        //         // Thay đổi các trường dữ liệu cần thiết
+        //         'created_at' => Carbon::now(),
+        //         // 'updated_at' => Carbon::now()
+        //     ]);
+        // }
+        
+        // Lọc $apiProducts để chỉ giữ lại những sản phẩm có ID trong $newApiIds
+        $newProducts = $apiProducts->whereIn('id', $newApiIds);
+        // Thêm các sản phẩm mới vào bảng products
+        foreach ($newProducts as $product) {
             DB::table('products')->insert([
-                'product_api_id' => $newApiId,
-                // Thay đổi các trường dữ liệu cần thiết
+                'product_api_id' => $product->id,
+                'sku' => $product->sku,
+                'name' => $product->name,
+                'quantity' => $product->inventory_quantity,
                 'created_at' => Carbon::now(),
-                // 'updated_at' => Carbon::now()
+                // 'updated_at' => Carbon::now(),
             ]);
         }
 
     }
-
 }

@@ -14,14 +14,17 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/inventory.css') }}"> 
+        <!-- <link rel="stylesheet" href="{{ asset('css/inventory.css') }}">  -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
-        <script src="//cdn.jsdelivr.net/npm/alpinejs" defer></script>
-    
+        <!-- <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/cdn.min.js" defer></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script> -->
+        <audio id="beep-sound" src="{{ asset('sound/beep.mp3') }}"></audio>
+        <audio id="beep-error-sound" src="{{ asset('sound/beep-error.flac') }}"></audio>
+        <audio id="error-sound" src="{{ asset('sound/error.wav') }}"></audio>
 
     </head>
     <body class="font-sans antialiased">

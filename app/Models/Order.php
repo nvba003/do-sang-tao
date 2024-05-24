@@ -21,5 +21,21 @@ class Order extends Model
     {
         return $this->hasOne(OrderSendo::class, 'order_id');
     }
+    public function platform()
+    {
+        return $this->hasOne(Platform::class, 'id', 'platform_id');
+    }
+    public function customerAccount()
+    {
+        return $this->hasOne(CustomerAccount::class, 'id', 'customer_account_id');
+    }
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+    public function finances()
+    {
+        return $this->hasMany(OrderFinance::class, 'order_id');
+    }
     
 }

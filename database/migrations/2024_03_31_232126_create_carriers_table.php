@@ -15,6 +15,8 @@ class CreateCarriersTable extends Migration
     {
         Schema::create('carriers', function (Blueprint $table) {
             $table->tinyIncrements('id');
+            $table->unsignedTinyInteger('carrier_group_id');
+            $table->foreign('carrier_group_id')->references('id')->on('carrier_groups')->onDelete('cascade');
             $table->string('name'); // Tên đơn vị vận chuyển
             $table->string('code')->unique(); // Mã đơn vị vận chuyển, dùng để nhận diện một cách nhanh chóng
             $table->text('description')->nullable(); // Mô tả về đơn vị vận chuyển

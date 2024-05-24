@@ -15,7 +15,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->string('customer_code')->unique();
+            $table->string('customer_code')->unique()->nullable();
             $table->unsignedTinyInteger('customer_group_id')->nullable();
             $table->foreign('customer_group_id')->references('id')->on('customer_groups')->onDelete('set null');
             $table->string('name');

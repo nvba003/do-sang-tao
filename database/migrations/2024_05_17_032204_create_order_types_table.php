@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBundleTypesTable extends Migration
+class CreateOrderTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateBundleTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('bundle_types', function (Blueprint $table) {
+        Schema::create('order_types', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();//->comment('1:regular, 2:promotion, 3:wholesale, 4:custom');
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateBundleTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bundle_types');
+        Schema::dropIfExists('order_types');
     }
 }

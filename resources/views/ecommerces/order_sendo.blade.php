@@ -37,7 +37,7 @@
                 </div>
                 <!-- Trạng thái -->
                 <div class="w-full sm:w-1/3 lg:w-1/6 px-2 mb-1 md:mb-0">
-                    <label for="order_id_check" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
+                    <label for="order_id_check" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Xử lý đơn:</label>
                     <select class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="order_id_check" name="order_id_check">
                         <option value="">Chọn</option>
                         <option value="0">Chưa tạo đơn</option>
