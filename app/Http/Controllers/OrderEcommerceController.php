@@ -1347,6 +1347,20 @@ class OrderEcommerceController extends Controller
             $order->customer_shipping_fee = (int) str_replace(',', '', $data['shippingFee']);
             $order->notes = $data['note'];
             $order->save();
+            // Tạo mới các OrderDetail
+            foreach ($data['products'] as $product) {
+                $productItem = Product::where('sku', $product['sku'])->first();
+                if (!$productItem) continue;
+                $detail = new OrderDetail;
+                $detail->order_id = $order->id;
+                $detail->product_api_id = $productItem->product_api_id;
+                $detail->bundle_id = $productItem->bundle_id;
+                $detail->quantity = $product['quantity'];
+                $detail->price = (int) str_replace(',', '', $product['unitPrice']);
+                $detail->discount = (int) str_replace(',', '', $product['discount']);
+                $detail->total = (int) str_replace(',', '', $product['totalPrice']);
+                $detail->save();
+            }
         } else {
             // Cập nhật đơn hàng nếu đã tồn tại
             $order->branch_id = $branchId;
@@ -1360,22 +1374,25 @@ class OrderEcommerceController extends Controller
                 'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
                 'platform_id' => $platform->id,
             ]);
-        }
-        // Xử lý sản phẩm trong đơn hàng
-        foreach ($data['products'] as $product) {
-            $productItem = Product::where('sku', $product['sku'])->first();
-            if (!$productItem) {
-                continue;  // Skip this product
+            // Cập nhật các OrderDetail
+            foreach ($data['products'] as $product) {
+                $productItem = Product::where('sku', $product['sku'])->first();
+                if (!$productItem) continue;
+                $detail = OrderDetail::where('order_id', $order->id)
+                                    ->where('product_api_id', $productItem->product_api_id)
+                                    ->first();
+                if (!$detail) {
+                    $detail = new OrderDetail;
+                    $detail->order_id = $order->id;
+                    $detail->product_api_id = $productItem->product_api_id;
+                    $detail->bundle_id = $productItem->bundle_id;
+                }
+                $detail->quantity = $product['quantity'];
+                $detail->price = (int) str_replace(',', '', $product['unitPrice']);
+                $detail->discount = (int) str_replace(',', '', $product['discount']);
+                $detail->total = (int) str_replace(',', '', $product['totalPrice']);
+                $detail->save();
             }
-            $detail = new OrderDetail;
-            $detail->order_id = $order->id;
-            $detail->product_api_id = $productItem->product_api_id;
-            $detail->bundle_id = $productItem->bundle_id;
-            $detail->quantity = $product['quantity'];
-            $detail->price = (int) str_replace(',', '', $product['unitPrice']);
-            $detail->discount = (int) str_replace(',', '', $product['discount']);
-            $detail->total = (int) str_replace(',', '', $product['totalPrice']);
-            $detail->save();
         }
 
         return response()->json([
