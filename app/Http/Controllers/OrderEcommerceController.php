@@ -1363,8 +1363,10 @@ class OrderEcommerceController extends Controller
         }
         // Xử lý sản phẩm trong đơn hàng
         foreach ($data['products'] as $product) {
-            $productItem = Product::find($product['sku']); // Giả sử bạn đã có SKU là unique key để tìm kiếm
-
+            $productItem = Product::where('sku', $product['sku'])->first();
+            if (!$productItem) {
+                continue;  // Skip this product
+            }
             $detail = new OrderDetail;
             $detail->order_id = $order->id;
             $detail->product_api_id = $productItem->product_api_id;
