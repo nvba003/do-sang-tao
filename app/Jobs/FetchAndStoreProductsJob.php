@@ -66,7 +66,7 @@ class FetchAndStoreProductsJob implements ShouldQueue
         DB::table('product_apis')->upsert($products->toArray(), ['id'], ['sku','name','product_type','images','alias','inventory_quantity','price','weight','updated_at']);
         // Lấy danh sách tất cả các product_api_id từ bảng product_apis
         // code cũ $apiIds = DB::table('product_apis')->pluck('id');
-        $apiProducts = DB::table('product_apis')->select('id', 'sku', 'name', 'inventory_quantity')->get();
+        $apiProducts = DB::table('product_apis')->select('id', 'sku', 'name', 'inventory_quantity', 'price')->get();
         $apiIds = $apiProducts->pluck('id');
         // Lấy danh sách các product_api_id đã tồn tại trong bảng products
         $existingApiIdsInProducts = DB::table('products')->whereIn('product_api_id', $apiIds)->pluck('product_api_id');
@@ -92,6 +92,7 @@ class FetchAndStoreProductsJob implements ShouldQueue
                 'sku' => $product->sku,
                 'name' => $product->name,
                 'quantity' => $product->inventory_quantity,
+                'price' => $product->price,
                 'created_at' => Carbon::now(),
                 // 'updated_at' => Carbon::now(),
             ]);

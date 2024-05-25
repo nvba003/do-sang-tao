@@ -70,7 +70,7 @@
             </div>
         </form>
     </div>
-
+    
     <div class="bg-white shadow-md rounded-lg my-1 overflow-x-auto p-2 sm:p-4">
         <!-- <button @click="updateOrders" class="bg-green-500 text-white px-4 py-2 rounded mb-4">Update orders</button>
         <table id="orderTable" class="w-full bg-white border border-gray-200 rounded-lg">
@@ -175,20 +175,74 @@
             order: {
                 details: []
             },
+            customers: @json($customers),
+            products: @json($products),
             init() {
                 this.orders = @json($orders)['data'];
-                // console.log(this.orders);
                 this.orders.forEach(item => {
                     item.showDetails = false;
-                    // item.products.forEach(product => {
-                    //     product.isSelected = false;
-                    //     product.containers.forEach(container => {
-                    //         container.isSelected = container.status === 1; // Thiết lập isSelected dựa trên status
-                    //     });
-                    // });
                 });
                 console.log(this.orders);
+                // Alpine.nextTick(() => {
+                //     this.setupAutocomplete();
+                // });
             },
+            autocompleteSetup(initialCustomerId) {
+                return {
+                    selectedCustomer: initialCustomerId,
+                    selectedCustomerLabel: '',
+                    initAutocomplete() {
+                        const initialCustomer = this.customers.find(customer => customer.id === initialCustomerId);
+                        if (initialCustomer) {
+                            this.selectedCustomerLabel = initialCustomer.customer_code;// + ' - ' + initialCustomer.name;
+                        }
+                        Alpine.nextTick(() => {
+                            $(this.$refs.customerInput).autocomplete({
+                                source: this.customers.map(customer => ({
+                                    label: customer.customer_code + ' - ' + customer.name,
+                                    value: customer.id
+                                })),
+                                select: (event, ui) => {
+                                    console.log('Selected:', ui.item);
+                                    this.selectedCustomer = ui.item.value;
+                                    this.selectedCustomerLabel = ui.item.label;  // Nhãn để hiển thị
+                                    return false;
+                                }
+                            });
+                        });
+                    }
+                }
+            },
+            autocompleteProductSetup(detail) {
+                return {
+                    initAutocompleteProduct() {
+                        Alpine.nextTick(() => {
+                            $(this.$refs.productInput).autocomplete({
+                                source: this.products.map(product => ({
+                                    label: product.sku + ' - ' + product.name,
+                                    sku: product.sku,
+                                    name: product.name,
+                                    price: product.price,
+                                    value: product.product_api_id
+                                })),
+                                select: (event, ui) => {
+                                    console.log('Selected:', ui.item);
+                                    // Cập nhật trực tiếp vào đối tượng detail
+                                    detail.product_api_id = ui.item.value;
+                                    detail.product.sku = ui.item.sku;
+                                    detail.product.name = ui.item.name;
+                                    detail.price = ui.item.price;
+                                    // Đẩy lại để cập nhật UI
+                                    this.$nextTick(() => this.$el.dispatchEvent(new CustomEvent('input', { bubbles: true })));
+                                    return false;
+                                }
+                            });
+                        });
+                    },
+                }
+            },
+
+
             getStatus(statusCode) {
                 switch (statusCode) {
                     case 1: return 'Đặt hàng';
@@ -222,9 +276,52 @@
                 // Giả sử bạn gửi yêu cầu AJAX ở đây
             },
             addDetail() {
-                // Logic để thêm chi tiết đơn hàng mới
-                this.order.details.push({ /* Khởi tạo chi tiết đơn hàng mới với giá trị mặc định */ });
+                // Tìm ID lớn nhất hiện tại trong danh sách để tránh trùng lặp
+                const maxId = this.order.details.reduce((max, detail) => Math.max(max, detail.id || 0), 0);
+                this.order.details.push({
+                    id: maxId + 1,
+                    product_api_id: '',
+                    quantity: 1,
+                    price: 0,
+                    discount_percent: 0,
+                    discount: 0,
+                    total: 0,
+                    promotion_id: null,
+                    bundle_id: null,
+                    notes: '',
+                    is_cancelled: false,
+                    product: {
+                        sku: '',
+                        name: '',
+                    }
+                });             
             },
+            updateDetail() {
+                console.log(this.order.details);
+                const url = '/path/to/your/api'; // URL của API để cập nhật đơn hàng
+                fetch(url, {
+                    method: 'POST', // Hoặc 'PUT' nếu bạn đang cập nhật
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Thêm các headers cần thiết khác, ví dụ xác thực
+                    },
+                    body: JSON.stringify(this.order.details) // Gửi chi tiết đơn hàng dưới dạng JSON
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    // Xử lý thêm sau khi cập nhật thành công
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            },
+
             editDetail(detail) {
                 // Logic để cập nhật chi tiết đơn hàng
                 // Có thể mở form modal hoặc chuyển input sang chế độ có thể chỉnh sửa
@@ -276,6 +373,7 @@
         // console.log(orders);
         var products = @json($products);
         console.log(products);
+        
 
         $('#orderTable').on('focus', '.autocomplete-product', function() {
             $(this).autocomplete({

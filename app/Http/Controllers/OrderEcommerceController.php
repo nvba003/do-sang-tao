@@ -1283,48 +1283,6 @@ class OrderEcommerceController extends Controller
     }
 
 //====================================================================
-    // public function storeOrderSapo(Request $request)
-    // {
-    //     $platformId = $request->input('platform_id');
-    //     $platform = Platform::find($platformId);
-    //     $branchId = $platform->branch_id;
-    //     $data = $request->input('orders');
-
-    //     $customerAccount = CustomerAccount::create([
-    //         'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
-    //         'platform_id' => $platform->id,
-    //     ]);
-    //     // Tạo đơn hàng mới
-    //     $order = new Order;
-    //     $order->order_code = $data['orderID'];
-    //     $order->branch_id = $branchId;
-    //     $order->platform_id = $platformId;
-    //     $order->customer_account_id = $customerAccount->id;
-    //     $order->total_discount = (int) str_replace(',', '', $data['totalDiscount']);
-    //     $order->total_amount = (int) str_replace(',', '', $data['totalAmount']);
-    //     $order->customer_shipping_fee = (int) str_replace(',', '', $data['shippingFee']);
-    //     $order->notes = $data['note'];
-    //     $order->save();
-
-    //     foreach ($data['products'] as $product) {
-    //         $productItem = Product::find($product['sku']);
-
-    //         $detail = new OrderDetail;
-    //         $detail->order_id = $order->id;
-    //         $detail->product_api_id = $productItem->product_api_id;
-    //         $detail->bundle_id = $productItem->bundle_id;
-    //         $detail->quantity = $product['quantity'];
-    //         $detail->price = (int) str_replace(',', '', $product['unitPrice']);
-    //         $detail->discount = (int) str_replace(',', '', $product['discount']);
-    //         $detail->total = (int) str_replace(',', '', $product['totalPrice']);
-    //         $detail->save();
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'Order created successfully!',
-    //         'order_id' => $order->id
-    //     ]);
-    // }
     public function storeOrderSapo(Request $request)
     {
         $platformId = $request->input('platform_id');

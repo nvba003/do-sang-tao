@@ -34,5 +34,9 @@ class OrderProcess extends Model
     {
         return $this->hasOne(OrderCancelAndReturn::class, 'order_id', 'order_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'responsible_user_id');
+    }
     
 }

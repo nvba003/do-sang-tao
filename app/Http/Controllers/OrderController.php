@@ -16,6 +16,8 @@ use App\Models\CustomerAccount;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderProcess;
+use App\Models\OrderType;
+use App\Models\OrderStatus;
 
 class OrderController extends Controller
 {
@@ -24,10 +26,13 @@ class OrderController extends Controller
         $perPage = $request->input('per_page',15);
         // Lấy branch_id từ đường dẫn
         $branch_id = $request->route('branch_id');
-        $products = ProductApi::all(); 
+        $products = Product::all(); 
         $branches = Branch::all();
         $users = User::all();
         $carriers = Carrier::all();
+        $orderTypes = OrderType::all();
+        $orderStatuses = OrderStatus::all();
+        $customers = Customer::all();
         $stringName = 'Tiki';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = Order::query();
@@ -66,15 +71,15 @@ class OrderController extends Controller
             //         $q->where('status', $status);
             //     }
             // })
-            ->with(['details.product', 'orderProcess', 'platform', 'customerAccount', 'customer', 'finances'])
+            ->with(['details.product', 'orderProcess.user', 'platform', 'customerAccount', 'customer', 'finances'])
             ->orderBy('created_at', 'desc');
         $orders = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('orders.partial_order_table', compact('branch_id', 'orders', 'products', 'users', 'carriers', 'platforms'))->render();
+            $view = view('orders.partial_order_table', compact('branch_id', 'orders', 'products', 'users', 'carriers', 'platforms', 'orderTypes', 'orderStatuses', 'customers'))->render();
             $links = $orders->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
-        return view('orders.order', compact('branch_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Xử lý đơn hàng']);
+        return view('orders.order', compact('branch_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms', 'orderTypes', 'orderStatuses', 'customers'), ['header' => 'Xử lý đơn hàng']);
     }
     
     public function showOrderProcesses(Request $request)
@@ -86,6 +91,8 @@ class OrderController extends Controller
         $branches = Branch::all();
         $users = User::all();
         $carriers = Carrier::all();
+        $orderTypes = OrderType::all();
+        $orderStatuses = OrderStatus::all();
         $stringName = 'Tiki';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderProcess::query();
@@ -94,11 +101,11 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc');
         $orders = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('orders.partial_order_process_table', compact('branch_id', 'orders', 'products', 'users', 'carriers', 'platforms'))->render();
+            $view = view('orders.partial_order_process_table', compact('branch_id', 'orders', 'products', 'users', 'carriers', 'platforms', 'orderTypes', 'orderStatuses'))->render();
             $links = $orders->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
-        return view('orders.order_process', compact('branch_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms'), ['header' => 'Xử lý đơn hàng']);
+        return view('orders.order_process', compact('branch_id', 'products', 'branches', 'orders', 'users', 'carriers', 'platforms', 'orderTypes', 'orderStatuses'), ['header' => 'Xử lý đơn hàng']);
     }
 
 
