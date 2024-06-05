@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;//thêm vào
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class FetchAndStoreProductsJob implements ShouldQueue
 {
@@ -36,7 +37,7 @@ class FetchAndStoreProductsJob implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info('Handling job for page: ' . $this->page);
+        Log::info('Handling job for page: ' . $this->page);
         $spikey = "4ccfe3d9305b4288bb2b5cf9184c8e5d";
         $apisecret = "c9830e0a36b348c786f8df30a72d75c8";
         $GetProducts = "@do-vat-sang-tao.mysapo.net/admin/products";

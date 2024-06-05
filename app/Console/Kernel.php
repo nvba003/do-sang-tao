@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -22,7 +23,7 @@ class Kernel extends ConsoleKernel
             $pages = ceil($count / 250);
     
             for ($i = 1; $i <= $pages; $i++) {
-                \Log::info('Dispatching job for page: ' . $i);
+                Log::info('Dispatching job for page: ' . $i);
                 FetchAndStoreProductsJob::dispatch($i);
             }
         })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
