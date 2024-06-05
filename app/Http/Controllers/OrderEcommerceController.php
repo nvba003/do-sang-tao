@@ -1319,6 +1319,13 @@ class OrderEcommerceController extends Controller
                 $detail->total = (int) str_replace(',', '', $product['totalPrice']);
                 $detail->save();
             }
+            // Tạo mới quy trình đơn hàng
+            OrderProcess::create([
+                'order_id' => $order->id,
+                'status_id' => 1, //trạng thái đang xử lý
+                'responsible_user_id' => Auth::id(),
+                'approval_time' => Carbon::now(),
+            ]);
         } else {
             // Cập nhật đơn hàng nếu đã tồn tại
             $order->branch_id = $branchId;
@@ -1351,6 +1358,13 @@ class OrderEcommerceController extends Controller
                 $detail->total = (int) str_replace(',', '', $product['totalPrice']);
                 $detail->save();
             }
+            // Cập nhật quy trình đơn hàng
+            // OrderProcess::updateOrCreate(
+            //     ['order_id' => $order->id],
+            //     [
+            //         'responsible_user_id' => Auth::id()
+            //     ]
+            // );
         }
 
         return response()->json([

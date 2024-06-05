@@ -18,6 +18,11 @@ class Product extends Model
 
     public function containers()
     {
-        return $this->hasMany(Container::class, 'product_id');
+        return $this->hasMany(Container::class, 'product_id', 'product_api_id');
+    }
+
+    public function bundles()
+    {
+        return $this->hasMany(BundleItem::class, 'bundle_id', 'bundle_id');
     }
 }

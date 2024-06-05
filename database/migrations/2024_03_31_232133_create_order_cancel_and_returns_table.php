@@ -17,7 +17,7 @@ class CreateOrderCancelAndReturnsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('order_id')->nullable(); // ID của đơn hàng
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('set null');
-            $table->enum('type', ['Huy', 'Tra']); // Loại: hủy đơn hoặc trả hàng
+            $table->enum('type', ['0', '1']); // Loại: 0:hủy đơn hoặc 1:trả hàng
             $table->unsignedTinyInteger('reason_id')->nullable();
             $table->foreign('reason_id')->references('id')->on('cancel_return_reasons')->onDelete('set null');
             $table->unsignedMediumInteger('processed_by')->nullable(); // ID của người xử lý (nhân viên)

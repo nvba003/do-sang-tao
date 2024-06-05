@@ -1,26 +1,40 @@
-@forelse ($scans as $scan)
-    <tr class="bg-white hover:bg-gray-100 border-b" data-scan-id="{{ $scan->scan_code }}">
-        <td class="p-2 w-1/24 text-center mt-1 hidden sm:block"> <!-- Reduced padding and set a fixed width -->
-            <input type="checkbox" class="checkItem">
-        </td>
-        <td class="text-center w-1/24 cursor-pointer">
-            <button class="expand-button text-xs md:text-lg sm:text-base xl:w-1/2 w-full h-full text-center text-gray-200 bg-cyan-500 rounded" data-target="#details{{ $scan->id }}">
-                +
-            </button>
-        </td>
-        <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $scan->created_at }}</td>
-        <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $scan->tracking_number }}</td>
-        <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $scan->user_id }}</td>
-        <td class="w-2/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $scan->platform_id }}</td>
-        <td class="w-12/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">{{ $scan->order_id }}</td>
-        <td class="text-center w-1/24 cursor-pointer">
-            <button class="remove-scan text-xs md:text-lg sm:text-base xl:w-1/2 w-full h-full text-center text-gray-200 bg-cyan-500 rounded" data-target="#details{{ $scan->id }}">
-                Xóa
-            </button>
-        </td>
-    </tr>
-    @empty
-    <tr>
-        <td colspan="100%" class="text-center py-3 text-xs md:text-lg sm:text-base">Không tìm thấy đơn đã quét nào.</td>
-    </tr>
-@endforelse
+<div class="bg-white shadow-md rounded-lg my-1 overflow-x-auto p-2 sm:p-4">
+    <div class="flex items-center px-4 py-1 bg-white">
+        <div>Đã chọn: <span class="bg-blue-500 text-white px-2 py-1 rounded-lg" x-text="selectedCount"></span> hàng</div>
+        <button @click="deliveryHandoff" class="bg-green-500 text-white px-4 py-2 ml-4 rounded">Giao bưu tá</button>
+    </div>
+    <table class="w-full bg-white border border-gray-200 rounded-lg">
+        <thead class="text-white bg-gray-500">
+            <tr>
+                <th scope="col" class="w-1/24 px-2 py-2 mt-1 text-center text-xs md:text-sm hidden md:block font-semibold uppercase tracking-wider">
+                    <input type="checkbox" x-model="checkAll" @click="toggleAll">
+                </th>
+                <th scope="col" class="w-5/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Thời gian</th>
+                <th scope="col" class="w-4/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã vận chuyển</th>
+                <th scope="col" class="w-4/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Mã đơn</th>
+                <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Kênh</th>
+                <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Người quét</th>
+                <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Thao tác</th>
+            </tr>
+        </thead>
+
+        <template x-for="order in orders" :key="order.id">
+            <tr :class="scanClass(order)" class="border-b">
+                <td class="p-2 w-1/24 text-center mt-2 hidden sm:block">
+                    <input type="checkbox" class="checkItem" :value="order.id" x-model="selectedItems" @change="updateCount">
+                </td>
+                <td class="w-4/24 px-6 py-4 whitespace-nowrap" x-text="formatDate(order.created_at)"></td>
+                <td class="w-4/24 px-6 py-4 whitespace-nowrap" x-text="order.tracking_number"></td>
+                <td class="w-5/24 px-6 py-4 whitespace-nowrap" x-text="order.order.order_code"></td>
+                <td class="w-3/24 px-6 py-4 whitespace-nowrap" x-text="order.platform.name"></td>
+                <td class="w-3/24 px-6 py-4 whitespace-nowrap" x-text="order.user.name"></td>
+                <td class="w-2/24 px-6 py-4 whitespace-nowrap">
+                    <button @click="deleteScan(order.id)" class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">
+                        Xóa
+                    </button>
+                </td>
+            </tr>
+        </template>
+
+    </table>
+</div>

@@ -18,7 +18,11 @@ class CreateTaskUsersTable extends Migration
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->unsignedMediumInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->boolean('is_primary')->default(false); // Đánh dấu người phụ trách chính
+            $table->unsignedTinyInteger('role')->default(1); // 1: Người tạo, 2: Phụ trách chính, 3: phụ trách phụ
+
+            // $table->boolean('is_creator')->default(false); // Người tạo
+            // $table->boolean('is_primary')->default(false); // Người phụ trách chính
+            // $table->boolean('is_secondary')->default(false); // Người phụ trách phụ
             $table->timestamps();
 
             $table->primary(['task_id', 'user_id']);

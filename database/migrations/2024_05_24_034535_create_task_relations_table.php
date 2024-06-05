@@ -19,7 +19,7 @@ class CreateTaskRelationsTable extends Migration
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->unsignedInteger('related_task_id'); // Công việc liên quan
             $table->foreign('related_task_id')->references('id')->on('tasks')->onDelete('cascade');
-            $table->unsignedTinyInteger('relation_type'); // Loại quan hệ, ví dụ: '1:dependency', '2:related'
+            $table->unsignedTinyInteger('relation_type')->nullable(); // Loại quan hệ, ví dụ: '1:dependency', '2:related'
             $table->timestamps();
         });
     }

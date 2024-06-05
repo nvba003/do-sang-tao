@@ -14,7 +14,6 @@ class CreateContainersTable extends Migration
     public function up()
     {
         Schema::create('containers', function (Blueprint $table) {
-            //$table->id();
             $table->smallIncrements('id');
             $table->string('container_code',7)->unique();// ContainerCode
             $table->unsignedTinyInteger('container_status_id')->nullable();

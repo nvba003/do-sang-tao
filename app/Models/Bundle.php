@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Models\Task;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tag extends Model
+class Bundle extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'task_tags');
-    }
 }

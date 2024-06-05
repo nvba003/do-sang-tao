@@ -18,6 +18,7 @@ class CreateTaskAttachmentsTable extends Migration
             $table->unsignedInteger('task_id');
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->string('file_path'); // Đường dẫn lưu trữ tệp
+            $table->string('filename')->nullable(); // Tên tệp gốc
             $table->timestamps();
         });
     }

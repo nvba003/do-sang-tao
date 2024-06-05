@@ -80,10 +80,22 @@ Route::post('/send-order-tiktok-to-order', [OrderEcommerceController::class, 'se
 
 Route::get('/order/{branch_id}', [OrderController::class, 'showOrders'])->name('order.show');
 Route::get('/order-process/{branch_id}', [OrderController::class, 'showOrderProcesses'])->name('orderProcess.show');
+Route::post('/order/update-info-order', [OrderController::class, 'updateInfoOrder']);
+Route::post('/order/add-finance-order', [OrderController::class, 'addFinanceOrder']);
+Route::get('/order/bundle-items/{bundleId}', [OrderController::class, 'getBundleItems']);
+Route::get('/get-packing-orders', [OrderController::class, 'getPackingOrders'])->name('packingOrder.fetch');
+Route::post('/order/update-order', [OrderController::class, 'updateOrder']);
+Route::post('/order-process/update-order-cancel-return', [OrderController::class, 'updateOrderCanCelReturn']);
+Route::post('/order-process/update-order-process', [OrderController::class, 'updateOrderProcess']);
 
+Route::post('/order/add-packing-details', [AuxpackingController::class, 'addPackings']);
 Route::get('/cal', [AuxpackingController::class, 'updateProductSummaries']);
 Route::get('/auxpacking-product/{branch_id}', [AuxpackingController::class, 'showProducts']);
 Route::post('/update-auxpacking-container', [AuxpackingController::class, 'updateContainer'])->name('auxPackingContainer.update');
+Route::post('/add-auxpacking-container', [AuxpackingController::class, 'addContainer'])->name('auxPackingContainer.add');
+Route::delete('/remove-auxpacking-container', [AuxpackingController::class, 'removeContainer'])->name('auxPackingContainer.remove');
+Route::delete('/remove-auxpacking-scan', [AuxpackingController::class, 'removeScan'])->name('auxPackingScan.remove');
+Route::post('/update-order-statuses', [AuxpackingController::class, 'updateOrderStatuses'])->name('auxPackingContainer.updateStatuses');
 
 Route::get('/auxpacking-order/{branch_id}', [AuxpackingController::class, 'showOrders']);
 Route::get('/auxpacking-container/{branch_id}', [AuxpackingController::class, 'showContainers']);
@@ -91,6 +103,32 @@ Route::get('/auxpacking-scan/{branch_id}', [AuxpackingController::class, 'showSc
 Route::post('/auxpacking-scan/store', [AuxpackingController::class, 'storeScan'])->name('scans.store');
 
 Route::resource('tasks', TaskController::class);
-Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.addComment');
-Route::post('/tasks/{task}/attachments', [TaskController::class, 'addAttachment'])->name('tasks.addAttachment');
-Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag'])->name('tasks.addTag');
+Route::post('/add-comment', [TaskController::class, 'addComment'])->name('tasks.addComment');
+Route::post('/update-comment', [TaskController::class, 'updateComment'])->name('tasks.updateComment');
+Route::delete('/delete-comment', [TaskController::class, 'deleteComment'])->name('tasks.deleteComment');
+Route::post('/tasks/{task}/attachments', [TaskController::class, 'storeAttachment']);
+Route::delete('/attachments/{attachment}', [TaskController::class, 'destroyAttachment']);
+
+Route::post('/tasks/{task}/tags', [TaskController::class, 'addTag']);
+Route::delete('/tags/{task}', [TaskController::class, 'destroyTag']);
+
+Route::post('/tasks/{task}/add-user', [TaskController::class, 'addUser']);
+Route::delete('/tasks/{task}/remove-user/{user}', [TaskController::class, 'removeUser']);
+
+Route::post('/tasks/add-order', [TaskController::class, 'addOrder']);
+Route::delete('/tasks/remove-order/{orderId}', [TaskController::class, 'removeOrder']);
+
+Route::post('/tasks/add-product', [TaskController::class, 'addProduct']);
+Route::delete('/tasks/remove-product/{productId}', [TaskController::class, 'removeProduct']);
+
+Route::post('/tasks/add-customer', [TaskController::class, 'addCustomer']);
+Route::delete('/tasks/remove-customer/{customerId}', [TaskController::class, 'removeCustomer']);
+
+Route::delete('/tasks/remove-related-task/{relatedTaskId}', [TaskController::class, 'removeRelatedTask']);
+Route::post('/tasks/add-dependent', [TaskController::class, 'addDependent']);
+Route::post('/tasks/add-dependency', [TaskController::class, 'addDependency']);
+Route::post('/tasks/add-related-task', [TaskController::class, 'addRelatedTask']);
+Route::delete('/tasks/remove-related-task/{taskId}', [TaskController::class, 'removeRelatedTask']);
+
+
+

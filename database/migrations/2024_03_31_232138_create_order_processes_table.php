@@ -21,7 +21,7 @@ class CreateOrderProcessesTable extends Migration
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
             $table->unsignedTinyInteger('platform_id')->nullable();
             $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
-            $table->unsignedTinyInteger('status_id')->nullable();//trạng thái xử lý và giao hàng
+            $table->unsignedTinyInteger('status_id')->nullable();//1: bắt đầu 2: đang xử lý 3: đang giao hàng 4: đơn hoàn toàn bộ 5: đơn hủy toàn bộ 6: đơn thất lạc
             $table->foreign('status_id')->references('id')->on('order_statuses')->onDelete('set null');
             $table->unsignedMediumInteger('responsible_user_id')->nullable(); // Người dùng phụ trách
             $table->foreign('responsible_user_id')->references('id')->on('users'); // Khóa ngoại tham chiếu đến bảng Users
@@ -29,8 +29,6 @@ class CreateOrderProcessesTable extends Migration
             $table->foreign('order_condition_id')->references('id')->on('order_conditions')->onDelete('set null');
             $table->unsignedTinyInteger('carrier_id')->nullable();//đơn vị vận chuyển
             $table->foreign('carrier_id')->references('id')->on('carriers')->onDelete('set null');
-            $table->unsignedInteger('cancel_return_id')->nullable();
-            $table->foreign('cancel_return_id')->references('id')->on('order_cancel_and_returns')->onDelete('set null');
             $table->text('notes')->nullable();
             $table->text('result')->nullable();//kết quả xử lý
             $table->string('tracking_number')->nullable();

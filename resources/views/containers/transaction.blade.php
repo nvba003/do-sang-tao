@@ -130,7 +130,7 @@
             </tbody>
         </table>
     </div>
-
+    <button onclick="playBeepSound()">Test Beep</button>
     <div class="mx-auto mt-2 max-w-full">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 m-2">
             <div class="lg:col-span-3 md:col-span-1"></div>
@@ -187,8 +187,13 @@
             quantityInput.value = currentValue - 1;
         }
     }
+    function playBeepSound() {
+        var audio = document.getElementById('beep-sound');
+        audio.play();
+    }
     window.onload = function() {
         @if(session('success'))
+            playBeepSound();
             toggleModal(true); // Hiển thị modal khi có thông báo thành công
             setTimeout(function() {
                 toggleModal(false); // Ẩn modal sau 500ms
@@ -379,6 +384,29 @@
             e.preventDefault(); // Ngăn form gửi theo cách truyền thống
             clearSearchContainer(); // Tìm sản phẩm thì xóa tìm mã thùng
         });//kết thúc searchProduct
+        
+        // $('#transactionForm').on('submit', function(e) {
+        //     e.preventDefault(); // Ngăn chặn hành vi gửi form mặc định
+        //     var formData = $(this).serialize(); // Lấy dữ liệu từ form
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '{{ route('transactions.store') }}',
+        //         data: formData,
+        //         success: function(response) {
+        //             if(response.success) {
+        //                 playBeepSound();
+        //                 //addNewTransactionRow(response.transaction); // Hàm để thêm hàng mới
+        //                 alert('Giao dịch được cập nhật thành công!');
+        //             } else {
+        //                 alert('Có lỗi xảy ra, vui lòng thử lại.');
+        //             }
+        //         },
+        //         error: function(error) {
+        //             console.error('Error:', error);
+        //             alert('Đã xảy ra lỗi, vui lòng thử lại.');
+        //         }
+        //     });
+        // });
         
 
     });

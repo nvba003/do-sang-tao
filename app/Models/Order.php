@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Auxpacking\AuxpackingOrder;
 
 class Order extends Model
 {
@@ -36,6 +37,14 @@ class Order extends Model
     public function finances()
     {
         return $this->hasMany(OrderFinance::class, 'order_id');
+    }
+    public function orderStatus()
+    {
+        return $this->hasOne(OrderStatus::class, 'id', 'status_id');
+    }
+    public function auxpackingOrder()
+    {
+        return $this->hasOne(AuxpackingOrder::class, 'order_id', 'id');
     }
     
 }

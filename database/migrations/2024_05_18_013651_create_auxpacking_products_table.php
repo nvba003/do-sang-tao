@@ -23,6 +23,8 @@ class CreateAuxpackingProductsTable extends Migration
             $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
             $table->unsignedInteger('product_api_id');
             $table->foreign('product_api_id')->references('product_api_id')->on('products')->onDelete('cascade');
+            $table->unsignedSmallInteger('bundle_id')->nullable();
+            $table->foreign('bundle_id')->references('id')->on('bundles')->onDelete('set null');
             $table->decimal('quantity', 8, 2);//số lượng cần đóng gói
             $table->unsignedTinyInteger('status')->default(1);//1:mặc định, 2:lấy chưa đủ, 3:lấy đủ, (4:thiếu sp trong thùng)
             $table->text('notes')->nullable();//ghi chú về sản phẩm như: lựa sản phẩm đẹp, lấy thêm sp trong đơn ncc

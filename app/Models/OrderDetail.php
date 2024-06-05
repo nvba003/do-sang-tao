@@ -17,4 +17,8 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_api_id', 'product_api_id');
     }
+    public function bundles()
+    {
+        return $this->hasMany(BundleItem::class, 'bundle_id', 'bundle_id');
+    }
 }

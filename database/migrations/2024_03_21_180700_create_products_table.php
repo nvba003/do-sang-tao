@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->string('sku');
             $table->string('name');
             $table->unsignedMediumInteger('base_price')->default(0);//đ
+            $table->unsignedMediumInteger('price')->default(0);
             $table->decimal('quantity', 8, 2)->default(0.00);
             $table->unsignedSmallInteger('reorder_level')->nullable();
             $table->decimal('length', 5, 2)->nullable();//cm
