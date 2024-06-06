@@ -1323,6 +1323,7 @@ class OrderEcommerceController extends Controller
             OrderProcess::create([
                 'order_id' => $order->id,
                 'status_id' => 1, //trạng thái đang xử lý
+                'branch_id' => $branchId,
                 'responsible_user_id' => $request->input('user_id'),
                 'approval_time' => Carbon::now(),
             ]);
@@ -1362,6 +1363,7 @@ class OrderEcommerceController extends Controller
             OrderProcess::updateOrCreate(
                 ['order_id' => $order->id],
                 [
+                    'branch_id' => $branchId,
                     'responsible_user_id' => $request->input('user_id'),
                 ]
             );
