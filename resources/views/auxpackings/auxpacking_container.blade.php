@@ -1,7 +1,7 @@
 @extends('layouts.app')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
-<x-conditional-content :condition="auth()->user()->hasRole('admin')">
+<x-conditional-content :condition="auth()->user()->hasRole('admin') || auth()->user()->hasRole('packing')">
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
     <div id="containerTable"  class="w-full" x-data="containerTable()">
         <div class="flex flex-wrap mx-auto mt-2 px-4 py-2 bg-white rounded shadow-md">

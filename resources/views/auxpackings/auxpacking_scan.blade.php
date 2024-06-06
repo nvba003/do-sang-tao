@@ -2,7 +2,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 @section('content')
-<x-conditional-content :condition="auth()->user()->hasRole('admin')">
+<x-conditional-content :condition="auth()->user()->hasRole('admin') || auth()->user()->hasRole('packing')">
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
   <div class="w-full" x-data="orderTable()" x-init="init()">
     <button class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded my-2"
