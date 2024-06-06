@@ -29,6 +29,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             // 'expires_in' => Auth::factory()->getTTL() * 60 // Thời gian sống của token (tùy chọn)
             'username' => auth()->user()->name, // Lấy name của người dùng và thêm vào phản hồi
+            'userId' => auth()->user()->id,
         ]);
     }
 }

@@ -1323,7 +1323,7 @@ class OrderEcommerceController extends Controller
             OrderProcess::create([
                 'order_id' => $order->id,
                 'status_id' => 1, //trạng thái đang xử lý
-                'responsible_user_id' => Auth::id(),
+                'responsible_user_id' => $request->input('user_id'),
                 'approval_time' => Carbon::now(),
             ]);
         } else {
@@ -1359,12 +1359,12 @@ class OrderEcommerceController extends Controller
                 $detail->save();
             }
             // Cập nhật quy trình đơn hàng
-            // OrderProcess::updateOrCreate(
-            //     ['order_id' => $order->id],
-            //     [
-            //         'responsible_user_id' => Auth::id()
-            //     ]
-            // );
+            OrderProcess::updateOrCreate(
+                ['order_id' => $order->id],
+                [
+                    'responsible_user_id' => $request->input('user_id'),
+                ]
+            );
         }
 
         return response()->json([
