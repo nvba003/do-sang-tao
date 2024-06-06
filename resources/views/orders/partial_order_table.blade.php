@@ -312,7 +312,7 @@
                                                 <button @click="addDetail()" class="bg-blue-500 text-white px-4 py-2 mx-2 rounded">Thêm mới</button>
                                                 <button x-bind:disabled="packingOrders.includes(order.id)"
                                                     x-text="packingOrders.includes(order.id) ? 'Đang đóng gói' : 'Chuyển đóng gói'"
-                                                    @click="confirm('Bạn đã cập nhật đơn chưa?') && addPackingDetail()"
+                                                    @click="addPackingDetail()"
                                                     class="px-4 py-2 mx-2 rounded"
                                                     :class="{'bg-gray-500 cursor-not-allowed': packingOrders.includes(order.id), 'bg-yellow-500': !packingOrders.includes(order.id)}">
                                                 </button>
