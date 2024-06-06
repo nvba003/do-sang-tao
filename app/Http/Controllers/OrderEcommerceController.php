@@ -98,10 +98,11 @@ class OrderEcommerceController extends Controller
         $perPage = $request->input('per_page',10);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
+        $platform = Platform::where('id', $platform_id)->first();
+        $carriers = Carrier::where('branch_id', $platform->branch_id)->get();
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
-        $carriers = Carrier::all();
         $stringName = 'Sendo';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderSendo::query();
@@ -335,10 +336,11 @@ class OrderEcommerceController extends Controller
         $perPage = $request->input('per_page',15);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
+        $platform = Platform::where('id', $platform_id)->first();
+        $carriers = Carrier::where('branch_id', $platform->branch_id)->get();
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
-        $carriers = Carrier::all();
         $stringName = 'Shopee';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderShopee::query();
@@ -596,10 +598,11 @@ class OrderEcommerceController extends Controller
         $perPage = $request->input('per_page',15);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
+        $platform = Platform::where('id', $platform_id)->first();
+        $carriers = Carrier::where('branch_id', $platform->branch_id)->get();
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
-        $carriers = Carrier::all();
         $stringName = 'Lazada';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderLazada::query();
@@ -846,10 +849,11 @@ class OrderEcommerceController extends Controller
         $perPage = $request->input('per_page',15);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
+        $platform = Platform::where('id', $platform_id)->first();
+        $carriers = Carrier::where('branch_id', $platform->branch_id)->get();
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
-        $carriers = Carrier::all();
         $stringName = 'Tiki';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderTiki::query();
@@ -1099,10 +1103,11 @@ class OrderEcommerceController extends Controller
         $perPage = $request->input('per_page',15);
         // Lấy platform_id từ đường dẫn
         $platform_id = $request->route('platform_id');
+        $platform = Platform::where('id', $platform_id)->first();
+        $carriers = Carrier::where('branch_id', $platform->branch_id)->get();
         $products = ProductApi::all(); 
         $branches = Branch::all();
         $users = User::all();
-        $carriers = Carrier::all();
         $stringName = 'Tiktok';
         $platforms = Platform::where('name', 'like', '%' . $stringName . '%')->get();
         $query = OrderTiktok::query();

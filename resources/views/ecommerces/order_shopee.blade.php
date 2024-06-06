@@ -266,11 +266,12 @@
         let perPage = $('#perPage').val();
         // Truyền giá trị platform_id từ Blade vào JavaScript
         const platformId = {{ $platform_id }};
-        console.log(platformId);
+        //console.log(platformId);
         var orders = @json($orders)['data'];
         console.log(orders);
         var products = @json($products);
-        //console.log(products);
+        var carriers = @json($carriers);
+        console.log(carriers);
 
         $('#orderTable').on('focus', '.autocomplete-product', function() {
             $(this).autocomplete({
