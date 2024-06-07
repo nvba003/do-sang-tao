@@ -51,7 +51,7 @@
                 </div>
                 <div class="flex items-center space-x-2">
                     <label for="tracking_{{ $order->id }}" class="text-gray-700">Vận đơn:</label>
-                    <input type="text" id="tracking_{{ $order->id }}" class="bg-white text-sm rounded p-2" value="{{ $order->tracking_number : '' }}">
+                    <input type="text" id="tracking_{{ $order->id }}" class="bg-white text-sm rounded p-2" value="{{ $order->tracking_number }}">
                 </div>
                 <div class="flex items-center space-x-2">
                     <label for="responsible_{{ $order->id }}" class="text-gray-700">Phụ trách:</label>
