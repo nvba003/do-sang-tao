@@ -51,7 +51,7 @@
                 </div>
                 <div class="flex items-center space-x-2">
                     <label for="tracking_{{ $order->id }}" class="text-gray-700">Vận đơn:</label>
-                    <input type="text" id="tracking_{{ $order->id }}" class="bg-white text-sm rounded p-2" value="{{ $order->order ? $order->tracking_number : '' }}">
+                    <input type="text" id="tracking_{{ $order->id }}" class="bg-white text-sm rounded p-2" value="{{ $order->tracking_number : '' }}">
                 </div>
                 <div class="flex items-center space-x-2">
                     <label for="responsible_{{ $order->id }}" class="text-gray-700">Phụ trách:</label>
@@ -75,7 +75,7 @@
                     <input type="text" id="notes_{{ $order->id }}" class="bg-white text-sm rounded p-2" value="{{ $order->order ? $order->order->notes : '' }}">
                 </div>
                 <div>
-                    <button class="bg-green-600 hover:bg-green-800 text-white py-2 px-4 rounded mt-5 md:mt-0" @click="sendOrder({{ $order }})">Tạo/Cập nhật</button>
+                    <button class="bg-green-600 hover:bg-green-800 text-white py-2 px-4 rounded mt-5 md:mt-0" @click="sendOrder({{ $order }})">Cập nhật</button>
                 </div>
                 <div class="flex items-center space-x-2">
                     <label for="platform_{{ $order->id }}" class="text-gray-700">Kênh BH:</label>

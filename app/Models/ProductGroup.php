@@ -5,12 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bundle extends Model
+class ProductGroup extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    public function bundleItems()
-    {
-        return $this->hasMany(BundleItem::class);
-    }
 }

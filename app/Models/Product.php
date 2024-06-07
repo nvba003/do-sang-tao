@@ -16,6 +16,11 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function productGroup()
+    {
+        return $this->belongsTo(ProductGroup::class, 'product_group_id');
+    }
+
     public function containers()
     {
         return $this->hasMany(Container::class, 'product_id', 'product_api_id');

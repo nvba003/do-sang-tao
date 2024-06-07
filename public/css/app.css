@@ -1223,6 +1223,12 @@ select {
 .w-full {
   width: 100%;
 }
+.w-7\/24 {
+  width: 29.166666667%;
+}
+.w-8\/24 {
+  width: 33.333333333%;
+}
 .min-w-20 {
   min-width: 5rem;
 }
@@ -1434,8 +1440,14 @@ select {
 .text-ellipsis {
   text-overflow: ellipsis;
 }
+.whitespace-normal {
+  white-space: normal;
+}
 .whitespace-nowrap {
   white-space: nowrap;
+}
+.break-words {
+  overflow-wrap: break-word;
 }
 .rounded {
   border-radius: 0.25rem;

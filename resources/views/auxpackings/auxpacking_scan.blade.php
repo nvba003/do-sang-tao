@@ -48,16 +48,16 @@
             </div>
         </div>
         <!-- Scan Results Table -->
-        <div class="bg-white p-4 rounded-lg shadow w-full" x-data="{ scanResults: Alpine.store('scannerStore').scanResults }">
-            <table class="table-auto w-full text-sm">
+        <div class="bg-white p-4 rounded-lg shadow w-full overflow-x-auto" x-data="{ scanResults: Alpine.store('scannerStore').scanResults }">
+            <table class="table-auto w-full text-xs sm:text-sm">
                 <thead class="bg-blue-500">
                     <tr class="text-white">
                         <th class="border px-4 py-2">Ngày quét</th>
                         <th class="border px-4 py-2">Mã vận đơn</th>
+                        <th class="border px-4 py-2">Thông tin</th>
                         <th class="border px-4 py-2">Mã đơn</th>
                         <th class="border px-4 py-2">Kênh</th>
                         <th class="border px-4 py-2">Người quét</th>
-                        <th class="border px-4 py-2">Thông tin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,14 +65,14 @@
                         <tr>
                             <td class="px-2" x-text="new Date(result.time).toLocaleString()"></td>
                             <td class="px-2" x-text="result.tracking_number"></td>
-                            <td class="px-2" x-text="result.order.order_code"></td>
-                            <td class="px-2" x-text="result.platform.name"></td>
-                            <td class="px-2" x-text="result.user.name"></td>
                             <td class="px-2" :class="{
                                 'text-green-500': result.status === 200,
                                 'text-red-500': result.status === 409,
                                 'text-gray-800': result.status === 404
                             }" x-text="result.message"></td>
+                            <td class="px-2" x-text="result.order.order_code"></td>
+                            <td class="px-2" x-text="result.platform.name"></td>
+                            <td class="px-2" x-text="result.user.name"></td>
                         </tr>
                     </template>
                 </tbody>

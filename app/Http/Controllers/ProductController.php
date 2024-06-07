@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use App\Models\ProductApi;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Bundle;
+use App\Models\ProductGroup;
 use Carbon\Carbon;
 use App\Jobs\FetchAndStoreProductsJob;
-//use Illuminate\Support\Carbon;
 
-class ProductApiController extends Controller
+class ProductController extends Controller
 {
     // public function getDataByPage($page)
     // {
@@ -29,6 +31,7 @@ class ProductApiController extends Controller
     //     $data = json_decode($response); // '{"id": 1420053, "name": "guzzle", ...}'
     //     return $data;
     // }
+
     // public function fetchAndStoreProducts()
     // {
         
@@ -88,26 +91,78 @@ class ProductApiController extends Controller
         // return response()->json(['message' => 'Products are being processed.']);
     }
 
-    public function showWebProducts(Request $request)
+    public function showProducts(Request $request)
     {
-        $perPage = $request->input('per_page',20); // Số lượng mặc định là 3 nếu không có tham số per_page
-        $query = ProductApi::query()
-            ->with(['containers'])
-            ->when($request->filled('created_at'), function ($q) use ($request) {
-                $q->whereDate('created_at', $request->created_at);
+        $perPage = $request->input('perPage');
+        // $containers = Container::all();    
+        $categories = Category::all();
+        $bundles = Bundle::all();
+        $productGroups = ProductGroup::all();
+        $query = Product::query()
+            ->when($request->filled('searchProductCode'), function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('searchProductCode') . '%');
             })
-            ->orderBy('name', 'desc'); // Sắp xếp theo report_date giảm dần
-
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $q->where('status_id', $request->input('status'));
+            })
+            ->when($request->filled('paymentStatus'), function ($q) use ($request) {
+                $q->where('payment', $request->input('paymentStatus'));
+            })
+            ->when($request->filled('platform'), function ($q) use ($request) {
+                $q->where('platform_id', $request->input('platform'));
+            })
+            ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->input('searchCreatedAtFrom'));  // Lọc theo ngày tạo từ
+            })
+            ->when($request->filled('searchCreatedAtTo'), function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->input('searchCreatedAtTo'));  // Lọc theo ngày tạo đến
+            })
+            ->when($request->filled('searchCustomer'), function ($q) use ($request) {
+                $q->whereHas('customerAccount', function ($subQuery) use ($request) {
+                    $subQuery->where('account_name', 'like', '%' . $request->input('searchCustomer') . '%');  // Tìm kiếm khách hàng theo tên tài khoản
+                });
+            })
+            ->when($request->filled('packingStatus'), function ($q) use ($request) {
+                if ($request->input('packingStatus') == '1') {
+                    $q->has('auxpackingOrder'); // Có auxpackingOrder
+                } else {
+                    $q->doesntHave('auxpackingOrder'); // Không có auxpackingOrder
+                }
+            })
+            ->when($request->filled('shipping'), function ($q) use ($request) {
+                if ($request->input('shipping') == '1') {
+                    $q->whereHas('orderProcess', function ($subQuery) {
+                        $subQuery->whereNotNull('tracking_number');
+                    });
+                } else {
+                    $q->whereDoesntHave('orderProcess', function ($subQuery) {
+                        $subQuery->whereNotNull('tracking_number');
+                    });
+                }
+            })
+            ->with(['category', 'bundles.bundleItems', 'productGroup'])
+            ->orderBy('created_at', 'desc');
         $products = $query->paginate($perPage);
-
         if ($request->ajax()) {
-            $view = view('products.partial_show_web_products', compact('products'))->render();
-            $links = $products->links()->toHtml();
-            return response()->json(['table' => $view, 'links' => $links]);//, 'products' => $products
+            return response()->json([
+                'products' => $products->items(),
+                'links' => $products->links('vendor.pagination.custom-tailwind')->toHtml(),
+            ]);
+        } else {
+            // For initial page load, send JSON as part of the rendered page
+            $initialData = json_encode([
+                'products' => $products->items(),
+                'links' => $products->links('vendor.pagination.custom-tailwind')->toHtml(),
+            ]);
+            return view('products.product', compact(
+                'categories',
+                'bundles',
+                'productGroups',
+                'initialData'),
+                ['header' => 'Xử lý đơn hàng']
+            );         
         }
-
-        $header = 'Danh sách sản phẩm';
-        return view('products.show_web_products', compact('products', 'header'));
     }
+
 
 }

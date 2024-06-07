@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\ProductApiController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContainerController;
 use App\Http\Controllers\InventoryTransactionController;
 use App\Http\Controllers\RoleController;
@@ -40,8 +40,8 @@ require __DIR__.'/auth.php';
 //Route::post('/login-endpoint', 'AuthController@login');
 Route::post('/login-endpoint', [AuthController::class, 'login']);
 
-Route::get('/fetch-products', [ProductApiController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
-Route::get('/show-web-products', [ProductApiController::class, 'showWebProducts'])->name('web.products');
+Route::get('/fetch-products', [ProductController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
+Route::get('/product', [ProductController::class, 'showProducts'])->name('products.show');
 
 Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới
