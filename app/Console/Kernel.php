@@ -5,6 +5,8 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use App\Console\Commands\ProcessCompletedOrders;
 
 class Kernel extends ConsoleKernel
 {
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
                 FetchAndStoreProductsJob::dispatch($i);
             }
         })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
+
+        $schedule->command('orders:process-completed')->dailyAt('00:00');// for processing completed orders
     }
 
     /**

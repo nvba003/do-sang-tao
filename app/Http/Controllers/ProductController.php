@@ -109,39 +109,16 @@ class ProductController extends Controller
             ->when($request->filled('group'), function ($q) use ($request) {
                 $q->where('product_group_id', $request->input('group'));
             })
-            ->when($request->filled('paymentStatus'), function ($q) use ($request) {
-                $q->where('payment', $request->input('paymentStatus'));
-            })
-            ->when($request->filled('platform'), function ($q) use ($request) {
-                $q->where('platform_id', $request->input('platform'));
-            })
-            ->when($request->filled('searchCreatedAtFrom'), function ($q) use ($request) {
-                $q->whereDate('created_at', '>=', $request->input('searchCreatedAtFrom'));  // Lọc theo ngày tạo từ
-            })
-            ->when($request->filled('searchCreatedAtTo'), function ($q) use ($request) {
-                $q->whereDate('created_at', '<=', $request->input('searchCreatedAtTo'));  // Lọc theo ngày tạo đến
-            })
-            ->when($request->filled('searchCustomer'), function ($q) use ($request) {
-                $q->whereHas('customerAccount', function ($subQuery) use ($request) {
-                    $subQuery->where('account_name', 'like', '%' . $request->input('searchCustomer') . '%');  // Tìm kiếm khách hàng theo tên tài khoản
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $status = $request->input('status');
+                $q->where(function ($subQuery) {
+                    $subQuery->where('sku', 'like', 'G4%')
+                             ->orWhere('sku', 'like', 'COMBO%');
                 });
-            })
-            ->when($request->filled('packingStatus'), function ($q) use ($request) {
-                if ($request->input('packingStatus') == '1') {
-                    $q->has('auxpackingOrder'); // Có auxpackingOrder
-                } else {
-                    $q->doesntHave('auxpackingOrder'); // Không có auxpackingOrder
-                }
-            })
-            ->when($request->filled('shipping'), function ($q) use ($request) {
-                if ($request->input('shipping') == '1') {
-                    $q->whereHas('orderProcess', function ($subQuery) {
-                        $subQuery->whereNotNull('tracking_number');
-                    });
-                } else {
-                    $q->whereDoesntHave('orderProcess', function ($subQuery) {
-                        $subQuery->whereNotNull('tracking_number');
-                    });
+                if ($status == 0) {
+                    $q->whereNull('bundle_id');
+                } elseif ($status == 1) {
+                    $q->whereNotNull('bundle_id');
                 }
             })
             ->with(['category', 'bundle.bundleItems.product', 'productGroup'])

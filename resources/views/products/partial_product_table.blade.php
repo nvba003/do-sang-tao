@@ -13,7 +13,7 @@
                 <th scope="col" class="w-3/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider">Danh mục</th>
                 <th scope="col" class="w-3/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Nhóm</th>
                 <th scope="col" class="w-1/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Combo</th>
-                <th scope="col" class="w-1/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider">SL</th>
+                <th scope="col" class="w-1/24 px-2 py-2 text-right text-xs md:text-sm font-semibold uppercase tracking-wider">SL</th>
                 <th scope="col" class="w-2/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider text-right">Giá lẻ</th>
             </tr>
         </thead>

@@ -27,6 +27,15 @@
                             @endforeach
                         </select>
                     </div>
+                    <!-- Combo chưa có dữ liệu -->
+                    <div class="w-full sm:w-1/4 md:w-3/12 xl:w-4/24 px-2 mb-1 md:mb-0">
+                        <label for="status" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
+                        <select id="status" x-model="searchParams.status" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option value="">Chọn</option>
+                                <option value="0">Chưa tạo nhóm</option>
+                                <option value="1">Đã tạo nhóm</option>
+                            </select>
+                    </div>
                     <!-- Nút Tìm -->
                     <div class="w-full sm:w-1/4 md:w-2/12 xl:w-2/24 mt-2 px-2 flex items-end">
                         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">Tìm</button>
@@ -110,6 +119,7 @@
             searchParams: {
                 searchProductCode: '',
                 group: '',
+                status: '',
             },
             selectedItems: [],
             checkAll: false,
