@@ -194,8 +194,8 @@ class OrderController extends Controller
                     'notes' => $request->notes ?? ''
                 ]
             );
-            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
             foreach ($request->details as $detail) {
+                $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                 OrderDetail::updateOrCreate(
                     [
                         'order_id' => $order->id,
