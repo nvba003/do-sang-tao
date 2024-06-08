@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Console\Commands\ProcessCompletedOrders;
+use App\Jobs\FetchAndStoreProductsJob;
 
 class Kernel extends ConsoleKernel
 {
