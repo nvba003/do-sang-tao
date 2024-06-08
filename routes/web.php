@@ -42,6 +42,10 @@ Route::post('/login-endpoint', [AuthController::class, 'login']);
 
 Route::get('/fetch-products', [ProductController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
 Route::get('/product', [ProductController::class, 'showProducts'])->name('products.show');
+Route::put('/update-info-product', [ProductController::class, 'updateInfoProduct'])->name('products.updateInfo');
+Route::put('/update-size-weight', [ProductController::class, 'updateSizeWeight'])->name('products.updateSizeWeight');
+Route::post('/product/bundle', [ProductController::class, 'saveBundleItems']);
+Route::delete('/product/bundle/{bundleId}', [ProductController::class, 'destroyBundle']);
 
 Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới

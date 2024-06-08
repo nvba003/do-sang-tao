@@ -99,6 +99,10 @@
     document.addEventListener('alpine:init', () => {
         Alpine.data('productTable', () => ({
             products: [],
+            allProducts: @json($allProducts),
+            categories: @json($categories),
+            productGroups: @json($productGroups),
+            userRole: @json(auth()->user()->roles()->first()->name),
             currentPage: 1,  // Ensure currentPage is part of your data model
             lastPage: 1,
             perPage: 15,
@@ -137,7 +141,7 @@
                     this.fetchData(`${urls.baseUrl}?page=${newPage}`);
                 });
                 console.log(this.products);
-                // console.log(branchId);
+                console.log(this.userRole);
                 // console.log(this.links);
                 console.log(this.productProcessings);
             },
@@ -163,6 +167,7 @@
                 .then(data => {
                     this.products = data.products;
                     this.links = data.links;
+                    console.log(this.products);
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -172,190 +177,29 @@
                 //console.log(this.searchParams);
                 this.fetchData(urls.baseUrl);
             },
-            calculateMinimumProductQuantity(bundles) {
-                let minQuantity = null; // Biến để lưu số lượng nhỏ nhất có thể đạt được
-                bundles.forEach(bundle => {
-                    let totalContainerQuantity = 0; // Tổng số lượng container cho mỗi bundle
-                    bundle.product.containers.forEach(container => {
-                        if (container.branch_id === branchId) {
-                            totalContainerQuantity += parseFloat(container.product_quantity);
-                        }
-                    });
-                    // Tính số lượng có thể đạt được cho bundle này
-                    let achievableQuantity = totalContainerQuantity / parseFloat(bundle.quantity);
-                    // Xác định số lượng nhỏ nhất có thể đạt được
-                    if (minQuantity === null || achievableQuantity < minQuantity) {
-                        minQuantity = achievableQuantity;
-                    }
-                });
-                return minQuantity;
+            getCategory(id) {
+                id = parseInt(id);  // Chuyển đổi id sang số nếu nó là chuỗi
+                let category = this.categories.find(c => c.id === id);
+                return category ? category.name : '_';
             },
-            calculateTotalQtyContainers(detail) {
-                // console.log(detail);
-                if (detail.product.containers) {
-                    const branchId = this.product.branch_id;
-                    return detail.product.containers
-                        .filter(container => container.branch_id === branchId)
-                        .reduce((total, container) => total + parseFloat(container.product_quantity || 0), 0);
-                }
-            },
-            checkQtyContainer(detail) {
-                let totalQuantity = detail.bundles.length > 0 ? this.calculateMinimumProductQuantity(detail.bundles) : this.calculateTotalQtyContainers(detail);
-                console.log(totalQuantity);
-                return totalQuantity < detail.quantity ? 'bg-red-400' : 'bg-green-500';
-            },
-            calculateTotalQtyDiff(productApiId, currentproductId) {
-                let totalQuantity = 0;
-                const details = this.productProcessings[productApiId] || [];
-                details.forEach(detail => {
-                    if (detail.product_id !== currentproductId) {
-                        totalQuantity += parseFloat(detail.quantity);
-                    }
-                });
-                return totalQuantity;
-            },
-            openProductDetails(productApiId, currentproductId) {
-                this.selectedProductDetails = this.productProcessings[productApiId] || [];
-                this.selectedProductDetails = this.selectedProductDetails.filter(detail => detail.product_id !== currentproductId);
-                // this.openModalDiff = true;
-                if (this.selectedProductDetails.length > 0) {
-                    this.openModalDiff = true;
-                } else {
-                    this.openModalDiff = false;
-                    console.log(`Không tìm thấy SP có ID ${productApiId} trong đơn hàng có ID ${currentproductId}`);
-                }
-            },
-            getStatus(statusCode) {
-                const numericCode = Number(statusCode); // Chuyển đổi statusCode từ chuỗi sang số
-                switch (numericCode) {
-                    case 1: return 'Đặt hàng';
-                    case 2: return 'Đang XL';
-                    case 3: return 'Đang giao';
-                    case 4: return 'Đơn hoàn';
-                    case 5: return 'Đơn hủy';
-                    case 6: return 'Thất lạc';
-                    case 7: return 'Hoàn thành';
-                    default: return 'Unknown';
-                }
-            },
-            getPaymentStatus(paymentCode) {
-                const numericCode = Number(paymentCode); // Chuyển đổi statusCode từ chuỗi sang số
-                switch (numericCode) {
-                    case 1: return '_';
-                    case 2: return 'Chưa đủ';
-                    case 3: return '✔️';
-                    default: return 'Unknown';
-                }
-            },
-            addDetail() {
-                // Tìm ID lớn nhất hiện tại trong danh sách để tránh trùng lặp
-                // const maxId = this.product.details.reduce((max, detail) => Math.max(max, detail.id || 0), 0);
-                this.product.details.push({
-                    // id: maxId + 1,
-                    id: Date.now(),// Trả về số milliseconds từ 1/1/1970 đến hiện tại
-                    product_id: this.product.id,
-                    product_api_id: '',
-                    quantity: 0,
-                    price: 0,
-                    discount_percent: 0,
-                    discount: 0,
-                    total: 0,
-                    promotion_id: null,
-                    bundle_id: null,
-                    bundles: [],
-                    notes: '',
-                    is_cancelled: 0,
-                    product: {
-                        product_api_id: '',
-                        sku: '',
-                        name: '',
-                    }
-                });             
-            },
-            updateproductTotal(product) {
-                let totalDiscount = 0;
-                let subtotal = 0;
-                product.details.forEach(detail => {
-                    if (!detail.is_cancelled) { // Kiểm tra xem sản phẩm có bị hủy không
-                        const detailTotal = detail.price * detail.quantity;
-                        const detailDiscount = detail.discount_percent > 0
-                            ? detailTotal * (detail.discount_percent / 100)
-                            : detail.discount;
-                        detail.total = detailTotal - detailDiscount;
-                        subtotal += detail.total; // Cộng dồn vào tổng phụ
-                        // totalDiscount += detailDiscount; // Cộng dồn tổng chiết khấu
-                    }
-                });
-                const totalAmount = subtotal + (product.customer_shipping_fee - product.shipping_fee) - product.total_discount;
-                const taxAmount = totalAmount * (product.tax / 100);
-                const finalAmount = totalAmount + taxAmount - product.commission_fee;
-                // Cập nhật các giá trị tổng cho đơn hàng
-                product.subtotal = subtotal;
-                product.total_amount = totalAmount;
-                product.final_amount = finalAmount;
-            },
-            updateDetails() {
-                console.log(this.product);
-                // Kiểm tra trùng lặp product_api_id
-                let productApiIds = new Set();
-                for (const detail of this.product.details) {
-                    if (productApiIds.has(detail.product_api_id)) {
-                        alert('Lỗi: Có sản phẩm bị trùng lặp.');
-                        return; // Ngưng thực thi nếu tìm thấy trùng lặp
-                    }
-                    productApiIds.add(detail.product_api_id);
-                }
-                const url = 'update-product';
-                fetch(url, {
-                    method: 'POST', // Hoặc 'PUT' nếu bạn đang cập nhật
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(this.product)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Success:', data);
-                    toggleModal(true); // Hiển thị modal khi có thông báo thành công
-                    setTimeout(function() {
-                        toggleModal(false); // Ẩn modal sau 500ms
-                    }, 500);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Lỗi không lưu được');
-                });
-            },
-            deleteDetail(detail) {
-                const index = this.product.details.indexOf(detail);
-                if (index !== -1) {
-                    this.product.details.splice(index, 1);
-                }
-                this.updateproductTotal(this.product);//tính lại số tổng
+            getGroup(id) {
+                id = parseInt(id);  // Chuyển đổi id sang số nếu nó là chuỗi
+                let group = this.productGroups.find(c => c.id === id);
+                return group ? group.name : '_';
             },
             updateInfo(product) {
+                // console.log(product);
                 const updatedInfoproduct = {
-                    id: product.id,  // Giả sử bạn cần ID để xác định đơn hàng cần cập nhật
-                    carrier_id: product.product_process.carrier_id,
-                    responsible_user_id: product.product_process.responsible_user_id,
-                    customer_account_id: product.customer_account_id,
-                    customer_id: product.customer_account.customer_id,
-                    tracking_number: product.product_process.tracking_number,
-                    product_type_id: product.product_type_id,
-                    source_info: product.source_info,
-                    status_id: product.product_process.status_id,
-                    notes: product.notes
+                    id: product.id,
+                    sku: product.sku,
+                    name: product.name,
+                    category_id: product.category_id,
+                    product_group_id: product.product_group_id,
                 };
                 console.log(updatedInfoproduct);
-                const url = "update-info-product";
+                const url = "{{ route('products.updateInfo') }}";
                 fetch(url, {
-                    method: 'POST',  // Sử dụng 'PUT' nếu bạn đang cập nhật thông tin
+                    method: 'PUT',  // Sử dụng 'PUT' nếu bạn đang cập nhật thông tin
                     headers: {
                         'Content-Type': 'application/json',
                         // Thêm token nếu API yêu cầu xác thực
@@ -382,61 +226,43 @@
                     alert('Có lỗi xảy ra khi cập nhật thông tin đơn hàng');
                 });
             },
-            addFinance(financeAmount) {
-                let newFinance = {
-                        id: '',
-                        product_id: '',
-                        amount_due: '',
-                        amount_paid: '',
-                        amount_remaining: '',
-                        created_at: '',
-                    };
-                if (this.product.finances.length === 0) {//nếu chưa có thanh toán
-                    newFinance = {
-                        id: Date.now(),
-                        product_id: this.product.id,
-                        amount_due: this.product.total_amount,
-                        amount_paid: financeAmount,
-                        amount_remaining: this.product.total_amount - financeAmount,
-                        created_at: Date.now(),
-                    };
-                } else {
-                    const lastFinance = this.product.finances[this.product.finances.length - 1];// Lấy thông tin tài chính cuối cùng và cập nhật
-                    if (financeAmount === this.product.total_amount) {//nếu chọn thanh toán đủ
-                        financeAmount = lastFinance.amount_remaining;//số tiền thanh toán là số tiền còn lại
-                    }
-                    newFinance = {
-                        id: Date.now(),
-                        product_id: this.product.id,
-                        amount_due: lastFinance.amount_remaining,
-                        amount_paid: financeAmount,
-                        amount_remaining: lastFinance.amount_remaining - financeAmount,
-                        created_at: Date.now(),
-                    };
-                }
-                console.log(newFinance);
-                const url = "add-finance-product";
+            updateSizeWeight(product) {
+                // console.log(product);
+                const updatedInfoproduct = {
+                    id: product.id,
+                    length: product.length,
+                    height: product.height,
+                    width: product.width,
+                    weight: product.weight,
+                };
+                console.log(updatedInfoproduct);
+                const url = "{{ route('products.updateSizeWeight') }}";
                 fetch(url, {
-                    method: 'POST',
+                    method: 'PUT',  // Sử dụng 'PUT' nếu bạn đang cập nhật thông tin
                     headers: {
                         'Content-Type': 'application/json',
+                        // Thêm token nếu API yêu cầu xác thực
+                        // 'Authorization': 'Bearer your-token-here',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify(newFinance)
-                }).then(response => response.json())
+                    body: JSON.stringify(updatedInfoproduct)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();  // Chuyển kết quả trả về dưới dạng JSON
+                })
                 .then(data => {
                     console.log('Success:', data);
-                    this.product.finances.push(newFinance);
-                    this.product.payment = data['payment'];//cập nhật giá trị trạng thái thanh toán
-                    this.financeAmount = '';
                     toggleModal(true); // Hiển thị modal khi có thông báo thành công
                         setTimeout(function() {
                             toggleModal(false); // Ẩn modal sau 500ms
                         }, 500);
                 })
                 .catch(error => {
-                    alert('Lỗi không thêm được');
                     console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi cập nhật thông tin đơn hàng');
                 });
             },
             
@@ -449,53 +275,107 @@
             },
 
             addBundle(product) {
-                // Đặt các giá trị bundle là null
-                product.bundle_id = null;
-                product.bundles = [{
-                    id: null,
-                    name: '',
-                    quantity: null
-                }];
+                console.log(product);
+                product.bundle_id = Date.now();
+                product.bundle = {
+                    id: '',
+                    name: product.name,
+                    price: product.price || null,
+                    type: 1,
+                    description: product.description || null,
+                    bundle_items: []
+                };
             },
             removeBundle(product) {
-                if (!confirm('Bạn chắc chắn muốn xóa bundle này?')) {
+                if (!confirm('Bạn chắc chắn muốn xóa combo này?')) {
                     return;
                 }
                 // Gửi request để xóa bundle
-                fetch(`${urls.baseUrl}/bundles/${product.bundle_id}`, {
+                fetch(`${urls.baseUrl}/bundle/${product.bundle.id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     }
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();  // Chuyển kết quả trả về dưới dạng JSON
+                })
                 .then(data => {
                     product.bundle_id = null;
-                    product.bundles = [];
+                    product.bundle = [];
+                    toggleModal(true); // Hiển thị modal khi có thông báo thành công
+                        setTimeout(function() {
+                            toggleModal(false); // Ẩn modal sau 500ms
+                        }, 500);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Lỗi! Không thể xóa bundle.');
+                    alert('Lỗi! Không thể xóa combo.');
                 });
             },
-            saveBundle(bundle) {
-                // Gửi request để lưu bundle
-                fetch(`${urls.baseUrl}/bundles/${bundle.id}`, {
-                    method: 'PUT',
+            addBundleItem(bundle) {
+                bundle.bundle_items.push({ id: Date.now(), product_api_id: '', quantity: 1 });
+            },
+            autocompleteProductSetup(item) {
+                return {
+                    productSuggestions: [],
+                    displayProductName: item.product ? item.product.name : '',
+                    initAutocompleteProduct() {
+                        // console.log(this.allProducts);
+                        this.$watch('displayProductName', (newValue) => {
+                            if (newValue && newValue.length > 2) { // Chỉ bắt đầu tìm kiếm khi có ít nhất 3 ký tự
+                                this.productSuggestions = this.allProducts.filter(product =>
+                                    product.name.toLowerCase().includes(newValue.toLowerCase()) ||
+                                    product.sku.toLowerCase().includes(newValue.toLowerCase())
+                                );
+                            } else {
+                                this.productSuggestions = [];
+                            }
+                        });
+                    },
+                    selectProduct(product,item) {
+                        this.displayProductName = product.name; // Hiển thị tên sản phẩm trong input
+                        item.product_api_id = product.product_api_id; // Cập nhật giá trị tìm kiếm với product_api_id của sản phẩm đã chọn
+                        this.productSuggestions = []; // Xóa các gợi ý sau khi sản phẩm được chọn
+                    }
+                }
+            },
+            removeBundleItem(item, itemIndex) {
+                item.splice(itemIndex, 1);
+            },
+            saveBundleItems(bundle, productId) {
+                bundle.product_id =  productId;
+                console.log(bundle);
+                fetch(`${urls.baseUrl}/bundle`, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify(bundle)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();  // Chuyển kết quả trả về dưới dạng JSON
+                })
                 .then(data => {
-                    alert('Đã lưu bundle thành công');
+                    console.log('Success:', data);
+                    bundle.id = data.bundle_id;
+                    // console.log(this.products);
+                    toggleModal(true); // Hiển thị modal khi có thông báo thành công
+                        setTimeout(function() {
+                            toggleModal(false); // Ẩn modal sau 500ms
+                        }, 500);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Lỗi! Không thể lưu bundle.');
+                    alert('Lỗi! Không thể lưu combo.');
                 });
             },
 

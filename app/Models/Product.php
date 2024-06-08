@@ -30,4 +30,9 @@ class Product extends Model
     {
         return $this->hasMany(BundleItem::class, 'bundle_id', 'bundle_id');
     }
+
+    public function bundle()
+    {
+        return $this->hasOne(Bundle::class, 'id', 'bundle_id');
+    }
 }
