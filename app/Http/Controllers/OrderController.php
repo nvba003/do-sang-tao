@@ -194,6 +194,7 @@ class OrderController extends Controller
                     'notes' => $request->notes ?? ''
                 ]
             );
+            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
             foreach ($request->details as $detail) {
                 OrderDetail::updateOrCreate(
                     [
@@ -207,7 +208,7 @@ class OrderController extends Controller
                         'discount' => $detail['discount'] ?? 0,
                         'total' => $detail['total'] ?? ($detail['price'] * $detail['quantity']),
                         'notes' => $detail['notes'] ?? null,
-                        'bundle_id' => $detail['bundle_id'] ?? null,
+                        'bundle_id' => $product->bundle_id,
                         'is_cancelled' => $detail['is_cancelled'],
                     ]
                 );
