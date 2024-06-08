@@ -17,14 +17,14 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Trạng thái -->
+                    <!-- Nhóm -->
                     <div class="w-full sm:w-1/4 md:w-3/12 xl:w-4/24 px-2 mb-1 md:mb-0">
-                        <label for="status" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Trạng thái:</label>
-                        <select id="status" x-model="searchParams.status" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <label for="group" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Nhóm:</label>
+                        <select id="group" x-model="searchParams.group" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option value="">Chọn</option>
-                            <option value="1">Chưa lấy hàng</option>
-                            <option value="2">Lấy chưa đủ</option>
-                            <option value="3">Đã lấy hàng</option>
+                            @foreach($productGroups as $group)
+                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <!-- Nút Tìm -->
@@ -109,7 +109,7 @@
             links: '',
             searchParams: {
                 searchProductCode: '',
-                status: '',
+                group: '',
             },
             selectedItems: [],
             checkAll: false,

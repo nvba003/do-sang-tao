@@ -106,8 +106,8 @@ class ProductController extends Controller
                 $q->where('name', 'like', '%' . $request->input('searchProductCode') . '%')
                 ->orWhere('sku', 'like', '%' . $request->input('searchProductCode') . '%');
             })
-            ->when($request->filled('status'), function ($q) use ($request) {
-                $q->where('status_id', $request->input('status'));
+            ->when($request->filled('group'), function ($q) use ($request) {
+                $q->where('product_group_id', $request->input('group'));
             })
             ->when($request->filled('paymentStatus'), function ($q) use ($request) {
                 $q->where('payment', $request->input('paymentStatus'));
