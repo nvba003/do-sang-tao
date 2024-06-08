@@ -9,11 +9,12 @@
                 </th>
                 <th scope="col" class="w-1/24 px-2 py-2 text-left text-center text-xs md:text-sm font-semibold uppercase tracking-wider"></th>
                 <th scope="col" class="w-3/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">SKU</th>
-                <th scope="col" class="w-10/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tên sản phẩm</th>
+                <th scope="col" class="w-9/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tên sản phẩm</th>
                 <th scope="col" class="w-3/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider">Danh mục</th>
                 <th scope="col" class="w-3/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Nhóm</th>
                 <th scope="col" class="w-1/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Combo</th>
-                <th scope="col" class="w-2/24 px-2 py-2 text-left text-xs md:text-sm font-semibold uppercase tracking-wider text-right">Giá lẻ</th>
+                <th scope="col" class="w-1/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider">SL</th>
+                <th scope="col" class="w-2/24 px-2 py-2 text-center text-xs md:text-sm font-semibold uppercase tracking-wider text-right">Giá lẻ</th>
             </tr>
         </thead>
         
@@ -27,10 +28,11 @@
                     <button @click="product.showDetails = !product.showDetails" x-text="product.showDetails ? '-' : '+'" class="bg-blue-500 w-6 h-6 text-white rounded"></button>
                 </td>
                 <td class="w-3/24 px-2 py-3 whitespace-nowrap" x-text="product.sku"></td>
-                <td class="w-10/24 px-2 py-3 whitespace-normal break-words" x-text="product.name"></td>
+                <td class="w-9/24 px-2 py-3 whitespace-normal break-words" x-text="product.name"></td>
                 <td class="w-3/24 px-2 py-3 whitespace-nowrap" x-text="getCategory(product.category_id)"></td>
                 <td class="w-3/24 px-2 py-3 whitespace-nowrap" x-text="getGroup(product.product_group_id)"></td>
                 <td class="w-1/24 px-2 py-3 whitespace-nowrap text-right mr-2" x-text="product.bundle_id ? '✔️' : '_'"></td>
+                <td class="w-1/24 px-2 py-3 whitespace-nowrap text-right" x-text="formatAmount(product.quantity)"></td>
                 <td class="w-2/24 px-2 py-3 whitespace-nowrap text-right" x-text="formatAmount(product.price)"></td>
             </tr>
             <template x-if="product.showDetails">
