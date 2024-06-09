@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
             }
         })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
 
-        $schedule->command('orders:process-completed')->dailyAt('00:00');// for processing completed orders
+        $schedule->command('orders:process-completed')->everyMinute();//->dailyAt('00:00');// for processing completed orders
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Branch;
 use App\Models\Container;
 use App\Models\ProductContainer;
+use App\Models\Category;
 use App\Models\ContainerMenuOption;
 use App\Models\ContainerStatus;
 use App\Models\Location;
@@ -31,7 +32,8 @@ class ContainerController extends Controller
         $products = ProductApi::all();
         $branches = Branch::all();
         // $bundleTypes = BundleType::all();
-        $containerMenuOptions = ContainerMenuOption::all();//cho chức năng thêm thùng
+        // $containerMenuOptions = ContainerMenuOption::all();//cho chức năng thêm thùng
+        $categories = Category::all();//cho chức năng thêm thùng
         $existingCodes = Container::pluck('container_code')->toArray();
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
@@ -74,7 +76,7 @@ class ContainerController extends Controller
         }
         
         $header = 'Quản lý thùng hàng';
-        return view('containers.container', compact('products', 'branches', 'containerMenuOptions', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
+        return view('containers.container', compact('products', 'branches', 'categories', 'containers', 'existingCodes', 'containerStatuses', 'locations', 'header'));
     }
 
     // public function searchProduct(Request $request)
@@ -137,5 +139,37 @@ class ContainerController extends Controller
 
         // Quay lại trang trước đó với thông báo thành công
         return back()->with('success', 'Thùng hàng đã được tạo thành công!');
+    }
+
+    public function indexLocation()
+    {
+        $locations = Location::with('children')->whereNull('parent_id')->get();
+        return view('containers.location', compact('locations'), ['header' => 'Vị trí thùng hàng']);
+    }
+
+    public function storeLocation(Request $request)
+    {
+        $request->validate([
+            'location_name' => 'required',
+        ]);
+        $data = $request->all();
+        if ($request->filled('location_id')) {
+            // Update existing location
+            $location = Location::find($request->location_id);
+            if ($location) {
+                $location->update($data);
+            }
+        } else {
+            // Create new location
+            Location::create($data);
+        }
+        return redirect()->route('locations.index');
+    }
+
+    public function destroyLocation($id)
+    {
+        $location = Location::findOrFail($id);
+        $location->delete();
+        return redirect()->route('locations.index');
     }
 }

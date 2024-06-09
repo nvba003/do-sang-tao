@@ -48,7 +48,7 @@
                             <label for="parent_menu" class="block text-sm text-left font-medium text-gray-700">Menu Cha:</label>
                             <select name="parent_id" id="parent_menu" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                 <option value="">Chọn Menu Cha (Nếu có)</option>
-                                @foreach($containerMenuOptions as $menuOption)
+                                @foreach($categories as $menuOption)
                                     @if($menuOption->isParent())
                                         <option value="{{ $menuOption->id }}" data-parent-menu="{{ $menuOption->definition_id }}">{{ $menuOption->name }}</option>
                                     @endif

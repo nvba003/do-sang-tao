@@ -232,6 +232,40 @@ class ProductController extends Controller
         $bundle->delete();
         return response()->json(['message' => 'Bundle deleted successfully']);
     }
+    //=========================================================================================================
+    public function indexCategory()
+    {
+        // $categories = Category::with('parent')->get();
+        $categories = Category::with('children')->whereNull('parent_id')->get();
+        return view('products.category', compact('categories'), ['header' => 'Danh mục sản phẩm']);
+    }
+
+    public function storeCategory(Request $request)
+    {
+        //dd($request->all());
+        $request->validate([
+            'name' => 'required',
+            'definition_id' => 'required|size:1',
+        ]);
+
+        if ($request->filled('category_id')) {
+            // Update existing category
+            $category = Category::find($request->category_id);
+            $category->update($request->all());
+        } else {
+            // Create new category
+            Category::create($request->all());
+        }
+
+        return redirect()->route('categories.index');
+    }
+
+    public function destroyCategory($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+        return redirect()->route('categories.index');
+    }
 
 
 }

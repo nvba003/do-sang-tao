@@ -46,9 +46,15 @@ Route::put('/update-info-product', [ProductController::class, 'updateInfoProduct
 Route::put('/update-size-weight', [ProductController::class, 'updateSizeWeight'])->name('products.updateSizeWeight');
 Route::post('/product/bundle', [ProductController::class, 'saveBundleItems']);
 Route::delete('/product/bundle/{bundleId}', [ProductController::class, 'destroyBundle']);
+Route::get('/categories', [ProductController::class, 'indexCategory'])->name('categories.index');
+Route::post('/categories', [ProductController::class, 'storeCategory'])->name('categories.store');
+Route::delete('/categories/{id}', [ProductController::class, 'destroyCategory'])->name('categories.destroy');
 
 Route::get('/containers', [ContainerController::class, 'showContainers'])->name('containers.show');//hiển thị trang danh sách thùng hàng
 Route::post('/containers', [ContainerController::class, 'store'])->name('containers.store');//tạo thùng hàng mới
+Route::get('/locations', [ContainerController::class, 'indexLocation'])->name('locations.index');
+Route::post('/locations', [ContainerController::class, 'storeLocation'])->name('locations.store');
+Route::delete('/locations/{id}', [ContainerController::class, 'destroyLocation'])->name('locations.destroy');
 
 Route::get('/container-transactions', [InventoryTransactionController::class, 'showTransactions'])->name('transactions.show');//trang hiện giao dịch thùng hàng
 Route::post('/container-transactions', [InventoryTransactionController::class, 'store'])->name('transactions.store');//tạo giao dịch thùng hàng

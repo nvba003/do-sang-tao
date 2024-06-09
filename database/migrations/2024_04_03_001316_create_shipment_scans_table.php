@@ -15,15 +15,17 @@ class CreateShipmentScansTable extends Migration
     {
         Schema::create('shipment_scans', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedTinyInteger('branch_id')->nullable();
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
+            $table->unsignedTinyInteger('platform_id')->nullable();
+            $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('set null');
+            $table->unsignedMediumInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->unsignedInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->string('tracking_number');
-            $table->boolean('scanned')->default(false);
             $table->timestamp('scan_date')->nullable();
             $table->timestamps();
-
-            $table->unsignedMediumInteger('user_id')->nullable(); // ID của người dùng thực hiện thao tác, nullable nếu hành động được thực hiện bởi hệ thống
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
