@@ -432,6 +432,8 @@ class OrderEcommerceController extends Controller
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                            $price = $product->price ?? 0;
                             $orderShopeeDetail = OrderShopeeDetail::where('id', $detail['detail_ecom_id']);
                             $orderShopeeDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -445,8 +447,8 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        // 'price' => $detail['price'],
-                                        // 'total' => $detail['total'],
+                                        'price' => $price,
+                                        'total' => $detail['quantity'] * $price,
                                     ]
                                 );
                                 OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -497,12 +499,14 @@ class OrderEcommerceController extends Controller
                     if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                         continue;
                     }
+                    $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                    $price = $product->price ?? 0;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        // 'price' => $detail['price'],
-                        // 'total' => $detail['total'],
+                        'price' => $price,
+                        'total' => $detail['quantity'] * $price,
                     ]);
                     OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
