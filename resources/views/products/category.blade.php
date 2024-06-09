@@ -66,7 +66,7 @@
         </div>
     </form> -->
 
-    <table class="max-w-full bg-white overflow-y-auto">
+    <table class="min-w-full bg-white h-[75%] overflow-y-auto">
         <thead>
             <tr>
                 <th class="py-2">ID</th>
