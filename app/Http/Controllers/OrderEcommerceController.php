@@ -531,7 +531,7 @@ class OrderEcommerceController extends Controller
                     'platform_id' => $platform->id,
                 ]);
             }
-            return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
+            return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id, 'orderDetail' => $orderDetail], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to store order and details', 'error' => $e->getMessage()], 500);
         }
