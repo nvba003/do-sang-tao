@@ -1,7 +1,6 @@
 @extends('layouts.app')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
-<!-- <x-conditional-content :condition="auth()->user()->hasRole('admin') || auth()->user()->hasRole('productProcess')"> -->
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
     <div id="productTable" class="w-full" x-data="productTable()">
         <div class="flex flex-wrap mx-auto mt-2 p-4 bg-white rounded shadow-md mb-2">
@@ -83,7 +82,6 @@
     </div>
   </div>
 </div>
-<!-- </x-conditional-content> -->
 @endsection
 
 @push('scripts')

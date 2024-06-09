@@ -141,7 +141,7 @@ class ProductController extends Controller
                 'productGroups',
                 'allProducts',
                 'initialData'),
-                ['header' => 'Xử lý đơn hàng']
+                ['header' => 'Danh sách sản phẩm']
             );         
         }
     }
