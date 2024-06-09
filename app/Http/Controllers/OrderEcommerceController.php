@@ -176,6 +176,8 @@ class OrderEcommerceController extends Controller
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                            $price = $product->price ?? 0;
                             $orderSendoDetail = OrderSendoDetail::where('id', $detail['sendo_detail_id']);
                             $orderSendoDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -189,8 +191,8 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        // 'price' => $detail['price'],
-                                        // 'total' => $detail['total'],
+                                        'price' => $price,
+                                        'total' => $detail['quantity'] * $price,
                                     ]
                                 );
                                 // Cập nhật OrderSendoDetail với order_detail_id mới và product_api_id mới
@@ -241,12 +243,14 @@ class OrderEcommerceController extends Controller
                     if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                         continue;
                     }
+                    $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                    $price = $product->price ?? 0;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        // 'price' => $detail['price'],
-                        // 'total' => $detail['total'],
+                        'price' => $price,
+                        'total' => $detail['quantity'] * $price,
                     ]);
                     OrderSendoDetail::where('id', $detail['sendo_detail_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -531,7 +535,7 @@ class OrderEcommerceController extends Controller
                     'platform_id' => $platform->id,
                 ]);
             }
-            return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id, 'orderDetail' => $orderDetail], 200);
+            return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to store order and details', 'error' => $e->getMessage()], 500);
         }
@@ -702,6 +706,8 @@ class OrderEcommerceController extends Controller
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                            $price = $product->price ?? 0;
                             $orderLazadaDetail = OrderLazadaDetail::where('id', $detail['detail_ecom_id']);
                             $orderLazadaDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -715,8 +721,8 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        // 'price' => $detail['price'],
-                                        // 'total' => $detail['total'],
+                                        'price' => $price,
+                                        'total' => $detail['quantity'] * $price,
                                     ]
                                 );
                                 OrderLazadaDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -767,12 +773,14 @@ class OrderEcommerceController extends Controller
                     if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                         continue;
                     }
+                    $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                    $price = $product->price ?? 0;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        // 'price' => $detail['price'],
-                        // 'total' => $detail['total'],
+                        'price' => $price,
+                        'total' => $detail['quantity'] * $price,
                     ]);
                     OrderLazadaDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -952,6 +960,8 @@ class OrderEcommerceController extends Controller
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                            $price = $product->price ?? 0;
                             $orderTikiDetail = OrderTikiDetail::where('id', $detail['detail_ecom_id']);
                             $orderTikiDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -965,8 +975,8 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        // 'price' => $detail['price'],
-                                        // 'total' => $detail['total'],
+                                        'price' => $price,
+                                        'total' => $detail['quantity'] * $price,
                                     ]
                                 );
                                 OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -1017,12 +1027,14 @@ class OrderEcommerceController extends Controller
                     if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                         continue;
                     }
+                    $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                    $price = $product->price ?? 0;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        // 'price' => $detail['price'],
-                        // 'total' => $detail['total'],
+                        'price' => $price,
+                        'total' => $detail['quantity'] * $price,
                     ]);
                     OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -1210,6 +1222,8 @@ class OrderEcommerceController extends Controller
                     foreach ($data['product_details'] as $detail) {
                         //if ($detail['product_api_id_before'] !== $detail['product_api_id']) {//nếu thay đổi product_api_id thì mới update
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
+                            $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                            $price = $product->price ?? 0;
                             $orderTiktokDetail = OrderTiktokDetail::where('id', $detail['detail_ecom_id']);
                             $orderTiktokDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -1223,8 +1237,8 @@ class OrderEcommerceController extends Controller
                                     ],
                                     [
                                         'quantity' => $detail['quantity'],
-                                        // 'price' => $detail['price'],
-                                        // 'total' => $detail['total'],
+                                        'price' => $price,
+                                        'total' => $detail['quantity'] * $price,
                                     ]
                                 );
                                 OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -1275,12 +1289,14 @@ class OrderEcommerceController extends Controller
                     if (empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                         continue;
                     }
+                    $product = Product::where('product_api_id', $detail['product_api_id'])->first();
+                    $price = $product->price ?? 0;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
-                        // 'price' => $detail['price'],
-                        // 'total' => $detail['total'],
+                        'price' => $price,
+                        'total' => $detail['quantity'] * $price,
                     ]);
                     OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
