@@ -1,5 +1,5 @@
 @forelse ($orders as $order)
-    <tr class="bg-white hover:bg-gray-100 border-b" data-order-id="{{ $order->id }}">
+    <tr class="{{ $order->order_id ? 'bg-green-500' : 'bg-white' }} border-b" data-order-id="{{ $order->id }}">
         <td class="p-2 w-1/24 text-center mt-2 hidden sm:block">
             <input type="checkbox" class="checkItem">
         </td>
@@ -22,7 +22,7 @@
                 <span class="text-green-500 ml-1">&#10004;</span>
             @endif
         </td> -->
-        <td id="order-id-{{ $order->id }}" class="w-1/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
+        <td id="order-id-{{ $order->id }}" class="w-2/24 p-2 text-xs sm:text-base overflow-hidden text-ellipsis">
             <span>{{ $order->order_id }}</span>
             @if ($order->order_id)
                 <span class="text-green-500 ml-1">&#10004;</span>

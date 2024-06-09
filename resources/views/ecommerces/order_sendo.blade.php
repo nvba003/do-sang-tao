@@ -279,6 +279,9 @@
                     const orderIdCheck = document.getElementById('order-id-' + orderId);//orderId là id trong order_sendos
                     const orderIdSpan = orderIdCheck.querySelector('span');
                     orderIdSpan.textContent = data.order_id;//data.order_id là id trong orders được trả về từ server
+                    const orderRow = orderIdCheck.closest('tr');
+                    orderRow.classList.remove('bg-white'); // Loại bỏ lớp nền cũ nếu có
+                    orderRow.classList.add('bg-green-500');  // Thêm lớp nền mới
                     toggleModal(true); // Hiển thị modal khi có thông báo thành công
                     setTimeout(function() {
                         toggleModal(false); // Ẩn modal sau 500ms
