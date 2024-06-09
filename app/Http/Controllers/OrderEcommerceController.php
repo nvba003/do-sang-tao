@@ -215,6 +215,8 @@ class OrderEcommerceController extends Controller
                             'responsible_user_id' => $data['responsible_user_id'],
                             'tracking_number' => $data['tracking_number'],
                             'carrier_id' => $data['carrier_id'],
+                            'branch_id' => $branchId,
+                            'platform_id' => $platform->id,
                         ]
                     );
                 }
@@ -264,6 +266,8 @@ class OrderEcommerceController extends Controller
                     'approval_time' => Carbon::now(),
                     'tracking_number' => $data['tracking_number'],
                     'carrier_id' => $data['carrier_id'],
+                    'branch_id' => $branchId,
+                    'platform_id' => $platform->id,
                 ]);
             }
             return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
@@ -467,6 +471,8 @@ class OrderEcommerceController extends Controller
                             'responsible_user_id' => $data['responsible_user_id'],
                             'tracking_number' => $tracking_number,
                             'carrier_id' => $data['carrier_id'],
+                            'branch_id' => $branchId,
+                            'platform_id' => $platform->id,
                         ]
                     );
                 }
@@ -517,6 +523,8 @@ class OrderEcommerceController extends Controller
                     'approval_time' => Carbon::now(),
                     'tracking_number' => $tracking_number,
                     'carrier_id' => $data['carrier_id'],
+                    'branch_id' => $branchId,
+                    'platform_id' => $platform->id,
                 ]);
             }
             return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
@@ -729,6 +737,8 @@ class OrderEcommerceController extends Controller
                             'responsible_user_id' => $data['responsible_user_id'],
                             'tracking_number' => $tracking_number,
                             'carrier_id' => $data['carrier_id'],
+                            'branch_id' => $branchId,
+                            'platform_id' => $platform->id,
                         ]
                     );
                 }
@@ -779,6 +789,8 @@ class OrderEcommerceController extends Controller
                     'approval_time' => Carbon::now(),
                     'tracking_number' => $tracking_number,
                     'carrier_id' => $data['carrier_id'],
+                    'branch_id' => $branchId,
+                    'platform_id' => $platform->id,
                 ]);
             }
             return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
@@ -975,6 +987,8 @@ class OrderEcommerceController extends Controller
                             'responsible_user_id' => $data['responsible_user_id'],
                             'tracking_number' => $tracking_number,
                             'carrier_id' => $data['carrier_id'],
+                            'branch_id' => $branchId,
+                            'platform_id' => $platform->id,
                         ]
                     );
                 }
@@ -1025,6 +1039,8 @@ class OrderEcommerceController extends Controller
                     'approval_time' => Carbon::now(),
                     'tracking_number' => $tracking_number,
                     'carrier_id' => $data['carrier_id'],
+                    'branch_id' => $branchId,
+                    'platform_id' => $platform->id,
                 ]);
             }
             return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
@@ -1229,6 +1245,8 @@ class OrderEcommerceController extends Controller
                             'responsible_user_id' => $data['responsible_user_id'],
                             'tracking_number' => $tracking_number,
                             'carrier_id' => $data['carrier_id'],
+                            'branch_id' => $branchId,
+                            'platform_id' => $platform->id,
                         ]
                     );
                 }
@@ -1279,6 +1297,8 @@ class OrderEcommerceController extends Controller
                     'approval_time' => Carbon::now(),
                     'tracking_number' => $tracking_number,
                     'carrier_id' => $data['carrier_id'],
+                    'branch_id' => $branchId,
+                    'platform_id' => $platform->id,
                 ]);
             }
             return response()->json(['message' => 'Order and details stored successfully', 'order_id' => $order->id], 200);
