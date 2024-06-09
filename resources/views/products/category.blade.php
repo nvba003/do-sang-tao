@@ -1,10 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-8">
-    <h1 class="text-2xl font-bold mb-4">Danh mục</h1>
-
-    <form action="{{ route('categories.store') }}" method="POST" class="mb-4">
+<div class="container mx-auto mt-4">
+    <form action="{{ route('categories.store') }}" method="POST" class="mb-4 max-w-lg mx-auto py-2 px-4 bg-white shadow rounded">
+        @csrf
+        <input type="hidden" name="category_id" id="category_id">
+        <div class="mb-0">
+            <label for="name" class="block text-gray-700">Tên:</label>
+            <input type="text" name="name" id="name" class="border border-gray-300 p-2 w-full" required>
+        </div>
+        <div class="mb-2">
+            <label for="definition_id" class="block text-gray-700">Ký tự định danh mã thùng:</label>
+            <input type="text" name="definition_id" id="definition_id" class="border border-gray-300 p-2 w-full" required>
+        </div>
+        <div class="mb-2">
+            <label for="parent_id" class="block text-gray-700">Danh mục cha:</label>
+            <select name="parent_id" id="parent_id" class="border border-gray-300 p-2 w-full">
+                <option value="">Chọn</option>
+                @foreach($categories as $parent)
+                <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-2">
+            <label for="notes" class="block text-gray-700">Ghi chú:</label>
+            <textarea name="notes" id="notes" class="border border-gray-300 p-2 w-full" rows="1"></textarea>
+        </div>
+        <div class="mb-2 flex justify-left">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Lưu</button>
+            <button type="reset" class="bg-gray-500 hover:bg-gray-700 text-white font-bold ml-2 py-2 px-4 rounded" onclick="resetForm()">Xóa form</button>
+        </div>
+    </form>
+    <!-- <form action="{{ route('categories.store') }}" method="POST" class="mb-4">
         @csrf
         <input type="hidden" name="category_id" id="category_id">
 
@@ -37,9 +64,9 @@
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Lưu</button>
             <button type="reset" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onclick="resetForm()">Xóa form</button>
         </div>
-    </form>
+    </form> -->
 
-    <table class="min-w-full bg-white">
+    <table class="min-w-full bg-white overflow-y-auto">
         <thead>
             <tr>
                 <th class="py-2">ID</th>
