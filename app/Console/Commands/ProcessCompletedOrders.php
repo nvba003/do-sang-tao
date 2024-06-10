@@ -15,6 +15,7 @@ use App\Models\ProductTransaction;
 use App\Models\InventoryTransaction;
 use App\Models\InventoryHistory;
 use App\Models\ShipmentScan;
+use App\Models\Platform;
 
 class ProcessCompletedOrders extends Command
 {
@@ -41,6 +42,7 @@ class ProcessCompletedOrders extends Command
             foreach ($completedOrders as $order) {
                 // Get all containers for the order
                 $containers = AuxpackingContainer::where('order_id', $order->order_id)->where('status', 1)->get();
+                $platform = Platform::find($order->platform_id);
                 foreach ($containers as $container) {
                     // Update product quantity
                     $product = Product::where('product_api_id', $container->product_api_id)->first();
@@ -75,6 +77,7 @@ class ProcessCompletedOrders extends Command
                             'transaction_id' => $transaction->id,
                             'quantity_before' => $containerModel->product_quantity,
                             'quantity_after' => $containerModel->product_quantity - $container->quantity,
+                            'notes' => $platform->name,
                         ]);
                         $containerModel->product_quantity -= $container->quantity;
                         $containerModel->save();
