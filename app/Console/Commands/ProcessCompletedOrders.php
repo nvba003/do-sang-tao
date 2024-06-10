@@ -43,7 +43,7 @@ class ProcessCompletedOrders extends Command
                 $containers = AuxpackingContainer::where('order_id', $order->order_id)->where('status', 1)->get();
                 foreach ($containers as $container) {
                     // Update product quantity
-                    $product = Product::find($container->product_api_id);
+                    $product = Product::where('product_api_id', $container->product_api_id)->first();
                     if ($product) {
                         $product->quantity -= $container->quantity;
                         $product->save();
