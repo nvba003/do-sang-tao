@@ -61,7 +61,7 @@ class ProcessCompletedOrders extends Command
                     if ($containerModel) {
                         // Record inventory transaction
                         $transaction = InventoryTransaction::create([
-                            'product_id' => $product->product_id,//product_api_id
+                            'product_id' => $product->product_api_id,
                             'container_id' => $containerModel->id,
                             'branch_id' => $containerModel->branch_id,
                             'user_id' => 2,
