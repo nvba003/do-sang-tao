@@ -9,10 +9,10 @@
 </div>
 
 <!-- <aside id="sidebar" :class="{ 'w-80': !collapsed, 'w-10': collapsed, 'hidden': hideSidebar }" class="bg-gray-800 text-white min-h-screen transition-width duration-300 ease-in-out relative"> -->
-<aside id="sidebar" 
+<aside
        :class="{ 'w-80': !collapsed && !hideSidebar, 'w-10': collapsed && !hideSidebar, 'hidden': hideSidebar, 
         'md:relative': !collapsed || hideSidebar, 'relative': collapsed || hideSidebar }" 
-       class="fixed inset-y-0 min-h-screen min-h-full bg-gray-800 text-white fixed z-40 transform transition-width">
+       class="fixed inset-y-0 min-h-screen bg-gray-800 text-white fixed z-40 transform transition-width">
     <div :class="{'right-sidebar-expanded': !collapsed, 'right-sidebar-collapsed': collapsed}" class="sidebar-toggle-container fixed top-10">
         <button @click="toggleSidebar" class="toggle-sidebar absolute flex items-center justify-between px-2 py-2 bg-gray-700 opacity-100 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="bi bi-list w-4 h-6">

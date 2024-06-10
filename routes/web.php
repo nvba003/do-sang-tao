@@ -40,6 +40,7 @@ require __DIR__.'/auth.php';
 //Route::post('/login-endpoint', 'AuthController@login');
 Route::post('/login-endpoint', [AuthController::class, 'login']);
 
+Route::group(['middleware' => 'auth'], function () {
 Route::get('/fetch-products', [ProductController::class, 'fetchAndStoreProducts'])->name('fetch.products');//lấy dữ liệu products on Sapo web
 Route::get('/product', [ProductController::class, 'showProducts'])->name('products.show');
 Route::put('/update-info-product', [ProductController::class, 'updateInfoProduct'])->name('products.updateInfo');
@@ -142,3 +143,4 @@ Route::delete('/tasks/remove-related-task/{taskId}', [TaskController::class, 're
 
 
 
+});

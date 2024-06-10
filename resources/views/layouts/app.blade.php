@@ -28,17 +28,17 @@
 
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <div class="flex flex-row min-h-full">
-                @include('components.sidebar')
-                <div id="content" class="content w-full">
-                    <div class="navigation">
-                        @include('layouts.navigation')
-                    </div>
-                    <main class="flex-1">
-                        @yield('content')
-                    </main>
+        <div class="min-h-screen bg-gray-100 flex">
+            <div id="sidebar" class="flex flex-col flex-grow">
+            @include('components.sidebar')
+            </div>
+            <div id="content" class="flex flex-col w-full">
+                <div class="navigation">
+                    @include('layouts.navigation')
                 </div>
+                <main class="flex-1">
+                    @yield('content')
+                </main>
             </div>
         </div>
 
@@ -49,6 +49,25 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         @stack('scripts')
+        <script>
+            function adjustSidebarHeight() {
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+                sidebar.style.height = content.scrollHeight + 'px';
+            }
+
+            // Adjust sidebar height on load
+            window.addEventListener('load', adjustSidebarHeight);
+
+            // Adjust sidebar height on resize
+            window.addEventListener('resize', adjustSidebarHeight);
+
+            // Optionally, adjust sidebar height on content changes if dynamic content is added
+            new MutationObserver(adjustSidebarHeight).observe(document.getElementById('content'), {
+                childList: true,
+                subtree: true
+            });
+        </script>
         
     </body>
 </html>
