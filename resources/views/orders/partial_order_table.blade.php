@@ -187,9 +187,9 @@
                                                         x-model="detail.product.sku">
                                                 </td>
                                                 <td class="py-2 px-2 w-9/24" >
-                                                    <div x-text="detail.product.name" class="text-xs"></div>
+                                                    <div x-text="detail.product.name" class="text-xs md:text-sm"></div>
                                                     <div>
-                                                        <input x-model="detail.notes" class="text-xs p-1 border-none rounded w-full bg-gray-50 italic" type="text">
+                                                        <input x-model="detail.notes" class="text-xs md:text-sm p-1 border-none rounded w-full bg-gray-50 italic" type="text">
                                                     </div>
                                                 </td>
                                                 <td class="py-2 px-1 w-1/24">
