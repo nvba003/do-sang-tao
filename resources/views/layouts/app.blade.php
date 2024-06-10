@@ -29,7 +29,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 flex">
-            <div id="sidebar" class="flex flex-col flex-grow">
+            <div id="sidebar" class="flex flex-col flex-grow bg-gray-800">
             @include('components.sidebar')
             </div>
             <div id="content" class="flex flex-col w-full">
