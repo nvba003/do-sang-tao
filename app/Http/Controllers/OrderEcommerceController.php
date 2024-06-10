@@ -178,6 +178,7 @@ class OrderEcommerceController extends Controller
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                             $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                             $price = $product->price ?? 0;
+                            $bundleId = $product->bundle_id ?? null;
                             $orderSendoDetail = OrderSendoDetail::where('id', $detail['sendo_detail_id']);
                             $orderSendoDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -193,6 +194,7 @@ class OrderEcommerceController extends Controller
                                         'quantity' => $detail['quantity'],
                                         'price' => $price,
                                         'total' => $detail['quantity'] * $price,
+                                        'bundle_id' => $bundleId,
                                     ]
                                 );
                                 // Cập nhật OrderSendoDetail với order_detail_id mới và product_api_id mới
@@ -205,6 +207,7 @@ class OrderEcommerceController extends Controller
                                 OrderDetail::where('id', $orderSendoDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                    'bundle_id' => $bundleId,
                                 ]);
                             }                            
                         }
@@ -245,12 +248,14 @@ class OrderEcommerceController extends Controller
                     }
                     $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                     $price = $product->price ?? 0;
+                    $bundleId = $product->bundle_id ?? null;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
                         'price' => $price,
                         'total' => $detail['quantity'] * $price,
+                        'bundle_id' => $bundleId,
                     ]);
                     OrderSendoDetail::where('id', $detail['sendo_detail_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -438,6 +443,7 @@ class OrderEcommerceController extends Controller
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                             $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                             $price = $product->price ?? 0;
+                            $bundleId = $product->bundle_id ?? null;
                             $orderShopeeDetail = OrderShopeeDetail::where('id', $detail['detail_ecom_id']);
                             $orderShopeeDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -453,6 +459,7 @@ class OrderEcommerceController extends Controller
                                         'quantity' => $detail['quantity'],
                                         'price' => $price,
                                         'total' => $detail['quantity'] * $price,
+                                        'bundle_id' => $bundleId,
                                     ]
                                 );
                                 OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -464,6 +471,7 @@ class OrderEcommerceController extends Controller
                                 OrderDetail::where('id', $orderShopeeDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                    'bundle_id' => $bundleId,
                                 ]);
                             }                            
                         }
@@ -505,12 +513,14 @@ class OrderEcommerceController extends Controller
                     }
                     $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                     $price = $product->price ?? 0;
+                    $bundleId = $product->bundle_id ?? null;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
                         'price' => $price,
                         'total' => $detail['quantity'] * $price,
+                        'bundle_id' => $bundleId,
                     ]);
                     OrderShopeeDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -708,6 +718,7 @@ class OrderEcommerceController extends Controller
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                             $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                             $price = $product->price ?? 0;
+                            $bundleId = $product->bundle_id ?? null;
                             $orderLazadaDetail = OrderLazadaDetail::where('id', $detail['detail_ecom_id']);
                             $orderLazadaDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -723,6 +734,7 @@ class OrderEcommerceController extends Controller
                                         'quantity' => $detail['quantity'],
                                         'price' => $price,
                                         'total' => $detail['quantity'] * $price,
+                                        'bundle_id' => $bundleId,
                                     ]
                                 );
                                 OrderLazadaDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -734,6 +746,7 @@ class OrderEcommerceController extends Controller
                                 OrderDetail::where('id', $orderLazadaDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                    'bundle_id' => $bundleId,
                                 ]);
                             }                            
                         }
@@ -775,12 +788,14 @@ class OrderEcommerceController extends Controller
                     }
                     $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                     $price = $product->price ?? 0;
+                    $bundleId = $product->bundle_id ?? null;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
                         'price' => $price,
                         'total' => $detail['quantity'] * $price,
+                        'bundle_id' => $bundleId,
                     ]);
                     OrderLazadaDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -962,6 +977,7 @@ class OrderEcommerceController extends Controller
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                             $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                             $price = $product->price ?? 0;
+                            $bundleId = $product->bundle_id ?? null;
                             $orderTikiDetail = OrderTikiDetail::where('id', $detail['detail_ecom_id']);
                             $orderTikiDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -977,6 +993,7 @@ class OrderEcommerceController extends Controller
                                         'quantity' => $detail['quantity'],
                                         'price' => $price,
                                         'total' => $detail['quantity'] * $price,
+                                        'bundle_id' => $bundleId,
                                     ]
                                 );
                                 OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -988,6 +1005,7 @@ class OrderEcommerceController extends Controller
                                 OrderDetail::where('id', $orderTikiDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                    'bundle_id' => $bundleId,
                                 ]);
                             }                            
                         }
@@ -1029,12 +1047,14 @@ class OrderEcommerceController extends Controller
                     }
                     $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                     $price = $product->price ?? 0;
+                    $bundleId = $product->bundle_id ?? null;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
                         'price' => $price,
                         'total' => $detail['quantity'] * $price,
+                        'bundle_id' => $bundleId,
                     ]);
                     OrderTikiDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,
@@ -1224,6 +1244,7 @@ class OrderEcommerceController extends Controller
                         if (!empty($detail['product_api_id'])) {// Bỏ qua nếu product_api_id rỗng
                             $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                             $price = $product->price ?? 0;
+                            $bundleId = $product->bundle_id ?? null;
                             $orderTiktokDetail = OrderTiktokDetail::where('id', $detail['detail_ecom_id']);
                             $orderTiktokDetail->update([
                                 'product_api_id' => $detail['product_api_id'],
@@ -1239,6 +1260,7 @@ class OrderEcommerceController extends Controller
                                         'quantity' => $detail['quantity'],
                                         'price' => $price,
                                         'total' => $detail['quantity'] * $price,
+                                        'bundle_id' => $bundleId,
                                     ]
                                 );
                                 OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
@@ -1250,6 +1272,7 @@ class OrderEcommerceController extends Controller
                                 OrderDetail::where('id', $orderShopeeDetail->order_detail_id)->update([
                                     'product_api_id' => $detail['product_api_id'],
                                     'quantity' => $detail['quantity'], //bỏ qua cũng được do chưa định làm chức năng thay đổi số lượng
+                                    'bundle_id' => $bundleId,
                                 ]);
                             }                            
                         }
@@ -1291,12 +1314,14 @@ class OrderEcommerceController extends Controller
                     }
                     $product = Product::where('product_api_id', $detail['product_api_id'])->first();
                     $price = $product->price ?? 0;
+                    $bundleId = $product->bundle_id ?? null;
                     $orderDetail = OrderDetail::create([
                         'order_id' => $order->id,
                         'product_api_id' => $detail['product_api_id'],
                         'quantity' => $detail['quantity'],
                         'price' => $price,
                         'total' => $detail['quantity'] * $price,
+                        'bundle_id' => $bundleId,
                     ]);
                     OrderTiktokDetail::where('id', $detail['detail_ecom_id'])->update([
                         'order_detail_id' => $orderDetail->id,

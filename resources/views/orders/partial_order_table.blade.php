@@ -46,8 +46,8 @@
                                     <div class="flex flex-wrap -mx-2">
                                         <!-- NVC: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'carrier_' + order.id" class="text-gray-700 text-xs">NVC:</label>
-                                            <select :id="'carrier_' + order.id" class="bg-white text-xs rounded py-2 px-6 w-full" x-model="order.order_process.carrier_id">
+                                            <label :for="'carrier_' + order.id" class="text-gray-700 text-xs md:text-sm">NVC:</label>
+                                            <select :id="'carrier_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-6 w-full" x-model="order.order_process.carrier_id">
                                                 <option value="">Chọn</option>
                                                 @foreach($carriers as $carrier)
                                                     <option value="{{ $carrier->id }}">{{ $carrier->name }}</option>
@@ -56,8 +56,8 @@
                                         </div>
                                         <!-- Phụ trách: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'responsible_' + order.id" class="text-gray-700 text-xs">Phụ trách:</label>
-                                            <select :id="'responsible_' + order.id" class="bg-white text-xs rounded py-2 px-8 w-full" x-model="order.order_process.responsible_user_id">
+                                            <label :for="'responsible_' + order.id" class="text-gray-700 text-xs md:text-sm">Phụ trách:</label>
+                                            <select :id="'responsible_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-8 w-full" x-model="order.order_process.responsible_user_id">
                                                 <option value="">Chọn</option>
                                                 @foreach($users as $user)
                                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -66,18 +66,18 @@
                                         </div>
                                         <!-- Mã KH: -->
                                         <div x-data="autocompleteSetup(order.customer_account.customer_id)" x-init="initAutocomplete" class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'customer_' + order.id" class="text-gray-700 text-xs">Mã KH:</label>
-                                            <input :id="'customer_' + order.id" x-ref="customerInput" type="text" class="bg-white text-xs rounded p-2 w-full"  x-model="selectedCustomerLabel">
+                                            <label :for="'customer_' + order.id" class="text-gray-700 text-xs md:text-sm">Mã KH:</label>
+                                            <input :id="'customer_' + order.id" x-ref="customerInput" type="text" class="bg-white text-xs md:text-sm rounded p-2 w-full"  x-model="selectedCustomerLabel">
                                         </div>
                                         <!-- Vận đơn: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'tracking_' + order.id" class="text-gray-700 text-xs">Vận đơn:</label>
-                                            <input :id="'tracking_' + order.id" type="text" class="bg-white text-xs rounded p-2 w-full" x-model="order.order_process.tracking_number">
+                                            <label :for="'tracking_' + order.id" class="text-gray-700 text-xs md:text-sm">Vận đơn:</label>
+                                            <input :id="'tracking_' + order.id" type="text" class="bg-white text-xs md:text-sm rounded p-2 w-full" x-model="order.order_process.tracking_number">
                                         </div>
                                         <!-- Loại đơn: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'orderType_' + order.id" class="text-gray-700 text-xs">Loại đơn:</label>
-                                            <select :id="'orderType_' + order.id" class="bg-white text-xs rounded py-2 px-6 w-full" x-model="order.order_type_id">
+                                            <label :for="'orderType_' + order.id" class="text-gray-700 text-xs md:text-sm">Loại đơn:</label>
+                                            <select :id="'orderType_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-6 w-full" x-model="order.order_type_id">
                                                 <option value="">Chọn</option>
                                                 @foreach($orderTypes as $orderType)
                                                     <option value="{{ $orderType->id }}">{{ $orderType->name }}</option>
@@ -86,13 +86,13 @@
                                         </div>
                                         <!-- Nguồn đơn từ: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'source_' + order.id" class="text-gray-700 text-xs">Nguồn đơn từ:</label>
-                                            <input :id="'source_' + order.id" type="text" class="bg-white text-xs rounded p-2 w-full" x-model="order.source_info">
+                                            <label :for="'source_' + order.id" class="text-gray-700 text-xs md:text-sm">Nguồn đơn từ:</label>
+                                            <input :id="'source_' + order.id" type="text" class="bg-white text-xs md:text-sm rounded p-2 w-full" x-model="order.source_info">
                                         </div>
                                         <!-- Trạng thái: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'orderStatus_' + order.id" class="text-gray-700 text-xs">Trạng thái:</label>
-                                            <select :id="'orderStatus_' + order.id" class="bg-white text-xs rounded py-2 px-6 w-full" x-model="order.order_process.status_id">
+                                            <label :for="'orderStatus_' + order.id" class="text-gray-700 text-xs md:text-sm">Trạng thái:</label>
+                                            <select :id="'orderStatus_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-6 w-full" x-model="order.order_process.status_id">
                                                 <option value="">Chọn</option>
                                                 @foreach($orderStatuses as $orderStatus)
                                                     <option value="{{ $orderStatus->id }}">{{ $orderStatus->name }}</option>
@@ -101,12 +101,12 @@
                                         </div>
                                         <!-- Ghi chú: -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2">
-                                            <label :for="'notes_' + order.id" class="text-gray-700 text-xs">Ghi chú:</label>
-                                            <textarea :id="'notes_' + order.id" class="bg-white text-xs rounded p-2 w-full" x-model="order.notes" rows="2"></textarea>
+                                            <label :for="'notes_' + order.id" class="text-gray-700 text-xs md:text-sm">Ghi chú:</label>
+                                            <textarea :id="'notes_' + order.id" class="bg-white text-xs md:text-sm rounded p-2 w-full" x-model="order.notes" rows="2"></textarea>
                                         </div>
                                         <!-- Button Update -->
                                         <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-2 mt-4">
-                                            <button class="bg-green-600 hover:bg-green-800 text-white text-xs font-bold py-2 px-4 rounded w-full" @click="updateInfo(order)">Cập nhật</button>
+                                            <button class="bg-green-600 hover:bg-green-800 text-white text-xs md:text-sm font-bold py-2 px-4 rounded w-full" @click="updateInfo(order)">Cập nhật</button>
                                         </div>
                                     </div>
                                 </div>

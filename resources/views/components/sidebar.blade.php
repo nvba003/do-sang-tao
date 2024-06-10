@@ -8,7 +8,6 @@
     </button>
 </div>
 
-<!-- <aside id="sidebar" :class="{ 'w-80': !collapsed, 'w-10': collapsed, 'hidden': hideSidebar }" class="bg-gray-800 text-white min-h-screen transition-width duration-300 ease-in-out relative"> -->
 <aside
        :class="{ 'w-80': !collapsed && !hideSidebar, 'w-10': collapsed && !hideSidebar, 'hidden': hideSidebar, 
         'md:relative': !collapsed || hideSidebar, 'relative': collapsed || hideSidebar }" 
