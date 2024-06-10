@@ -12,6 +12,7 @@
                             <div class="flex items-center space-x-2">
                                 <span class="font-normal">Mã CV:</span>
                                 <p x-text="taskDetail.task_code" class="px-4 block border-none rounded-md shadow-sm text-white bg-blue-500 font-medium"></p>
+                                <p class="text-gray-600 text-sm" x-text="'Ngày tạo: ' + formatDateTime(taskDetail.created_at)"></p>
                             </div>
                             <input x-model="taskDetail.title" type="text" class="mb-1 mt-2 p-1 block w-full border-none hover:border-gray-300 rounded-md shadow-sm font-bold" :disabled="!canEditTask()">
                             <label class="block text-sm font-medium text-gray-700">Mô tả</label>

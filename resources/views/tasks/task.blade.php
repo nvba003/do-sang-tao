@@ -645,8 +645,8 @@
             getRoleName(role) {
                 switch (role) {
                     case 1: return 'Người tạo';
-                    case 2: return 'Phụ trách chính';
-                    case 3: return 'Phụ trách phụ';
+                    case 2: return 'PT chính';
+                    case 3: return 'PT phụ';
                     default: return '_';
                 }
             },
