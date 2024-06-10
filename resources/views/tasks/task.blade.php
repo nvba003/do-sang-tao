@@ -211,9 +211,9 @@
                 //this.links = initialData.links;
                 this.fetchData(urls.baseUrl);
                 // Watch for changes to currentPage and fetch new data accordingly
-                this.$watch('currentPage', (newPage) => {
-                    this.fetchData(`${urls.baseUrl}?page=${newPage}`);
-                });
+                // this.$watch('currentPage', (newPage) => {
+                //     this.fetchData(`${urls.baseUrl}?page=${newPage}`);
+                // });
                 console.log(this.tasks);
                 // console.log(this.links);
                 console.log(this.tasksGroupedByStatus);
@@ -324,6 +324,9 @@
                         this.taskDetail.customer_contact_date = this.formatDateTimeLocal(this.taskDetail.customer_contact_date);
                         this.taskDetail.customer_response_date = this.formatDateTimeLocal(this.taskDetail.customer_response_date);
                         this.taskDetail.combinedRelations = this.combinedRelations();
+                        this.$nextTick(() => {
+                            this.adjustTextareaHeight(this.$refs.textarea);
+                        });
                     })
                     .catch(error => {
                         console.error('Failed to fetch task details:', error);
@@ -331,7 +334,6 @@
             },
 
             taskDetailModal(taskId) {
-                // this.filteredTags = this.tags;
                 this.fetchTask(taskId);
                 console.log(this.taskDetail);
                 this.openModalDetail = true;
@@ -657,6 +659,12 @@
                     case 3: return 'bg-gray-500 text-white rounded-full px-2';
                     default: return '';
                 }
+            },
+            adjustTextareaHeight(textarea) {
+                // Reset height to auto to correctly calculate the new height
+                textarea.style.height = 'auto';
+                // Set the height based on the scrollHeight
+                textarea.style.height = `${textarea.scrollHeight}px`;
             },
             addUser() {
                 if (!this.newUserId) {

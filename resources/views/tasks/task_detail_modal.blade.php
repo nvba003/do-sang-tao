@@ -16,8 +16,14 @@
                             </div>
                             <input x-model="taskDetail.title" type="text" class="mb-1 mt-2 p-1 block w-full border-none hover:border-gray-300 rounded-md shadow-sm font-bold" :disabled="!canEditTask()">
                             <label class="block text-sm font-medium text-gray-700">Mô tả</label>
-                            <textarea x-model="taskDetail.description" rows="3" class="mb-1 block w-full border-gray-300 rounded-md shadow-sm" :disabled="!canEditTask()"></textarea>
-
+                            <!-- <textarea x-model="taskDetail.description" class="mb-1 block w-full border-gray-300 rounded-md shadow-sm" :disabled="!canEditTask()"></textarea> -->
+                            <textarea 
+                                x-model="taskDetail.description" 
+                                class="mb-1 block w-full border-gray-300 rounded-md shadow-sm overflow-hidden resize-none"
+                                :disabled="!canEditTask()"
+                                x-ref="textarea"
+                                @input="adjustTextareaHeight($refs.textarea)"
+                            ></textarea>
                             <div class="flex space-x-4">
                                 <div class="flex-1">
                                     <label class="block text-sm font-medium text-gray-700">Trạng thái</label>

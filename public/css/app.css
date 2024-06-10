@@ -1336,6 +1336,9 @@ select {
 .cursor-pointer {
   cursor: pointer;
 }
+.resize-none {
+  resize: none;
+}
 .resize-y {
   resize: vertical;
 }
