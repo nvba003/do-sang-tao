@@ -140,7 +140,7 @@
                                 <tr class="border-b w-full">
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Trạng thái:</td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <select :id="'orderStatus_' + order.id" class="bg-white text-xs rounded py-2 px-6 w-full" x-model="order.status_id">
+                                        <select :id="'orderStatus_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-2 w-full" x-model="order.status_id">
                                             <option value="">Chọn</option>
                                             @foreach($orderStatuses as $orderStatus)
                                                 <option value="{{ $orderStatus->id }}">{{ $orderStatus->name }}</option>
@@ -149,7 +149,7 @@
                                     </td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Tình trạng:</td>
                                     <td colspan="2" class="px-2 py-3 w-6/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <select :id="'orderCondition_' + order.id" class="bg-white text-xs rounded py-2 px-6 w-full" x-model="order.order_condition_id">
+                                        <select :id="'orderCondition_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-2 w-full" x-model="order.order_condition_id">
                                             <option value="">Chọn</option>
                                             @foreach($orderConditions as $orderCondition)
                                                 <option value="{{ $orderCondition->id }}">{{ $orderCondition->name }}</option>
@@ -158,7 +158,7 @@
                                     </td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Người phụ trách:</td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <select :id="'responsible_' + order.id" class="bg-white text-xs rounded py-2 px-8 w-full" x-model="order.responsible_user_id">
+                                        <select :id="'responsible_' + order.id" class="bg-white text-xs md:text-sm rounded py-2 px-2 w-full" x-model="order.responsible_user_id">
                                             <option value="">Chọn</option>
                                             @foreach($users as $user)
                                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -167,17 +167,17 @@
                                     </td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Ngày XL tiếp:</td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.processing_date">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.processing_date">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Ghi chú:</td>
                                     <td colspan="3" class="px-2 py-3 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <textarea :id="'notes_' + order.id" class="bg-white text-xs rounded p-2 w-full" x-model="order.notes" rows="1"></textarea>
+                                        <textarea :id="'notes_' + order.id" class="bg-white text-xs md:text-sm rounded p-2 w-full" x-model="order.notes" rows="1"></textarea>
                                     </td>
                                     <td colspan="1" class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Kết quả:</td>
                                     <td colspan="3" class="px-2 py-3 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="text" :id="'result_' + order.id" class="bg-white text-xs rounded p-2 w-full" x-model="order.result">
+                                        <input type="text" :id="'result_' + order.id" class="bg-white text-xs md:text-sm rounded p-2 w-full" x-model="order.result">
                                     </td>
                                 </tr>
                             </tbody>
