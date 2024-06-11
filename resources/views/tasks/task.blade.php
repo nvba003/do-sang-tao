@@ -815,6 +815,7 @@
                     alert('Chưa nhập thông tin sản phẩm');
                     return;
                 }
+                console.log(this.newProductNumber);
                 fetch(`${urls.baseUrl}/add-product`, {
                     method: 'POST',
                     headers: {
