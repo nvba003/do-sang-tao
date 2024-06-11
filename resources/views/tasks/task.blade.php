@@ -332,11 +332,36 @@
                         console.error('Failed to fetch task details:', error);
                     });
             },
-
+            
             taskDetailModal(taskId) {
                 this.fetchTask(taskId);
                 console.log(this.taskDetail);
                 this.openModalDetail = true;
+            },
+            autocompleteProductSetup() {
+                return {
+                    allProducts: @json($allProducts),
+                    productSuggestions: [],
+                    displayProductName: '',
+                    initAutocompleteProduct() {
+                        console.log(this.allProducts);
+                        this.$watch('displayProductName', (newValue) => {
+                            if (newValue && newValue.length > 2) { // Chỉ bắt đầu tìm kiếm khi có ít nhất 3 ký tự
+                                this.productSuggestions = this.allProducts.filter(product =>
+                                    product.name.toLowerCase().includes(newValue.toLowerCase()) ||
+                                    product.sku.toLowerCase().includes(newValue.toLowerCase())
+                                );
+                            } else {
+                                this.productSuggestions = [];
+                            }
+                        });
+                    },
+                    selectProduct(product) {
+                        this.displayProductName = product.name; // Hiển thị tên sản phẩm trong input
+                        this.newProductNumber = product.product_api_id; // Cập nhật giá trị tìm kiếm với product_api_id của sản phẩm đã chọn
+                        this.productSuggestions = []; // Xóa các gợi ý sau khi sản phẩm được chọn
+                    }
+                }
             },
 
             savetaskDetail() {
@@ -786,8 +811,8 @@
             },
 
             addProduct() {
-                if (this.newProductNumber.trim() === '') {
-                    alert('Chưa nhập mã sản phẩm');
+                if (this.newProductNumber === '') {
+                    alert('Chưa nhập thông tin sản phẩm');
                     return;
                 }
                 fetch(`${urls.baseUrl}/add-product`, {

@@ -28,6 +28,7 @@ class TaskController extends Controller
         $categories = TaskCategory::all();
         $users = User::all();
         $tags = Tag::all();
+        $allProducts = Product::all();
         $statuses = [
             1 => 'Chưa bắt đầu',
             2 => 'Đang làm',
@@ -81,7 +82,7 @@ class TaskController extends Controller
             'tasks' => $tasks,//->items(),
             //'links' => $tasks->links('vendor.pagination.custom-tailwind')->toHtml(),
         ]);
-        return view('tasks.task', compact('tasks', 'tags', 'statuses', 'categories', 'users', 'initialData'), [
+        return view('tasks.task', compact('tasks', 'tags', 'statuses', 'categories', 'users', 'allProducts', 'initialData'), [
             'header' => 'Quản lý công việc'
         ]);
     }
@@ -355,11 +356,11 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'taskId' => 'required|exists:tasks,id',
-            'productNumber' => 'required|string'
+            'productNumber' => 'required|int'
         ]);
 
         $task = Task::findOrFail($validated['taskId']);
-        $product = Product::where('sku', $validated['productNumber'])->first();
+        $product = Product::where('product_api_id', $validated['productNumber'])->first();
 
         if (!$task || !$product) {
             return response()->json(['message' => 'Task or Product not found'], 404);

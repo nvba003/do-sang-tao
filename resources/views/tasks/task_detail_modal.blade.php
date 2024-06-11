@@ -1,5 +1,5 @@
 <!-- Modal for taskDetail Details -->
-<div x-show="openModalDetail" class="fixed inset-0 overflow-y-auto flex items-center justify-center" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div x-show="openModalDetail" class="fixed inset-0 overflow-y-auto flex items-center justify-center z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-10 mt-12 w-full text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75" @click="openModalDetail = false"></div>
         <!-- Modal content -->
@@ -277,11 +277,20 @@
                         <div class="border-t">
                             <div class="flex items-center space-x-2">
                                 <h4 class="text-md font-semibold mt-1">Sản phẩm liên quan</h4>
-                                <div class="relative text-sm">
-                                    <div class="relative mt-2 flex items-center">
-                                        <input x-model="newProductNumber" type="text" class="border rounded px-2 py-1 w-full text-sm" placeholder="Nhập mã sản phẩm">
-                                        <button @click.prevent="addProduct()" class="ml-2 bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1">Thêm</button>
+                                <div class="relative mt-2 text-sm flex items-center" x-data="autocompleteProductSetup()" x-init="initAutocompleteProduct">
+                                    <input type="text" x-ref="productInput" id="newProductNumber" x-model="displayProductName" 
+                                        @blur="setTimeout(() => productSuggestions = [], 100)" class="text-sm shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập sản phẩm">
+                                    <div class="absolute z-20 w-full bg-white mt-1 rounded-md shadow-lg" x-show="productSuggestions.length > 0" style="top: 100%;">
+                                        <ul class="max-h-60 overflow-y-auto">
+                                            <template x-for="product in productSuggestions" :key="product.id">
+                                                <li @click="selectProduct(product)" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                                    <span x-text="product.name"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
                                     </div>
+                                    <!-- <input x-model="newProductNumber" type="text" class="border rounded px-2 py-1 w-full text-sm" placeholder="Nhập mã sản phẩm"> -->
+                                    <button @click.prevent="addProduct()" class="ml-2 bg-green-500 hover:bg-green-700 text-white rounded px-2 py-1">Thêm</button>
                                 </div>
                             </div>
                             <table class="min-w-full bg-white mt-1" x-show="taskDetail.products.length > 0">
