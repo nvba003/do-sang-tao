@@ -196,15 +196,15 @@
                                     <td class="px-1 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700" x-text="order.carrier.name"></td>
                                     <td class="px-0 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Ngày vận chuyển:</td>
                                     <td class="px-1 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.ship_date">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.ship_date">
                                     </td>
                                     <td class="px-0 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Ngày nhận ước tính:</td>
                                     <td class="px-1 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.estimated_delivery_date">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.estimated_delivery_date">
                                     </td>
                                     <td class="px-0 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Ngày nhận thực tế:</td>
                                     <td class="px-1 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.actual_delivery_date">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.actual_delivery_date">
                                     </td>
                                 </tr>
                             </tbody>
@@ -221,23 +221,23 @@
                                 <tr>
                                     <td class="px-2 py-3 w-1/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Duyệt:</td>
                                     <td class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="text" class="timepicker text-xs p-1 border rounded w-full" x-model="order.approval_time">
+                                        <input type="text" class="timepicker text-xs md:text-sm p-1 border rounded w-full" x-model="order.approval_time">
                                     </td>
                                     <td class="px-2 py-3 w-1/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Đóng gói:</td>
                                     <td class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="text" class="timepicker text-xs p-1 border rounded w-full" x-model="order.packing_time">
+                                        <input type="text" class="timepicker text-xs md:text-sm p-1 border rounded w-full" x-model="order.packing_time">
                                     </td>
                                     <td class="px-2 py-3 w-2/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Giao bưu tá:</td>
                                     <td class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="text" class="timepicker text-xs p-1 border rounded w-full" x-model="order.delivery_handoff_time">
+                                        <input type="text" class="timepicker text-xs md:text-sm p-1 border rounded w-full" x-model="order.delivery_handoff_time">
                                     </td>
                                     <td class="px-2 py-3 w-2/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Hoàn thành:</td>
                                     <td class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.completion_time">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.completion_time">
                                     </td>
                                     <td class="px-2 py-3 w-2/24 whitespace-no-wrap text-sm leading-5 text-gray-900 text-right font-medium">Nhận hoàn:</td>
                                     <td class="px-2 py-3 w-3/24 whitespace-no-wrap text-sm leading-5 text-gray-700">
-                                        <input type="date" class="text-xs p-1 border rounded w-full" x-model="order.received_return_date">
+                                        <input type="date" class="text-xs md:text-sm p-1 border rounded w-full" x-model="order.received_return_date">
                                     </td>
                                 </tr>
                             </tbody>
