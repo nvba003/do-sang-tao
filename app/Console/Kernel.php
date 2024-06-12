@@ -21,17 +21,17 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('orders:process-completed')->dailyAt('00:00');// for processing completed orders ->everyMinute();//
 
-        $schedule->call(function () {
-            $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
-            $response = Http::get($countProduct);
-            $count = json_decode($response->body())->count;
-            $pages = ceil($count / 250);
+        // $schedule->call(function () {
+        //     $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
+        //     $response = Http::get($countProduct);
+        //     $count = json_decode($response->body())->count;
+        //     $pages = ceil($count / 250);
     
-            for ($i = 1; $i <= $pages; $i++) {
-                Log::info('Dispatching job for page: ' . $i);
-                FetchAndStoreProductsJob::dispatch($i);
-            }
-        })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
+        //     for ($i = 1; $i <= $pages; $i++) {
+        //         Log::info('Dispatching job for page: ' . $i);
+        //         FetchAndStoreProductsJob::dispatch($i);
+        //     }
+        // })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
 
     }
 
