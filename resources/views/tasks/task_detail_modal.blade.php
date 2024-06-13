@@ -1,7 +1,7 @@
 <!-- Modal for taskDetail Details -->
-<div x-show="openModalDetail" class="fixed inset-0 overflow-y-auto flex items-center justify-center z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center overflow-hidden max-h-full w-full pt-4 px-4 pb-10 mt-12 w-full text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75" @click="openModalDetail = false"></div>
+<div x-show="openModalDetail" class="fixed inset-0 flex items-center justify-center z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75" @click="openModalDetail = false"></div>
+        <div class="bg-white rounded-lg shadow-lg overflow-y-auto mx-auto p-4 w-full max-w-4xl my-10 max-h-[80vh]">
         <!-- Modal content -->
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-4xl sm:w-full"> <!-- Increase max-width -->
             <form @submit.prevent="savetaskDetail()" class="bg-white px-4 pt-4">
