@@ -14,7 +14,7 @@ class CreateBundleItemsTable extends Migration
     public function up()
     {
         Schema::create('bundle_items', function (Blueprint $table) {
-            $table->tinyIncrements('id');
+            $table->increments('id');
             $table->unsignedSmallInteger('bundle_id');
             $table->foreign('bundle_id')->references('id')->on('bundles')->onDelete('cascade');
             $table->unsignedInteger('product_api_id');
