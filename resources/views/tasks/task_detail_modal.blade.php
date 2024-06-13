@@ -1,13 +1,11 @@
 <!-- Modal for taskDetail Details -->
 <div x-show="openModalDetail" class="fixed inset-0 flex items-center justify-center z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!-- Overlay làm mờ nền -->
     <div class="fixed inset-0 bg-gray-500 bg-opacity-75" @click="openModalDetail = false"></div>
     <!-- Modal content -->
-    <div class="relative bg-white rounded-lg shadow-lg overflow-y-auto mx-auto p-4 w-full my-10 max-h-screen">
-        <!-- Modal content -->
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-4xl sm:w-full"> <!-- Increase max-width -->
-            <form @submit.prevent="savetaskDetail()" class="bg-white px-4 pt-4">
-                <div class="sm:flex sm:items-start">
+    <div class="inline-block text-left bg-white rounded-lg overflow-y-auto shadow-xl transform transition-all sm:align-middle lg:max-w-5xl w-full max-h-[90vh] sm:max-h-screen"> <!-- Adjust max-height for small screens -->
+        <div class="p-4 sm:p-6 rounded-lg">    
+            <form @submit.prevent="savetaskDetail()" class="mb-0"> <!-- Adjusted padding for better space usage -->
+                <div class="flex sm:items-start flex-col sm:flex-row">
                     <!-- Column 1: Original content -->
                     <div class="sm:flex-1"> <!-- Adjusted for grid layout -->
                         <div class="mt-3 text-center sm:mt-0 sm:text-left">
