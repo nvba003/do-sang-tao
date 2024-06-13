@@ -1,6 +1,6 @@
 <!-- Modal for taskDetail Details -->
 <div x-show="openModalDetail" class="fixed inset-0 flex items-center justify-center z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 bg-gray-500 bg-opacity-25" @click="openModalDetail = false"></div>
+    <div class="fixed inset-0 bg-gray-50 bg-opacity-25" @click="openModalDetail = false"></div>
         <div class="bg-white rounded-lg shadow-lg overflow-y-auto mx-auto p-4 w-full my-10 max-h-screen">
         <!-- Modal content -->
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-4xl sm:w-full"> <!-- Increase max-width -->
