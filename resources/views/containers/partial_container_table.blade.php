@@ -26,6 +26,7 @@
         <td class="w-2/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">
             <span class="location-name">{{ $container->location->location_name ?? '_' }}</span>
             <select class="text-xs md:text-lg sm:text-base location-name-input hidden ml-2 border rounded p-1 w-6 sm:w-16">
+                <option value=""></option>
                 @foreach($locations as $location)
                     @if($location->isChild() && $location->parent_id == $container->location_parent_id)
                         <option value="{{ $location->location_name }}" {{ $location->id == $container->location_id ? 'selected' : '' }}>{{ $location->location_name }}</option>

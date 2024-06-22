@@ -56,6 +56,26 @@ class ContainerController extends Controller
             ->when($request->filled('location_id'), function ($q) use ($request) {
                 $q->where('location_id', $request->input('location_id'));
             })
+            ->when($request->filled('state_location'), function ($q) use ($request) {
+                switch ($request->input('state_location')) {
+                    case '1':
+                        // Chưa có location_parent_id
+                        $q->whereNull('location_parent_id');
+                        break;
+                    case '2':
+                        // Có location_parent_id
+                        $q->whereNotNull('location_parent_id');
+                        break;
+                    case '3':
+                        // Chưa có location_id
+                        $q->whereNull('location_id');
+                        break;
+                    case '4':
+                        // Có location_parent_id nhưng chưa có location_id
+                        $q->whereNotNull('location_parent_id')->whereNull('location_id');
+                        break;
+                }
+            })
             ->orderBy('id', 'desc');
 
         $containers = $query->paginate($perPage);
@@ -163,6 +183,29 @@ class ContainerController extends Controller
         return redirect()->route('locations.index');
     }
 
+    // public function updateLocationParentId()
+    // {
+    //     // Lấy tất cả các container
+    //     $containers = Container::all();
+    //     foreach ($containers as $container) {
+    //         // Kiểm tra nếu cột notes có thông tin vị trí thùng hàng
+    //         if (strlen($container->notes) == 4 && ctype_alpha(substr($container->notes, 0, 2)) && ctype_digit(substr($container->notes, 2, 2))) {
+    //             // Lấy branch_id của container
+    //             $branchId = $container->branch_id;
+    //             // Tìm location có location_name và branch_id khớp
+    //             $location = Location::where('location_name', $container->notes)
+    //                                 ->where('branch_id', $branchId)
+    //                                 ->first();
+    //             // Nếu tìm thấy location, cập nhật location_parent_id cho container
+    //             if ($location) {
+    //                 $container->location_parent_id = $location->id;
+    //                 $container->save();
+    //             }
+    //         }
+    //     }
+    //     return response()->json(['message' => 'Update location_parent_id completed.']);
+    // }
+
     public function updateLocationParentId()
     {
         // Lấy tất cả các container
@@ -172,14 +215,34 @@ class ContainerController extends Controller
             if (strlen($container->notes) == 4 && ctype_alpha(substr($container->notes, 0, 2)) && ctype_digit(substr($container->notes, 2, 2))) {
                 // Lấy branch_id của container
                 $branchId = $container->branch_id;
-                // Tìm location có location_name và branch_id khớp
-                $location = Location::where('location_name', $container->notes)
-                                    ->where('branch_id', $branchId)
-                                    ->first();
-                // Nếu tìm thấy location, cập nhật location_parent_id cho container
-                if ($location) {
-                    $container->location_parent_id = $location->id;
-                    $container->save();
+                // Nếu mã không bắt đầu bằng "GM"
+                if (substr($container->notes, 0, 2) !== 'GM') {
+                    // Tìm location có location_name và branch_id khớp
+                    $location = Location::where('location_name', $container->notes)
+                                        ->where('branch_id', $branchId)
+                                        ->first();
+                    // Nếu tìm thấy location, cập nhật location_parent_id cho container
+                    if ($location) {
+                        $container->location_parent_id = $location->id;
+                        // Tìm các locations có parent_id khớp với id của location
+                        $childLocations = Location::where('parent_id', $location->id)
+                                                ->where('branch_id', $branchId)
+                                                ->get();
+                        // Nếu chỉ có một hàng duy nhất trong các child locations
+                        if ($childLocations->count() == 1) {
+                            $container->location_id = $childLocations->first()->id;
+                        }
+                        $container->save();
+                    }
+                } else {
+                    // Trường hợp mã bắt đầu bằng "GM"
+                    $location = Location::where('location_name', $container->notes)
+                                        ->where('branch_id', $branchId)
+                                        ->first();
+                    if ($location) {
+                        $container->location_parent_id = $location->id;
+                        $container->save();
+                    }
                 }
             }
         }

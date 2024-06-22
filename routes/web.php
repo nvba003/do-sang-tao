@@ -60,7 +60,7 @@ Route::post('/containers', [ContainerController::class, 'store'])->name('contain
 Route::get('/locations', [ContainerController::class, 'indexLocation'])->name('locations.index');
 Route::post('/locations', [ContainerController::class, 'storeLocation'])->name('locations.store');
 Route::delete('/locations/{id}', [ContainerController::class, 'destroyLocation'])->name('locations.destroy');
-Route::get('/update-location-parent-id', [ContainerController::class, 'updateLocationParentId']);
+Route::get('/update-location-parent-id', [ContainerController::class, 'updateLocationParentId']);//caculate location
 Route::get('/get-locations/{parent}', [ContainerController::class, 'getLocationsByParent']);
 Route::post('/update-container/{id}', [ContainerController::class, 'updateContainer']);
 

@@ -24,12 +24,12 @@
                     <div class="relative">
                         <input type="text" id="searchProductID" class="z-0 text-sm shadow appearance-none border rounded mt-1 block w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
                         <input type="hidden" id="searchProductIDValue" name="searchProductID">
-                        <div class="absolute inset-y-0 right-0 flex items-right px-2">
+                        <div class="absolute inset-y-0 right-0 flex items-right px-1">
                             <button class="bg-gray-200 hover:bg-gray-300 text-gray-500 bg-opacity-75 hover:bg-opacity-100 p-2 rounded-r-md z-10" type="button" onclick="clearSearchProduct()">Xóa</button>
                         </div>
                     </div>
                 </div>
-                <div class="w-full sm:w-3/24 px-1 md:px-2 mb-1 md:mb-2 text-sm">
+                <div class="w-1/2 sm:w-3/24 px-1 md:px-2 mb-1 md:mb-2 text-sm">
                     <label for="parent_location_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 ">Vị trí:</label>
                     <select name="parent_location_id" id="parent_location_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                         <option value="">Chọn</option>
@@ -40,22 +40,33 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-4/24 px-1 md:px-3 mb-1 md:mb-2">
+                <div class="w-1/2 sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="branch_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Chi nhánh:</label>
-                    <select id="branch_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="branch_id">
+                    <select id="branch_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-6 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="branch_id">
                         <option value="">Chọn chi nhánh</option>
                         @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="w-full sm:w-4/24 px-1 md:px-3 mb-1 md:mb-2">
+                <div class="w-1/2 sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
                     <label for="container_status_id" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Trạng thái:</label>
-                    <select id="container_status_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
+                    <select id="container_status_id" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-6 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="container_status_id">
                         <option value="">Chọn trạng thái</option>
                         @foreach($containerStatuses as $status)
                         <option value="{{ $status->id }}">{{ $status->status_name }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <!-- Trạng thái vị trí -->
+                <div class="w-1/2 sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
+                    <label for="state_location" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Lọc vị trí:</label>
+                    <select id="state_location" class="block text-sm appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-6 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500" name="state_location">
+                        <option value="">Chọn</option>
+                        <option value="1">Chưa có vị trí</option>
+                        <option value="2">Có vị trí</option>
+                        <option value="3">Chưa có số thùng</option>
+                        <option value="4">Có vị trí chưa có số thùng</option>
                     </select>
                 </div>
                 <!-- <div class="w-full sm:w-3/24 px-1 md:px-3 mb-1 md:mb-2">
@@ -71,14 +82,14 @@
             </div>
         </form>
 
-        <form id="searchContainer" action="" method="POST" class="mb-2 bg-white p-2 sm:p-4 rounded shadow-md">
+        <form id="searchContainer" action="" method="POST" class="container mb-2 bg-white p-2 sm:p-4 rounded shadow-md">
             @csrf    
             <div class="flex flex-wrap -mx-2 w-full">
                 <div class="flex flex-wrap md:flex-nowrap px-2 space-x-2">
                     <div class="flex-grow w-full md:w-6/12 md:mr-2 flex items-center mb-2 md:mb-0 space-x-2 text-sm">
                         <div class="relative">
                             <input type="text" class="flex-1 px-2 py-2 border text-sm border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded transition duration-150 ease-in-out" placeholder="Nhập mã thùng" name="container_id" id="search_container_id">
-                            <div class="absolute inset-y-0 right-0 flex items-right px-2">
+                            <div class="absolute inset-y-0 right-0 flex items-right px-1">
                                 <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-500 bg-opacity-75 hover:bg-opacity-100 p-2 rounded-r-md z-10" onclick="clearSearchContainer()">Xóa</button>
                             </div>
                         </div>
