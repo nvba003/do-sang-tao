@@ -31,6 +31,12 @@ class Container extends Model
     }
 
     // Mối quan hệ với Location
+    public function locationParent()
+    {
+        return $this->belongsTo(Location::class, 'location_parent_id', 'id');
+    }
+
+    // Mối quan hệ với Location
     public function location()
     {
         return $this->belongsTo(Location::class);

@@ -18,6 +18,8 @@ class CreateContainersTable extends Migration
             $table->string('container_code',7)->unique();// ContainerCode
             $table->unsignedTinyInteger('container_status_id')->nullable();
             $table->foreign('container_status_id')->references('id')->on('container_statuses')->onDelete('set null'); // Add a foreign key to the ContainerStatuses table
+            $table->unsignedSmallInteger('location_parent_id')->nullable();
+            $table->foreign('location_parent_id')->references('id')->on('locations')->onDelete('set null');
             $table->unsignedSmallInteger('location_id')->nullable();
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('set null'); // LocationID with foreign key constraint
             $table->unsignedInteger('product_id');//mã product_api_id

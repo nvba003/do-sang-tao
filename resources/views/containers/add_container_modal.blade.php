@@ -17,7 +17,7 @@
                         <div class="col-span-2 sm:col-span-1">
                             <label for="containerId" class="block text-sm text-left font-medium text-gray-700">Mã thùng:</label>
                             <input type="text" name="id" id="containerId" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Nhập mã thùng">
-                            <div id="containerCodeError" class="text-xs text-red-500 mt-1 hidden">Mã thùng đã tồn tại.</div>
+                            <div id="containerCodeError" class="text-xs sm:text-base text-red-500 mt-1 hidden">Mã thùng đã tồn tại.</div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
                             <label for="branchId" class="block text-sm text-left font-medium text-gray-700">Chi Nhánh:</label>

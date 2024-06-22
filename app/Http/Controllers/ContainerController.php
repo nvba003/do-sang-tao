@@ -21,14 +21,6 @@ class ContainerController extends Controller
     public function showContainers(Request $request)
     {
         $perPage = $request->input('per_page',10);
-        // Kiểm tra quyền
-        //if (!Gate::allows('add-container')) {
-            //abort(403);
-        //}
-        // if (Gate::denies('add-container')) {
-        //     abort(403);
-        // }
-
         $products = ProductApi::all();
         $branches = Branch::all();
         // $bundleTypes = BundleType::all();
@@ -38,14 +30,12 @@ class ContainerController extends Controller
         $containerStatuses = ContainerStatus::all();
         $locations = Location::all();
         $query = Container::query()
-            ->with(['transaction', 'inventoryTransaction', 'productapi'])
+            ->with(['transaction', 'inventoryTransaction', 'productapi', 'locationParent'])
             ->when($request->filled('searchProductID'), function ($q) use ($request) {
                 $q->where('product_id', $request->input('searchProductID'));
             })
-            ->when($request->filled('parent_location_id'), function ($query) use ($request) {
-                $query->whereHas('location', function ($q) use ($request) {
-                    $q->where('parent_id', $request->input('parent_location_id'));
-                });
+            ->when($request->filled('parent_location_id'), function ($q) use ($request) {
+                $q->where('location_parent_id', $request->input('parent_location_id'));
             })
             ->when($request->filled('branch_id'), function ($q) use ($request) {
                 $q->whereHas('branch', function ($q) use ($request) {
@@ -70,7 +60,7 @@ class ContainerController extends Controller
 
         $containers = $query->paginate($perPage);
         if ($request->ajax()) {
-            $view = view('containers.partial_container_table', compact('containers'))->render();
+            $view = view('containers.partial_container_table', compact('containers', 'branches', 'locations'))->render();
             $links = $containers->links()->toHtml();
             return response()->json(['table' => $view, 'links' => $links]);
         }
@@ -171,5 +161,83 @@ class ContainerController extends Controller
         $location = Location::findOrFail($id);
         $location->delete();
         return redirect()->route('locations.index');
+    }
+
+    public function updateLocationParentId()
+    {
+        // Lấy tất cả các container
+        $containers = Container::all();
+        foreach ($containers as $container) {
+            // Kiểm tra nếu cột notes có thông tin vị trí thùng hàng
+            if (strlen($container->notes) == 4 && ctype_alpha(substr($container->notes, 0, 2)) && ctype_digit(substr($container->notes, 2, 2))) {
+                // Lấy branch_id của container
+                $branchId = $container->branch_id;
+                // Tìm location có location_name và branch_id khớp
+                $location = Location::where('location_name', $container->notes)
+                                    ->where('branch_id', $branchId)
+                                    ->first();
+                // Nếu tìm thấy location, cập nhật location_parent_id cho container
+                if ($location) {
+                    $container->location_parent_id = $location->id;
+                    $container->save();
+                }
+            }
+        }
+        return response()->json(['message' => 'Update location_parent_id completed.']);
+    }
+
+    public function getLocationsByParent($locationName)
+    {
+        $parentLocation = Location::where('location_name', $locationName)->first();
+        if (!$parentLocation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tồn tại vị trí đã nhập.'
+            ]);
+        }
+        $locations = Location::where('parent_id', $parentLocation->id)->get();
+        return response()->json([
+            'success' => true,
+            'locations' => $locations
+        ]);
+    }
+
+    public function updateContainer($id, Request $request)
+    {
+        $container = Container::findOrFail($id);
+        $branchId = $request->input('branch_id');
+        $locationParentName = $request->input('location_parent');
+        $locationName = $request->input('location_name');
+        
+        // Chỉ kiểm tra và cập nhật location_parent nếu có giá trị
+        if ($locationParentName) {
+            $locationParent = Location::where('location_name', $locationParentName)
+                                      ->where('branch_id', $branchId)
+                                      ->first();
+            if (!$locationParent) {
+                return response()->json(['success' => false, 'message' => 'Không tồn tại vị trí cha đã nhập.']);
+            }
+            $container->location_parent_id = $locationParent->id;
+        }
+        
+        // Chỉ kiểm tra và cập nhật location_name nếu có giá trị
+        if ($locationName) {
+            $location = Location::where('location_name', $locationName)
+                                ->where('branch_id', $branchId)
+                                ->first();
+            if (!$location) {
+                return response()->json(['success' => false, 'message' => 'Không tồn tại vị trí đã nhập.']);
+            }
+            $container->location_id = $location->id;
+        }
+        
+        // Cập nhật thông tin container
+        $container->unit = $request->input('unit');
+        $container->branch_id = $branchId;
+        $container->notes = $request->input('notes');
+        
+        $container->save();
+        
+        return response()->json(['success' => true]);
     }
 }

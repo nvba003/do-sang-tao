@@ -12,6 +12,10 @@ use App\Http\Controllers\OrderEcommerceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuxpackingController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierProductController;
+use App\Http\Controllers\ShoppingListController;
+use App\Http\Controllers\PurchaseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,6 +60,9 @@ Route::post('/containers', [ContainerController::class, 'store'])->name('contain
 Route::get('/locations', [ContainerController::class, 'indexLocation'])->name('locations.index');
 Route::post('/locations', [ContainerController::class, 'storeLocation'])->name('locations.store');
 Route::delete('/locations/{id}', [ContainerController::class, 'destroyLocation'])->name('locations.destroy');
+Route::get('/update-location-parent-id', [ContainerController::class, 'updateLocationParentId']);
+Route::get('/get-locations/{parent}', [ContainerController::class, 'getLocationsByParent']);
+Route::post('/update-container/{id}', [ContainerController::class, 'updateContainer']);
 
 Route::get('/container-transactions', [InventoryTransactionController::class, 'showTransactions'])->name('transactions.show');//trang hiện giao dịch thùng hàng
 Route::post('/container-transactions', [InventoryTransactionController::class, 'store'])->name('transactions.store');//tạo giao dịch thùng hàng
@@ -141,6 +148,14 @@ Route::post('/tasks/add-dependency', [TaskController::class, 'addDependency']);
 Route::post('/tasks/add-related-task', [TaskController::class, 'addRelatedTask']);
 Route::delete('/tasks/remove-related-task/{taskId}', [TaskController::class, 'removeRelatedTask']);
 
+Route::resource('suppliers', SupplierController::class);
+Route::get('supplier-products', [SupplierProductController::class, 'index']);
+Route::get('supplier-products/create', [SupplierProductController::class, 'create'])->name('supplier-products.create');
+Route::get('supplier-products/edit', [SupplierProductController::class, 'edit'])->name('supplier-products.edit');
+Route::get('supplier-products/destroy', [SupplierProductController::class, 'destroy'])->name('supplier-products.destroy');
+Route::post('supplier-products', [SupplierProductController::class, 'store'])->name('supplier-products.store');
 
+Route::resource('shopping-lists', ShoppingListController::class);
+Route::get('purchase', [PurchaseController::class, 'index'])->name('purchase.index');
 
 });

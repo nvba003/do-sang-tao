@@ -35,4 +35,9 @@ class Product extends Model
     {
         return $this->hasOne(Bundle::class, 'id', 'bundle_id');
     }
+
+    public function suppliers()
+    {
+        return $this->hasMany(SupplierProduct::class, 'product_api_id', 'product_api_id');
+    }
 }

@@ -1,13 +1,19 @@
 @extends('layouts.app')
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('content')
 <div class="container mx-auto px-2 sm:px-3 lg:px-4">
     @include('containers.add_container_modal')
 
     <div class="mx-auto mt-2">
         @if(auth()->user() && auth()->user()->can('edit posts'))
-            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 mb-2 rounded" onclick="openModal()">
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-3 mb-2 rounded" onclick="openModal()">
                 Thêm Thùng
+            </button>
+            <button type="button" id="editContainersButton" class="bg-yellow-500 hover:bg-yellow-700 text-white text-sm font-bold py-2 px-3 mb-2 rounded">
+                Chỉnh sửa
+            </button>
+            <button type="button" id="cancelContainersButton" class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-2 px-3 mb-2 rounded">
+                Tắt chỉnh sửa
             </button>
         @endif
         <form id="searchProduct" action="" method="POST" class="mb-1 bg-white p-2 sm:p-4 rounded shadow-md">
@@ -110,11 +116,12 @@
                     <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">SL</th>
                     <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">V.Trí</th>
                     <th scope="col" class="w-2/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">No.</th>
-                    <th scope="col" class="w-12/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tên sản phẩm</th>
+                    <th scope="col" class="w-9/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Tên sản phẩm</th>
+                    <th scope="col" class="w-3/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Ghi chú</th>
                 </tr>
             </thead>
             <tbody>
-                @include('containers.partial_container_table', ['containers' => $containers])
+                @include('containers.partial_container_table', ['containers' => $containers, 'branches' => $branches, 'locations' => $locations])
             </tbody>
         </table>
     </div>
@@ -350,7 +357,7 @@
         var containerCodeError = document.getElementById('containerCodeError');
         if (isExisting) {
         containerCodeError.style.display = 'block';
-        containerCodeError.textContent = 'Mã thùng đã tồn tại: ' + idExist;
+        containerCodeError.textContent = 'Mã thùng liên quan đã tạo là: ' + idExist;
         } else {
         containerCodeError.style.display = 'none';
         }
@@ -539,6 +546,143 @@ $(document).ready(function() {
         setInitialState(); // Set ẩn hiện thùng về ban đầu
         clearSearchContainerForm(); // Tìm sản phẩm thì xóa bộ lọc mã thùng
     });//kết thúc searchProduct
+
+    // Xử lý nút "Chỉnh sửa"
+    // $('#editContainersButton').click(function() {
+    //     var isEditing = $(this).data('editing') || false;
+    //     if (!isEditing) {
+    //         // Hiển thị input sửa
+    //         $('tr').each(function() {
+    //             $(this).find('span').addClass('hidden');
+    //             $(this).find('input, select, textarea').removeClass('hidden');
+    //             $(this).find('.save-button').removeClass('hidden');
+    //             $(this).find('.edit-button').addClass('hidden');
+    //         });
+    //         $(this).text('Hủy bỏ');
+    //     } else {
+    //         // Ẩn input sửa và hiển thị lại giá trị gốc
+    //         $('tr').each(function() {
+    //             $(this).find('span').removeClass('hidden');
+    //             $(this).find('input, select, textarea').addClass('hidden');
+    //             $(this).find('.save-button').addClass('hidden');
+    //             $(this).find('.edit-button').removeClass('hidden');
+    //         });
+    //         $(this).text('Chỉnh sửa');
+    //     }
+    //     $(this).data('editing', !isEditing);
+    // });
+
+    // Xử lý nút "Chỉnh sửa"
+    $('#editContainersButton').click(function() {
+        $('tr').each(function() {
+            $(this).find('span').addClass('hidden');
+            $(this).find('input, select, textarea').removeClass('hidden');
+            $(this).find('.save-button').removeClass('hidden');
+            $(this).find('.edit-button').addClass('hidden');
+        });
+    });
+
+    // Xử lý nút "Hủy bỏ"
+    $('#cancelContainersButton').click(function() {
+        $('tr').each(function() {
+            $(this).find('span').removeClass('hidden');
+            $(this).find('input, select, textarea').addClass('hidden');
+            $(this).find('.save-button').addClass('hidden');
+            $(this).find('.edit-button').removeClass('hidden');
+        });
+    });
+
+    // Xử lý khi người dùng nhập vào location-parent
+    $('#containerTable').on('input', '.location-parent-input', function() {
+        var input = $(this);
+        var row = input.closest('tr');
+        var detailsRow = row.next();
+        var locationParent = input.val();
+        
+        if (locationParent.length === 4) {
+            // Gửi yêu cầu AJAX để lấy các location-name tương ứng
+            fetch(`get-locations/${locationParent}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var select = row.find('.location-name-input');
+                    select.empty(); // Xóa các tùy chọn hiện tại
+                    data.locations.forEach(location => {
+                        select.append(`<option value="${location.location_name}">${location.location_name}</option>`);
+                    });
+                    select.removeClass('hidden');
+                } else {
+                    var select = row.find('.location-name-input');
+                    select.empty(); // Xóa các tùy chọn hiện tại
+                    alert(data.message || 'Không tìm thấy vị trí.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi khi tải vị trí.');
+            });
+        }
+    });
+
+    // Xử lý nút "Lưu lại"
+    $('#containerTable').on('click', '.save-button', function() {
+        var row = $(this).closest('tr').prev(); // Lấy hàng trước đó, nơi chứa các dữ liệu không nằm trong phần chi tiết
+        var detailsRow = $(this).closest('tr'); // Lấy hàng hiện tại, nơi chứa các dữ liệu chi tiết
+        var containerId = row.data('id');
+        var unit = detailsRow.find('.unit-input').val();
+        var branchId = detailsRow.find('.branch-select').val();
+        var notes = detailsRow.find('.notes-input').val();
+        var locationParent = row.find('.location-parent-input').val();
+        var locationName = row.find('.location-name-input').val();
+
+        fetch(`update-container/${containerId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            body: JSON.stringify({
+                unit: unit,
+                branch_id: branchId,
+                notes: notes,
+                location_parent: locationParent,
+                location_name: locationName
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update displayed values
+                detailsRow.find('.unit-display').text(unit);
+                detailsRow.find('.branch-display').text(detailsRow.find('.branch-select option:selected').text());
+                detailsRow.find('.notes-display').text(notes);
+                row.find('.location-parent').text(locationParent);
+                row.find('.location-name').text(locationName);
+                // Hide input fields and show spans
+                detailsRow.find('span').removeClass('hidden');
+                detailsRow.find('input, select, textarea').addClass('hidden');
+                detailsRow.find('.save-button').addClass('hidden');
+                detailsRow.find('.edit-button').removeClass('hidden');
+                // Ẩn input fields cho location-parent và location-name, nhưng không ẩn span
+                row.find('.location-parent-input').addClass('hidden');
+                row.find('.location-parent').removeClass('hidden');
+                row.find('.location-name-input').addClass('hidden');
+                row.find('.location-name').removeClass('hidden');
+            } else {
+                alert(data.message || 'Lỗi chưa lưu được.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Lỗi chưa lưu được.');
+        });
+    });
 
 });
     
