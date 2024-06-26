@@ -37,4 +37,8 @@ class Supplier extends Model
     {
         return $this->belongsTo(SupplierGroup::class, 'supplier_group_id');
     }
+    public function levelDetail()
+    {
+        return $this->belongsTo(SupplierLevelDetail::class, 'supplier_level_detail_id');
+    }
 }

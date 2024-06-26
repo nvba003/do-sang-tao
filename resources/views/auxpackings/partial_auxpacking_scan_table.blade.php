@@ -6,7 +6,7 @@
     <table class="w-full bg-white border border-gray-200 rounded-lg">
         <thead class="text-white bg-gray-500">
             <tr>
-                <th scope="col" class="w-1/24 px-2 py-2 mt-1 text-center text-xs md:text-sm hidden md:block font-semibold uppercase tracking-wider">
+                <th scope="col" class="w-1/24 px-2 py-2 mt-1 text-center text-xs md:text-sm font-semibold uppercase tracking-wider">
                     <input type="checkbox" x-model="checkAll" @click="toggleAll">
                 </th>
                 <th scope="col" class="w-5/24 px-2 py-3 text-left text-xs md:text-sm font-semibold uppercase tracking-wider">Thời gian</th>
@@ -20,7 +20,7 @@
 
         <template x-for="order in orders" :key="order.id">
             <tr :class="scanClass(order)" class="border-b">
-                <td class="p-2 w-1/24 text-center mt-2 hidden sm:block">
+                <td class="p-2 w-1/24 text-center mt-2">
                     <input type="checkbox" class="checkItem" :value="order.id" x-model="selectedItems" @change="updateCount">
                 </td>
                 <td class="w-4/24 px-6 py-4 whitespace-nowrap" x-text="formatDate(order.created_at)"></td>

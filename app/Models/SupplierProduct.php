@@ -23,4 +23,18 @@ class SupplierProduct extends Model
     {
         return $this->belongsTo(SupplierReview::class, 'supplier_id');
     }
+    public function images()
+    {
+        return $this->hasMany(SupplierProductImage::class);
+    }
+
+    public function properties()
+    {
+        return $this->hasMany(SupplierProductProperty::class);
+    }
+
+    public function skus()
+    {
+        return $this->hasMany(SupplierProductSku::class);
+    }
 }

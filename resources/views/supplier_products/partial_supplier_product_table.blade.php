@@ -38,8 +38,16 @@
                     <tr class="bg-blue-100 border-b">
                         <td colspan="100%" class="text-xs md:text-sm">
                             <div class="flex flex-col w-full p-2 rounded-lg">
-                                <div class="mb-2">
-                                    <button @click="addSupplierToProduct(product)" class="bg-green-500 text-white px-4 py-2 rounded mb-4">Thêm nhà cung cấp</button>
+                                <h1>Chi tiết sản phẩm</h1>
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title" x-text="product.title"></h5>
+                                        <p class="card-text"><strong>Giá: </strong><span x-text="product.price"></span></p>
+                                        <p class="card-text"><strong>Nhà cung cấp: </strong><span x-text="product.nick"></span></p>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <button @click="showAddSupplierModal" class="bg-green-500 text-white px-4 py-2 rounded mb-4">Thêm nhà cung cấp</button>
                                 </div>
                                 <table class="w-full bg-gray-100 border border-gray-200 rounded-lg">
                                     <thead class="bg-blue-500 text-white text-sm md:text-base rounded-lg">
@@ -59,7 +67,7 @@
                                                 <td class="p-1 w-3/24"><a :href="supplier.pivot.supplier_product_url" target="_blank" class="text-blue-500">Link</a></td>
                                                 <td class="p-1 w-1/24 text-center" x-text="supplier.pivot.available ? 'Yes' : 'No'"></td>
                                                 <td class="p-1 w-1/24 items-center">
-                                                    <button @click="removeSupplierFromProduct(product, supplier)" class="bg-red-500 text-white text-xs md:text-sm font-bold py-2 px-4 rounded">Xóa</button>
+                                                    <button @click="removeSupplierFromProduct(supplier)" class="bg-red-500 text-white text-xs md:text-sm font-bold py-2 px-4 rounded">Xóa</button>
                                                 </td>
                                             </tr>
                                         </template>

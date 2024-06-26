@@ -67,7 +67,7 @@
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('productTable', () => ({
-            products: @json($supplierProducts),
+            products: @json($products),
             searchParams: {
                 searchProductCode: '',
                 group: '',

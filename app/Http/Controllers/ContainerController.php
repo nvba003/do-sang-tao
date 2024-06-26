@@ -151,10 +151,16 @@ class ContainerController extends Controller
         return back()->with('success', 'Thùng hàng đã được tạo thành công!');
     }
 
-    public function indexLocation()
+    public function indexLocation(Request $request)
     {
-        $locations = Location::with('children')->whereNull('parent_id')->get();
-        return view('containers.location', compact('locations'), ['header' => 'Vị trí thùng hàng']);
+        $branches = Branch::all();
+        $defaultBranchId = $request->input('branch_id', null);
+        $locationsQuery = Location::with('children', 'branch')->whereNull('parent_id');
+        if ($defaultBranchId) {
+            $locationsQuery->where('branch_id', $defaultBranchId);
+        }
+        $locations = $locationsQuery->get();
+        return view('containers.location', compact('locations', 'branches'), ['header' => 'Vị trí thùng hàng']);
     }
 
     public function storeLocation(Request $request)

@@ -60,7 +60,7 @@
             <div class="w-full md:w-1/4 px-2 mb-4">
                 <div class="bg-stone-200 p-2 rounded-lg shadow">
                     <h2 class="font-bold text-lg mb-1 text-center" x-text="statusNames[status]"></h2>
-                    <div class="space-y-2 overflow-y-scroll max-h-[90%]">
+                    <div class="space-y-2 overflow-y-scroll max-h-[50%]">
                         <template x-for="task in tasks">
                             <div class="bg-white rounded shadow p-3">
                                 <div class="flex items-center space-x-2">
@@ -133,7 +133,7 @@
         customerBaseUrl: '/customers',
     };
     const today = new Date();
-    const sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    const daysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('taskTable', () => ({
@@ -171,7 +171,7 @@
             // perPage: 15,
             // links: '',
             searchParams: {
-                searchCreatedAtFrom: sevenDaysAgo.toISOString().slice(0, 10), // Đặt ngày bắt đầu là 7 ngày trước
+                searchCreatedAtFrom: daysAgo.toISOString().slice(0, 10), // Đặt ngày bắt đầu là 7 ngày trước
                 searchCreatedAtTo: today.toISOString().slice(0, 10), // Đặt ngày kết thúc là hôm nay
                 status: '',
                 searchTaskCode: '',

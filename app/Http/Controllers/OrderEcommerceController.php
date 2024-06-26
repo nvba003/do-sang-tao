@@ -1362,7 +1362,7 @@ class OrderEcommerceController extends Controller
         $order = Order::where('order_code', $data['orderID'])->first();
         if (!$order) {// Nếu đơn hàng không tồn tại
             $customerAccount = CustomerAccount::create([
-                'account_name' => $data['customerName'] . " - " . $data['customerPhone'],
+                'account_name' => $data['customerName'] . (filled($data['customerPhone']) ? " - " . $data['customerPhone'] : ''),
                 'platform_id' => $platform->id,
             ]);
             $order = new Order;

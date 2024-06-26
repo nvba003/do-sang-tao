@@ -21,11 +21,11 @@
         </td>
         <td class="w-3/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">
             <span class="location-parent">{{ $container->location_parent_id ? $container->locationParent->location_name : '_' }}</span>
-            <input type="text" class="text-xs md:text-lg sm:text-base location-parent-input hidden ml-2 border rounded p-1 w-6 sm:w-16" value="{{ $container->location_parent_id ? $container->locationParent->location_name : '' }}" maxlength="4">
+            <input type="text" class="text-xs md:text-lg sm:text-base location-parent-input hidden border rounded p-1 w-10 sm:w-16" value="{{ $container->location_parent_id ? $container->locationParent->location_name : '' }}" maxlength="4">
         </td>
         <td class="w-2/24 p-2 text-xs md:text-lg sm:text-base overflow-hidden text-ellipsis">
             <span class="location-name">{{ $container->location->location_name ?? '_' }}</span>
-            <select class="text-xs md:text-lg sm:text-base location-name-input hidden ml-2 border rounded p-1 w-6 sm:w-16">
+            <select class="text-xs md:text-lg sm:text-base location-name-input hidden border rounded p-1 w-10 sm:w-16">
                 <option value=""></option>
                 @foreach($locations as $location)
                     @if($location->isChild() && $location->parent_id == $container->location_parent_id)

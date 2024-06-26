@@ -11,8 +11,9 @@ class SupplierProductController extends Controller
 {
     public function index()
     {
-        $supplierProducts = SupplierProduct::with('supplier', 'product')->get();
-        return view('supplier_products.index', compact('supplierProducts'))->with('header', 'Tất cả sản phẩm của nhà cung cấp');
+        $products = Product::with('supplierProducts')->get();
+        // $supplierProducts = SupplierProduct::with('supplier', 'product')->get();
+        return view('supplier_products.index', compact('products'))->with('header', 'Tất cả sản phẩm của nhà cung cấp');
     }
 
     public function create()

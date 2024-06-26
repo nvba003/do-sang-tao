@@ -32,7 +32,7 @@ class TaskController extends Controller
         $statuses = [
             1 => 'Chưa bắt đầu',
             2 => 'Đang làm',
-            3 => 'Đợi xử lý',
+            3 => 'Cần đợi',
             4 => 'Hoàn thành'
         ];
         $query = Task::with(['category', 'users']);

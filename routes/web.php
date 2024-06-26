@@ -16,6 +16,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierProductController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\RapidController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -157,5 +158,7 @@ Route::post('supplier-products', [SupplierProductController::class, 'store'])->n
 
 Route::resource('shopping-lists', ShoppingListController::class);
 Route::get('purchase', [PurchaseController::class, 'index'])->name('purchase.index');
+
+Route::get('/fetch-rapid-data', [RapidController::class, 'fetchData']);
 
 });

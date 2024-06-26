@@ -15,14 +15,25 @@ class CreateSupplierProductsTable extends Migration
     {
         Schema::create('supplier_products', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('product_api_id')->nullable();
+            $table->foreign('product_api_id')->references('product_api_id')->on('products')->onDelete('cascade');
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
-            $table->unsignedInteger('product_api_id');
-            $table->foreign('product_api_id')->references('product_api_id')->on('products')->onDelete('cascade');
-            $table->string('supplier_product_id');
-            $table->text('supplier_product_url');
+            $table->unsignedBigInteger('num_iid')->nullable();
+            $table->string('title')->nullable();
+            $table->text('desc_short')->nullable()->nullable();
+            $table->decimal('price', 10, 2)->nullable();
+            $table->decimal('orginal_price', 10, 2)->nullable();
+            $table->string('nick')->nullable();
+            $table->unsignedMediumInteger('num')->nullable();
+            $table->string('detail_url')->nullable();
+            $table->string('pic_url')->nullable();
+            $table->text('desc')->nullable();
+            $table->unsignedMediumInteger('min_order')->nullable();
             $table->unsignedTinyInteger('available')->default(true);//còn hàng, hết hàng, ncc xóa,...
             $table->timestamps();
+
+            $table->index('num_iid');
         });
     }
 

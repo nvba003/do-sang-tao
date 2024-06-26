@@ -34,4 +34,9 @@ class Location extends Model
     {
         return $this->hasMany(Container::class);
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

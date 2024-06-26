@@ -38,6 +38,11 @@ class Product extends Model
 
     public function suppliers()
     {
+        return $this->hasMany(Supplier::class, 'product_api_id', 'product_api_id');
+    }
+
+    public function supplierProducts()
+    {
         return $this->hasMany(SupplierProduct::class, 'product_api_id', 'product_api_id');
     }
 }
