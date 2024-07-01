@@ -36,13 +36,13 @@ class Product extends Model
         return $this->hasOne(Bundle::class, 'id', 'bundle_id');
     }
 
-    public function suppliers()
-    {
-        return $this->hasMany(Supplier::class, 'product_api_id', 'product_api_id');
-    }
-
     public function supplierProducts()
     {
         return $this->hasMany(SupplierProduct::class, 'product_api_id', 'product_api_id');
+    }
+
+    public function supplierLinks()
+    {
+        return $this->hasMany(ProductSupplierLink::class, 'product_api_id', 'product_api_id');
     }
 }

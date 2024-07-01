@@ -15,8 +15,6 @@ class CreateSupplierProductsTable extends Migration
     {
         Schema::create('supplier_products', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('product_api_id')->nullable();
-            $table->foreign('product_api_id')->references('product_api_id')->on('products')->onDelete('cascade');
             $table->unsignedInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->unsignedBigInteger('num_iid')->nullable();

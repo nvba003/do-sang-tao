@@ -2,13 +2,10 @@
 
 @section('content')
 <div class="container mx-auto px-2 sm:px-3 lg:px-4" x-data="purchaseSummaryPage()">
-    <h1 class="text-2xl font-bold mb-4">Tổng hợp đặt hàng</h1>
     <div class="flex justify-between mb-4">
         <button @click="calculateOrderList" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Tính toán đặt hàng</button>
     </div>
-    <div class="bg-white shadow-md rounded-lg my-1 overflow-x-auto p-2 sm:p-4">
-        @include('purchase_summary.partial_product_table')
-    </div>
+    @include('purchases.partial_purchase_table')
 </div>
 
 <script>

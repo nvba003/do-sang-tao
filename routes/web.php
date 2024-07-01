@@ -64,6 +64,7 @@ Route::delete('/locations/{id}', [ContainerController::class, 'destroyLocation']
 Route::get('/update-location-parent-id', [ContainerController::class, 'updateLocationParentId']);//caculate location
 Route::get('/get-locations/{parent}', [ContainerController::class, 'getLocationsByParent']);
 Route::post('/update-container/{id}', [ContainerController::class, 'updateContainer']);
+Route::post('/update-quantity-containers', [ContainerController::class, 'updateQtyFromOldContainers']);
 
 Route::get('/container-transactions', [InventoryTransactionController::class, 'showTransactions'])->name('transactions.show');//trang hiện giao dịch thùng hàng
 Route::post('/container-transactions', [InventoryTransactionController::class, 'store'])->name('transactions.store');//tạo giao dịch thùng hàng
@@ -155,10 +156,13 @@ Route::get('supplier-products/create', [SupplierProductController::class, 'creat
 Route::get('supplier-products/edit', [SupplierProductController::class, 'edit'])->name('supplier-products.edit');
 Route::get('supplier-products/destroy', [SupplierProductController::class, 'destroy'])->name('supplier-products.destroy');
 Route::post('supplier-products', [SupplierProductController::class, 'store'])->name('supplier-products.store');
+Route::post('/supplier-links', [SupplierProductController::class, 'storeSupplierLink']);
+Route::put('/supplier-links/{id}', [SupplierProductController::class, 'updateSupplierLink']);
+Route::delete('/supplier-links/{id}', [SupplierProductController::class, 'destroySupplierLink']);
 
 Route::resource('shopping-lists', ShoppingListController::class);
 Route::get('purchase', [PurchaseController::class, 'index'])->name('purchase.index');
 
-Route::get('/fetch-rapid-data', [RapidController::class, 'fetchData']);
+Route::post('/fetch-rapid-data', [RapidController::class, 'fetchData'])->name('rapidapi.fetch');
 
 });

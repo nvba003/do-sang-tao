@@ -16,7 +16,7 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('supplier_group_id');
-            $table->foreign('supplier_group_id')->references('id')->on('supplier_groups')->onDelete('cascade');
+            $table->foreign('supplier_group_id')->references('id')->on('supplier_groups');
             $table->unsignedInteger('supplier_level_detail_id')->nullable();
             $table->foreign('supplier_level_detail_id')->references('id')->on('supplier_level_details')->onDelete('set null');
             $table->string('name');

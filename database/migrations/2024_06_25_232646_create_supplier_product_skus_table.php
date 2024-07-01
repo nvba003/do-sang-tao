@@ -15,10 +15,12 @@ class CreateSupplierProductSkusTable extends Migration
     {
         Schema::create('supplier_product_skus', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedTinyInteger('sort_order')->nullable();
             $table->unsignedInteger('supplier_product_id');
             $table->foreign('supplier_product_id')->references('id')->on('supplier_products')->onDelete('cascade');
-            $table->string('sku_id')->nullable();
+            $table->unsignedBigInteger('sku_id')->nullable();
             $table->decimal('price', 10, 2)->nullable();
+            $table->decimal('price_real', 10, 2)->nullable();
             $table->string('prop_id')->nullable();
             $table->string('prop_value')->nullable();
             $table->unsignedMediumInteger('storage')->nullable();

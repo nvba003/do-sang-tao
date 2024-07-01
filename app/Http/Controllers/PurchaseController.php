@@ -10,10 +10,8 @@ class PurchaseController extends Controller
     public function index()
     {
         // Lấy tất cả các sản phẩm với thông tin nhà cung cấp và đánh giá
-        $products = Product::with(['suppliers.reviews', 'suppliers' => function ($query) {
-            $query->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating');
-        }])->get();
+        $products = Product::with(['supplierLinks.supplier.reviews', 'supplierLinks.supplierProduct.supplierSkus'])->get();
         
-        return view('purchase_summary.index', compact('products'));
+        return view('purchases.index', compact('products'), ['header' => 'Đặt hàng']);
     }
 }

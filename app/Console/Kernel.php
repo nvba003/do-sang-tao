@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Console\Commands\ProcessCompletedOrders;
 use App\Jobs\FetchAndStoreProductsJob;
+use App\Console\Commands\DispatchFetchProductDataJobs;
 
 class Kernel extends ConsoleKernel
 {
@@ -19,19 +20,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('orders:process-completed')->cron('0 19 * * *');  // Chạy vào lúc 00:00 mỗi ngày, for processing completed orders ->everyMinute();//
+        $schedule->command('dispatch:fetchproductdatajobs')->cron('* 7-23 * * *');
+        // $schedule->command('orders:process-completed')->cron('0 19 * * *');  // Chạy vào lúc 00:00 mỗi ngày, for processing completed orders ->everyMinute();//
 
-        $schedule->call(function () {
-            $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
-            $response = Http::get($countProduct);
-            $count = json_decode($response->body())->count;
-            $pages = ceil($count / 250);
+        // $schedule->call(function () {
+        //     $countProduct = 'https://4ccfe3d9305b4288bb2b5cf9184c8e5d:c9830e0a36b348c786f8df30a72d75c8@do-vat-sang-tao.mysapo.net/admin/products/count.json';
+        //     $response = Http::get($countProduct);
+        //     $count = json_decode($response->body())->count;
+        //     $pages = ceil($count / 250);
     
-            for ($i = 1; $i <= $pages; $i++) {
-                Log::info('Dispatching job for page: ' . $i);
-                FetchAndStoreProductsJob::dispatch($i);
-            }
-        })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
+        //     for ($i = 1; $i <= $pages; $i++) {
+        //         Log::info('Dispatching job for page: ' . $i);
+        //         FetchAndStoreProductsJob::dispatch($i);
+        //     }
+        // })->cron('* * * * *');//->cron('*/10 7-19 * * *'); // Chạy mỗi 10 phút, trong khoảng từ 7 giờ sáng đến 7 giờ tối
 
     }
 

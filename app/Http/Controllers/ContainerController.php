@@ -309,4 +309,19 @@ class ContainerController extends Controller
         
         return response()->json(['success' => true]);
     }
+
+    public function updateQtyFromOldContainers()
+    {
+        // Lấy dữ liệu từ bảng thung_hang
+        $thungHangs = DB::table('thung_hang')->get(['id', 'so_luong']);
+
+        foreach ($thungHangs as $thungHang) {
+            // Cập nhật bảng containers
+            DB::table('containers')
+                ->where('container_code', $thungHang->id)
+                ->update(['product_quantity' => $thungHang->so_luong]);
+        }
+
+        return response()->json(['message' => 'Containers updated successfully']);
+    }
 }

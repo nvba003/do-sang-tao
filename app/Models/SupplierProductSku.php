@@ -14,4 +14,9 @@ class SupplierProductSku extends Model
     {
         return $this->belongsTo(SupplierProduct::class);
     }
+
+    public function productLinks()
+    {
+        return $this->hasMany(ProductSupplierLink::class);
+    }
 }

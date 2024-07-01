@@ -21,6 +21,9 @@
                         <label for="group" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-1">Nhóm:</label>
                         <select id="group" x-model="searchParams.group" class="block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 text-sm py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option value="">Chọn</option>
+                            @foreach($productGroups as $group)
+                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <!-- Trạng thái -->
@@ -67,7 +70,8 @@
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('productTable', () => ({
-            products: @json($products),
+            products: [],
+            suppliers: @json($suppliers),
             searchParams: {
                 searchProductCode: '',
                 group: '',
@@ -75,6 +79,15 @@
             },
             perPage: 15,
             links: '',
+            newSupplier: {
+                supplier_id: '',
+                provider: '1688',
+                url: '',
+                product_id: ''
+            },
+            init() {
+                this.fetchData(urls.baseUrl);
+            },
             fetchData(baseUrl) {
                 const url = new URL(baseUrl);
                 url.searchParams.set('perPage', this.perPage);
@@ -92,10 +105,104 @@
                 .then(data => {
                     this.products = data.products;
                     this.links = data.links;
+                    console.log(this.products);
                 });
             },
             submitForm() {
                 this.fetchData(urls.baseUrl);
+            },
+            extractProductId() {
+                const url = this.newSupplier.url;
+                const id = this.getProductIdFromUrl(url);
+                this.newSupplier.product_id = id ? id : 'Không hợp lệ';
+            },
+            getProductIdFromUrl(url) {
+                const url1688Pattern = /offer\/(\d+).html/;
+                const urlTaobaoTmallPattern = /id=(\d+)/;
+                if (url.includes('1688.com')) {
+                    const match = url.match(url1688Pattern);
+                    return match ? match[1] : null;
+                } else if (url.includes('taobao.com') || url.includes('tmall.com')) {
+                    const match = url.match(urlTaobaoTmallPattern);
+                    return match ? match[1] : null;
+                }
+                return null;
+            },
+            addSupplier(product) {
+                fetch('{{ route('rapidapi.fetch') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        supplier_id: this.newSupplier.supplier_id,
+                        provider: this.newSupplier.provider,
+                        product_id: this.newSupplier.product_id,
+                        product_api_id: product.product_api_id
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    product.supplier_products.push(data); // Thêm dữ liệu nhà cung cấp mới vào danh sách
+                    this.newSupplier.supplier_id = '';
+                    this.newSupplier.product_id = '';
+                    product.showAddSupplierForm = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            },
+            editSupplierLink(link) {
+                this.newSupplier = {
+                    supplier_id: link.supplier_id,
+                    provider: link.supplier_group_id == 1 ? '1688' : 'taobao',
+                    url: link.url,
+                    product_id: link.product_id,
+                };
+                this.extractProductId();
+            },
+            saveSupplierLink(link) {
+                console.log(link);
+                fetch(`supplier-links/${link.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(link)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // this.fetchProducts();
+                        } else {
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            },
+            removeSupplierFromProduct(link) {
+                fetch(`supplier-links/${link.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.fetchProducts();
+                        } else {
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             },
         }));
     });

@@ -37,4 +37,14 @@ class SupplierProduct extends Model
     {
         return $this->hasMany(SupplierProductSku::class);
     }
+
+    public function productLinks()
+    {
+        return $this->hasMany(ProductSupplierLink::class);
+    }
+
+    public function supplierSkus()
+    {
+        return $this->hasMany(SupplierProductSku::class);
+    }
 }

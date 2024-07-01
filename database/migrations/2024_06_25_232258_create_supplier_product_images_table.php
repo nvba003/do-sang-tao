@@ -15,6 +15,7 @@ class CreateSupplierProductImagesTable extends Migration
     {
         Schema::create('supplier_product_images', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedTinyInteger('sort_order')->nullable();
             $table->unsignedInteger('supplier_product_id');
             $table->foreign('supplier_product_id')->references('id')->on('supplier_products')->onDelete('cascade');
             $table->string('url')->nullable();
