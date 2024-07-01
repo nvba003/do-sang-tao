@@ -64,7 +64,7 @@ Route::delete('/locations/{id}', [ContainerController::class, 'destroyLocation']
 Route::get('/update-location-parent-id', [ContainerController::class, 'updateLocationParentId']);//caculate location
 Route::get('/get-locations/{parent}', [ContainerController::class, 'getLocationsByParent']);
 Route::post('/update-container/{id}', [ContainerController::class, 'updateContainer']);
-Route::post('/update-quantity-containers', [ContainerController::class, 'updateQtyFromOldContainers']);
+Route::get('/update-quantity-containers', [ContainerController::class, 'updateQtyFromOldContainers']);
 
 Route::get('/container-transactions', [InventoryTransactionController::class, 'showTransactions'])->name('transactions.show');//trang hiện giao dịch thùng hàng
 Route::post('/container-transactions', [InventoryTransactionController::class, 'store'])->name('transactions.store');//tạo giao dịch thùng hàng
