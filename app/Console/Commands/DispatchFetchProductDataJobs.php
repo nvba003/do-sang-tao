@@ -23,7 +23,7 @@ class DispatchFetchProductDataJobs extends Command
 
         $links = DB::table('product_supplier_links')
             ->whereNull('updated_at')
-            ->limit(10)
+            ->limit(100)
             ->get();
 
         foreach ($links as $link) {

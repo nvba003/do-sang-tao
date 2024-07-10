@@ -17,6 +17,7 @@ use App\Http\Controllers\SupplierProductController;
 use App\Http\Controllers\ShoppingListController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RapidController;
+use App\Http\Controllers\FundController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +42,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/agilino', function () {
+    return view('agilino');
+});
 
 //Route::post('/login-endpoint', 'AuthController@login');
 Route::post('/login-endpoint', [AuthController::class, 'login']);
@@ -161,8 +166,13 @@ Route::put('/supplier-links/{id}', [SupplierProductController::class, 'updateSup
 Route::delete('/supplier-links/{id}', [SupplierProductController::class, 'destroySupplierLink']);
 
 Route::resource('shopping-lists', ShoppingListController::class);
-Route::get('purchase', [PurchaseController::class, 'index'])->name('purchase.index');
+Route::get('/purchase', [PurchaseController::class, 'index'])->name('purchase.index');
+Route::get('/purchase/load-more', [PurchaseController::class, 'loadMore'])->name('purchase.load-more');
+Route::post('/shopping_list/add', [PurchaseController::class, 'add'])->name('shopping_list.add');
+Route::get('/purchase-carts', [PurchaseController::class, 'showCart'])->name('purchase-carts.show');
 
 Route::post('/fetch-rapid-data', [RapidController::class, 'fetchData'])->name('rapidapi.fetch');
+Route::get('/calculate-vnd', [FundController::class, 'calculateVND']);
+
 
 });

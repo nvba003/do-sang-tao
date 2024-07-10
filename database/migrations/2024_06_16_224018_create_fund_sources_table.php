@@ -17,7 +17,7 @@ class CreateFundSourcesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->unsignedTinyInteger('type');
-            $table->unsignedTinyInteger('exchange_rate');
+            $table->unsignedSmallInteger('exchange_rate');
             $table->timestamps();
         });
     }

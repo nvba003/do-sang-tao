@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('dispatch:fetchproductdatajobs')->cron('* 7-23 * * *');
+        $schedule->command('dispatch:fetchproductdatajobs')->cron('* * * * *');//->cron('* 7-23 * * *');
         // $schedule->command('orders:process-completed')->cron('0 19 * * *');  // Chạy vào lúc 00:00 mỗi ngày, for processing completed orders ->everyMinute();//
 
         // $schedule->call(function () {

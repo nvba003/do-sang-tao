@@ -45,4 +45,14 @@ class Product extends Model
     {
         return $this->hasMany(ProductSupplierLink::class, 'product_api_id', 'product_api_id');
     }
+
+    public function purchaseProducts()
+    {
+        return $this->hasMany(PurchaseProduct::class, 'product_api_id', 'product_api_id');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_api_id', 'product_api_id');
+    }
 }

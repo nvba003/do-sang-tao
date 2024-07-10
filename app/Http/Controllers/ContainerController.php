@@ -220,7 +220,7 @@ class ContainerController extends Controller
             // Kiểm tra nếu cột notes có thông tin vị trí thùng hàng
             if (strlen($container->notes) == 4 && ctype_alpha(substr($container->notes, 0, 2)) && ctype_digit(substr($container->notes, 2, 2))) {
                 // Lấy branch_id của container
-                $branchId = $container->branch_id;
+                $branchId = 2;//apply with branch HCM; $container->branch_id;
                 // Nếu mã không bắt đầu bằng "GM"
                 if (substr($container->notes, 0, 2) !== 'GM') {
                     // Tìm location có location_name và branch_id khớp

@@ -18,8 +18,9 @@ class CreateFundTransactionsTable extends Migration
             $table->unsignedInteger('fund_source_id');
             $table->foreign('fund_source_id')->references('id')->on('fund_sources')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
+            $table->decimal('remaining_amount', 10, 2)->default(0);
             $table->date('transaction_date');
-            $table->unsignedTinyInteger('exchange_rate');
+            $table->unsignedSmallInteger('exchange_rate');
             $table->timestamps();
         });
     }
